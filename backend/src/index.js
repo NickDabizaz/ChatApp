@@ -1,6 +1,7 @@
 // src/server.js
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require("cors");
 const mongoose = require('mongoose');
 const app = express();
 const server = require('http').Server(app);
@@ -10,6 +11,13 @@ const userRoutes = require('./routes/userRoutes');
 // Body parser middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+const corsOptions = {
+  origin: "http://localhost:5173", // Mengizinkan akses dari alamat ini
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 
 // Configure socket.io
 const io = initializeSocket(server);
