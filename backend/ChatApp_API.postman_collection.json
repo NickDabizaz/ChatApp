@@ -11,7 +11,7 @@
         "method": "POST",
         "header": [],
         "body": {
-          "mode": "raw",
+          "mode": "json",
           "raw": "{\n  \"name\": \"John Doe\",\n  \"phoneNumber\": \"123456789\",\n  \"password\": \"password123\"\n}"
         },
         "url": {
@@ -30,7 +30,7 @@
         "method": "POST",
         "header": [],
         "body": {
-          "mode": "raw",
+          "mode": "json",
           "raw": "{\n  \"phoneNumber\": \"123456789\",\n  \"password\": \"password123\"\n}"
         },
         "url": {
@@ -49,7 +49,7 @@
         "method": "POST",
         "header": [],
         "body": {
-          "mode": "raw",
+          "mode": "json",
           "raw": "{\n  \"userId\": \"user_id_here\",\n  \"friendPhoneNumber\": \"friend_phone_number_here\"\n}"
         },
         "url": {
@@ -68,7 +68,7 @@
         "method": "POST",
         "header": [],
         "body": {
-          "mode": "raw",
+          "mode": "json",
           "raw": "{\n  \"userId\": \"user_id_here\",\n  \"friendId\": \"friend_id_here\",\n  \"content\": \"Hello, friend!\"\n}"
         },
         "url": {
@@ -87,7 +87,7 @@
         "method": "POST",
         "header": [],
         "body": {
-          "mode": "raw",
+          "mode": "json",
           "raw": "{\n  \"userId\": \"user_id_here\",\n  \"friendId\": \"friend_id_here\"\n}"
         },
         "url": {
@@ -106,7 +106,7 @@
         "method": "POST",
         "header": [],
         "body": {
-          "mode": "raw",
+          "mode": "json",
           "raw": "{\n  \"userId\": \"user_id_here\",\n  \"friendId\": \"friend_id_here\"\n}"
         },
         "url": {
@@ -125,11 +125,11 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "http://localhost:3000/api/users/chat-history/user_id_here/friend_id_here",
+          "raw": "http://localhost:3000/api/users/chat-history/:user_id/:friend_id",
           "protocol": "http",
           "host": ["localhost"],
           "port": "3000",
-          "path": ["api", "users", "chat-history", "user_id_here", "friend_id_here"]
+          "path": ["api", "users", "chat-history", ":user_id", ":friend_id"]
         }
       },
       "response": []
@@ -140,11 +140,11 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "http://localhost:3000/api/users/user-details/user_id_here",
+          "raw": "http://localhost:3000/api/users/user-details/:user_id",
           "protocol": "http",
           "host": ["localhost"],
           "port": "3000",
-          "path": ["api", "users", "user-details", "user_id_here"]
+          "path": ["api", "users", "user-details", ":user_id"]
         }
       },
       "response": []
@@ -155,11 +155,11 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "http://localhost:3000/api/users/user-friends/user_id_here",
+          "raw": "http://localhost:3000/api/users/user-friends/:user_id",
           "protocol": "http",
           "host": ["localhost"],
           "port": "3000",
-          "path": ["api", "users", "user-friends", "user_id_here"]
+          "path": ["api", "users", "user-friends", ":user_id"]
         }
       },
       "response": []
@@ -170,15 +170,45 @@
         "method": "PUT",
         "header": [],
         "url": {
-          "raw": "http://localhost:3000/api/users/read-message/user_id_here/friend_id_here/message_id_here",
+          "raw": "http://localhost:3000/api/users/read-message/:user_id/:friend_id/:message_id",
           "protocol": "http",
           "host": ["localhost"],
           "port": "3000",
-          "path": ["api", "users", "read-message", "user_id_here", "friend_id_here", "message_id_here"]
+          "path": ["api", "users", "read-message", ":user_id", ":friend_id", ":message_id"]
         },
         "description": "Mark a message as read.",
         "response": []
       }
+    },
+    {
+      "name": "Get Last Message",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/users/last-message/:user_id/:friend_id",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "users", "last-message", ":user_id", ":friend_id"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get All Users",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/users/all-users",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "users", "all-users"]
+        }
+      },
+      "response": []
     }
   ]
 }

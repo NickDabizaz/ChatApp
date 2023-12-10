@@ -269,66 +269,98 @@ const UserController = {
     }
   },
   // src/controllers/userController.js
-readMessage: async (req, res) => {
-  try {
-    const { userId, friendId, messageId } = req.params;
-    const user = await User.findById(userId);
-
-    if (!user) {
-      return res.status(404).json({ error: "Pengguna tidak ditemukan" });
-    }
-
-    let foundMessage = null;
-
-    // Cari pesan di dalam user
-    user.friends.forEach((friendObj) => {
-      if (friendObj.friendId.toString() === friendId) {
-        const message = friendObj.messages.find(
-          (messageObj) => messageObj._id.toString() === messageId
-        );
-
-        if (message) {
-          message.isRead = true;
-          foundMessage = message;
-        }
+  readMessage: async (req, res) => {
+    try {
+      const { userId, friendId, messageId } = req.params;
+  
+      // Cari pengguna yang sedang membaca pesan
+      const user = await User.findById(userId);
+  
+      if (!user) {
+        return res.status(404).json({ error: "Pengguna tidak ditemukan" });
       }
-    });
-
-    // Jika pesan tidak ditemukan di user, cari di dalam friend
-    if (!foundMessage) {
-      const friend = await User.findById(friendId);
-
-      if (!friend) {
+  
+      // Cari teman di dalam daftar teman pengguna
+      const friendObj = user.friends.find((friend) => friend.friendId.toString() === friendId);
+  
+      if (!friendObj) {
         return res.status(404).json({ error: "Teman tidak ditemukan" });
       }
-
-      friend.friends.forEach((friendObj) => {
-        if (friendObj.friendId.toString() === userId) {
-          const message = friendObj.messages.find(
-            (messageObj) => messageObj._id.toString() === messageId
-          );
-
-          if (message) {
-            message.isRead = true;
-            foundMessage = message;
-          }
-        }
-      });
-    }
-
-    // Simpan perubahan jika pesan ditemukan
-    if (foundMessage) {
+  
+      // Cari pesan di dalam teman
+      const message = friendObj.messages.find((msg) => msg._id.toString() === messageId);
+  
+      if (!message) {
+        return res.status(404).json({ error: "Pesan tidak ditemukan" });
+      }
+  
+      // Tandai pesan sebagai sudah dibaca
+      message.isRead = true;
+  
+      // Simpan perubahan
       await user.save();
-      return res.status(200).json({ message: "Pesan berhasil ditandai sebagai sudah dibaca" });
-    } else {
-      return res.status(404).json({ error: "Pesan tidak ditemukan" });
+  
+      return res.status(200).json({
+        message: "Pesan berhasil ditandai sebagai sudah dibaca",
+        senderId: message.senderId,
+        receiverId: message.receiverId,
+        content: message.content,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Kesalahan Server Internal" });
     }
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Kesalahan Server Internal" });
-  }
-},
-
+  },
+  getAllUsers: async (req, res) => {
+    try {
+      // Ambil semua pengguna dari database
+      const users = await User.find({}, 'name phoneNumber');
+  
+      return res.status(200).json(users);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Kesalahan Server Internal" });
+    }
+  },
+  getLastMessage: async (req, res) => {
+    try {
+      const { userId, friendId } = req.params;
+  
+      // Cari pengguna yang sedang membaca pesan
+      const user = await User.findById(userId);
+  
+      if (!user) {
+        return res.status(404).json({ error: "Pengguna tidak ditemukan" });
+      }
+  
+      // Cari teman di dalam daftar teman pengguna
+      const friendObj = user.friends.find((friend) => friend.friendId.toString() === friendId);
+  
+      if (!friendObj) {
+        return res.status(404).json({ error: "Teman tidak ditemukan" });
+      }
+  
+      // Ambil last message dari teman
+      const lastMessage = friendObj.messages.reduce((prev, current) =>
+        prev.timestamp > current.timestamp ? prev : current
+      );
+  
+      if (!lastMessage) {
+        return res.status(404).json({ error: "Pesan tidak ditemukan" });
+      }
+  
+      return res.status(200).json({
+        senderId: lastMessage.senderId,
+        receiverId: lastMessage.receiverId,
+        content: lastMessage.content,
+        timestamp: lastMessage.timestamp,
+        isRead: lastMessage.isRead,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Kesalahan Server Internal" });
+    }
+  },
 
 };
 
