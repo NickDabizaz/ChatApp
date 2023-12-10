@@ -1,0 +1,184 @@
+{
+  "info": {
+    "_postman_id": "your_postman_id",
+    "name": "Chat App API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Register User",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"John Doe\",\n  \"phoneNumber\": \"123456789\",\n  \"password\": \"password123\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/users/register",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "users", "register"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Login User",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"phoneNumber\": \"123456789\",\n  \"password\": \"password123\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/users/login",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "users", "login"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Add Friend",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"userId\": \"user_id_here\",\n  \"friendPhoneNumber\": \"friend_phone_number_here\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/users/add-friend",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "users", "add-friend"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Send Message",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"userId\": \"user_id_here\",\n  \"friendId\": \"friend_id_here\",\n  \"content\": \"Hello, friend!\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/users/send-message",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "users", "send-message"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Accept Friend Request",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"userId\": \"user_id_here\",\n  \"friendId\": \"friend_id_here\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/users/accept-friend-request",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "users", "accept-friend-request"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Reject Friend Request",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"userId\": \"user_id_here\",\n  \"friendId\": \"friend_id_here\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/users/reject-friend-request",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "users", "reject-friend-request"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Chat History",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/users/chat-history/user_id_here/friend_id_here",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "users", "chat-history", "user_id_here", "friend_id_here"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get User Details",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/users/user-details/user_id_here",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "users", "user-details", "user_id_here"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get User Friends",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/users/user-friends/user_id_here",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "users", "user-friends", "user_id_here"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Read Message",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/users/read-message/user_id_here/friend_id_here/message_id_here",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "users", "read-message", "user_id_here", "friend_id_here", "message_id_here"]
+        },
+        "description": "Mark a message as read.",
+        "response": []
+      }
+    }
+  ]
+}
