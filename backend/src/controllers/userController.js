@@ -315,6 +315,7 @@ const UserController = {
     try {
       // Ambil semua pengguna dari database
       const users = await User.find({}, 'name phoneNumber');
+      // const users = await User.findAll();
   
       return res.status(200).json(users);
     } catch (error) {

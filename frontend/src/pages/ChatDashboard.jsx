@@ -9,6 +9,7 @@ function ChatDashboard() {
     const navigate = useNavigate();
     const data = useLoaderData();
     console.log(data);
+    
 
     // useEffect(() => {
     //     if(!cookie.user_id){
@@ -17,7 +18,8 @@ function ChatDashboard() {
     // }, []);
 
     return (
-        <div>ChatDashboard</div>
+        <div style={{ fontSize: "25pt" }}>ChatDashboard</div>
+
     )
 }
 

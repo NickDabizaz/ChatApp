@@ -1,7 +1,5 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App.jsx";
-import "./index.css";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import ErrorPage from "./pages/ErrorPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
@@ -20,10 +18,11 @@ const router = createBrowserRouter([
       {
         path: "/",
         children: [
-          { index: true, element: <ChatDashboard /> },
+          { index: true, element: <ChatDashboard />, loader: loadData },
           {
             path: "/contact",
-            element: <ContactDashboard />
+            element: <ContactDashboard />,
+            loader: loadData
           },
           {
             path: "/profile",
@@ -48,7 +47,6 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <RouterProvider router={router}>
-      <App />
     </RouterProvider>
   </React.StrictMode>
 );
