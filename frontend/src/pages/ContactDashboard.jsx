@@ -1,12 +1,12 @@
 import React from "react";
 import { useLoaderData } from "react-router-dom";
 
-function LoginPage() {
+function ContactDashboard() {
   const data = useLoaderData();
   console.log(data);
   return (
-    <div>LoginPage</div>
+    <div>ContactDashboard</div>
   )
 }
 
-export default LoginPage;
+export default ContactDashboard;
