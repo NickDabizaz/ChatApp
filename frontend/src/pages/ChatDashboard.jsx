@@ -19,7 +19,6 @@ function ChatDashboard() {
 
     return (
         <div style={{ fontSize: "25pt" }}>ChatDashboard</div>
-
     )
 }
 

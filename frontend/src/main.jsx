@@ -9,7 +9,7 @@ import ContactDashboard from "./pages/ContactDashboard.jsx";
 import ProfileDashboard from "./pages/ProfileDashboard.jsx";
 import dataHandler from "./dataHandler.jsx";
 
-const { loadData } = dataHandler;
+const { loadData, login } = dataHandler;
 
 const router = createBrowserRouter([
   {
@@ -35,6 +35,7 @@ const router = createBrowserRouter([
         path: "/login",
         element: <LoginPage />,
         loader: loadData,
+        action: login
       },
       {
         path: "/register",
