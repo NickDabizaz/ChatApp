@@ -4,9 +4,7 @@ import { useLoaderData } from "react-router-dom";
 function ProfileDashboard() {
   const data = useLoaderData();
   console.log(data);
-  return (
-    <div>ProfileDashboard</div>
-  )
+  return <div></div>;
 }
 
 export default ProfileDashboard;
