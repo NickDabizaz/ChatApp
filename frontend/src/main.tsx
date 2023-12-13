@@ -5,6 +5,10 @@ import "./index.css";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import ErrorPage from "./pages/ErrorPage.tsx";
 import ProfilePage from "./pages/ProfilePage.tsx";
+import dataHandler from "./dataHandler.tsx";
+import LoginPage from "./pages/LoginPage.tsx";
+
+const { loadData } = dataHandler;
 
 interface RouteConfig {
   path: string;
@@ -17,7 +21,10 @@ interface RouteConfig {
 const router = createBrowserRouter([
   {
     errorElement: <ErrorPage />,
-    children: [{ path: "/profile", element: <ProfilePage /> }],
+    children: [
+      { path: "/login", element: <LoginPage />, loader: loadData },
+      { path: "/profile", element: <ProfilePage />, loader: loadData },
+    ],
   },
 ]);
 
