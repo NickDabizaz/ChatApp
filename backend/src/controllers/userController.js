@@ -83,33 +83,32 @@ const UserController = {
     try {
       const { userId, friendId, content } = req.body;
       const user = await User.findById(userId);
-  
+
       if (!user) {
         return res.status(404).json({ error: "User tidak ditemukan" });
       }
-  
+
       // Temukan objek teman yang spesifik
       const userFriend = user.friends.find(
         (friendObj) => friendObj.friendId.toString() === friendId
       );
-  
+
       // Tambahkan pesan ke kotak pesan pengguna
       userFriend.messages.push({
         senderId: userId,
         receiverId: friendId,
         content,
       });
-  
+
       // Simpan perubahan
       await user.save();
-  
+
       res.status(201).json({ message: "Pesan berhasil dikirim" });
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Kesalahan Server Internal" });
     }
   },
-  
 
   getChatHistory: async (req, res) => {
     try {
@@ -268,38 +267,44 @@ const UserController = {
       res.status(500).json({ error: "Kesalahan Server Internal" });
     }
   },
+
   // src/controllers/userController.js
+
   readMessage: async (req, res) => {
     try {
       const { userId, friendId, messageId } = req.params;
-  
+
       // Cari pengguna yang sedang membaca pesan
       const user = await User.findById(userId);
-  
+
       if (!user) {
         return res.status(404).json({ error: "Pengguna tidak ditemukan" });
       }
-  
+
       // Cari teman di dalam daftar teman pengguna
-      const friendObj = user.friends.find((friend) => friend.friendId.toString() === friendId);
-  
+      const friendObj = user.friends.find(
+        (friend) => friend.friendId.toString() === friendId
+      );
+
       if (!friendObj) {
         return res.status(404).json({ error: "Teman tidak ditemukan" });
       }
-  
+
       // Cari pesan di dalam teman
-      const message = friendObj.messages.find((msg) => msg._id.toString() === messageId);
-  
+      const message = friendObj.messages.find(
+        (msg) => msg._id.toString() === messageId
+      );
+
       if (!message) {
         return res.status(404).json({ error: "Pesan tidak ditemukan" });
       }
-  
+
       // Tandai pesan sebagai sudah dibaca
       message.isRead = true;
-  
+
       // Simpan perubahan
       await user.save();
-  
+
       return res.status(200).json({
         message: "Pesan berhasil ditandai sebagai sudah dibaca",
         senderId: message.senderId,
@@ -311,45 +316,49 @@ const UserController = {
       res.status(500).json({ error: "Kesalahan Server Internal" });
     }
   },
+
   getAllUsers: async (req, res) => {
     try {
       // Ambil semua pengguna dari database
-      const users = await User.find({}, 'name phoneNumber password');
+      const users = await User.find({}, "name phoneNumber password");
       // const users = await User.findAll();
-  
+
       return res.status(200).json(users);
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Kesalahan Server Internal" });
     }
   },
+
   getLastMessage: async (req, res) => {
     try {
       const { userId, friendId } = req.params;
-  
+
       // Cari pengguna yang sedang membaca pesan
       const user = await User.findById(userId);
-  
+
       if (!user) {
         return res.status(404).json({ error: "Pengguna tidak ditemukan" });
       }
-  
+
       // Cari teman di dalam daftar teman pengguna
-      const friendObj = user.friends.find((friend) => friend.friendId.toString() === friendId);
-  
+      const friendObj = user.friends.find(
+        (friend) => friend.friendId.toString() === friendId
+      );
+
       if (!friendObj) {
         return res.status(404).json({ error: "Teman tidak ditemukan" });
       }
-  
+
       // Ambil last message dari teman
       const lastMessage = friendObj.messages.reduce((prev, current) =>
         prev.timestamp > current.timestamp ? prev : current
       );
-  
+
       if (!lastMessage) {
         return res.status(404).json({ error: "Pesan tidak ditemukan" });
       }
-  
+
       return res.status(200).json({
         senderId: lastMessage.senderId,
         receiverId: lastMessage.receiverId,
@@ -362,7 +371,6 @@ const UserController = {
       res.status(500).json({ error: "Kesalahan Server Internal" });
     }
   },
-
 };
 
 module.exports = UserController;
