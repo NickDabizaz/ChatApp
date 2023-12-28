@@ -63,8 +63,9 @@ function LoginPage() {
         data
       );
       const responseData = response.data;
-      setCookie("user_id", responseData.user_id, { path: "/" });
-      navigate(-1);
+      console.log(responseData);
+
+      setCookie("user_id", responseData.userId, { path: "/home" });
     } catch (error) {
       if (axios.isAxiosError(error)) {
         if (error.response) {
@@ -77,7 +78,7 @@ function LoginPage() {
   };
 
   useEffect(() => {
-    if (cookies.user_id) navigate("/");
+    if (cookies.user_id) navigate("/home");
   }, [cookies.user_id, navigate]);
 
   return (
@@ -155,7 +156,7 @@ function LoginPage() {
                 />
                 {errors.email && (
                   <p style={{ color: "red", textAlign: "center" }}>
-                    {errors.email.message}
+                    {errors.phoneNumber.message}
                   </p>
                 )}
                 <TextField

@@ -17,4 +17,16 @@ const loadData = async (): Promise<any> => {
   }
 };
 
+const loadCurUser = async (): Promise<any> => {
+  try {
+    const response = await axios.get(
+      "http://localhost:3000/api/users/user-details/"
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+    throw error;
+  }
+};
+
 export default { loadData };

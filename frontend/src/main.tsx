@@ -8,6 +8,7 @@ import ProfilePage from "./pages/ProfilePage.tsx";
 import dataHandler from "./dataHandler.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
 import RegisterPage from "./pages/RegisterPage.tsx";
+import HomePage from "./pages/HomePage.tsx";
 
 const { loadData } = dataHandler;
 
@@ -25,7 +26,8 @@ const router = createBrowserRouter([
     children: [
       { path: "/login", element: <LoginPage />, loader: loadData },
       { path: "/register", element: <RegisterPage />, loader: loadData },
-      { path: "/profile", element: <ProfilePage />, loader: loadData },
+      { path: "/home", element: <HomePage /> },
+      { path: "/profile", element: <ProfilePage /> },
     ],
   },
 ]);
