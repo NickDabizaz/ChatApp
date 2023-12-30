@@ -1,10 +1,10 @@
 import React, { Suspense, useEffect, useState } from "react";
-import { useLoaderData } from "react-router-dom";
+import { Outlet, useLoaderData } from "react-router-dom";
 import Box from "@mui/system/Box";
 import Paper from "@mui/material/Paper";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
-import { styled } from "@mui/system";
+import { style, styled } from "@mui/system";
 import ContactCard from "../components/ContactCard";
 import axios from "axios";
 import { useCookies } from "react-cookie";
@@ -31,7 +31,6 @@ const Sidebar = styled(Box)({
 
 const ProfileContainer = styled(Box)({
   display: "flex",
-  flexDirection: "column",
   alignItems: "center",
   marginTop: "1rem",
 });
@@ -48,16 +47,15 @@ const Line = styled("hr")({
 //   marginBottom: "1rem",
 // });
 
+const NameContainer = styled(Box)({
+  display: "block",
+});
+
 const ContentContainer = styled(Box)({
   flex: 3,
   display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-});
-
-const PaperContainer = styled(Paper)({
-  padding: "1rem",
-  textAlign: "center",
+  // justifyContent: "center",
+  // alignItems: "center",
 });
 
 const AvatarImage = styled(Avatar)({
@@ -69,8 +67,10 @@ const AvatarImage = styled(Avatar)({
 function HomePage() {
   const [userData, setUserData] = useState(null);
   const [cookie, setCookie] = useCookies("user_id");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
     const fetchUserData = async () => {
       try {
         // Replace with your actual API endpoint
@@ -81,6 +81,8 @@ function HomePage() {
         console.log(response.data);
       } catch (error) {
         console.error("Error fetching user data", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -101,12 +103,14 @@ function HomePage() {
             alt="User Avatar"
             src="https://i.pinimg.com/736x/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.jpg"
           />
-          <Typography variant="h6" gutterBottom>
-            {userData.name}
-          </Typography>
-          <Typography variant="body2" color="textSecondary">
-            {/* {userData.status} */}online
-          </Typography>
+          <NameContainer>
+            <Typography variant="h6" gutterBottom>
+              {userData.name}
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
+              {/* {userData.status} */}online
+            </Typography>
+          </NameContainer>
         </ProfileContainer>
         <Line />
 
@@ -123,11 +127,7 @@ function HomePage() {
 
       {/* content kanan */}
       <ContentContainer>
-        <PaperContainer elevation={10}>
-          <Typography variant="h6" gutterBottom>
-            Welcome to the Chat App!
-          </Typography>
-        </PaperContainer>
+        <Outlet />
       </ContentContainer>
     </Container>
   );

@@ -65,7 +65,8 @@ function LoginPage() {
       const responseData = response.data;
       console.log(responseData);
 
-      setCookie("user_id", responseData.userId, { path: "/home" });
+      setCookie("user_id", responseData.userId);
+      navigate("/home");
     } catch (error) {
       if (axios.isAxiosError(error)) {
         if (error.response) {

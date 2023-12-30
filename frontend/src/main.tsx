@@ -9,6 +9,10 @@ import dataHandler from "./dataHandler.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
 import RegisterPage from "./pages/RegisterPage.tsx";
 import HomePage from "./pages/HomePage.tsx";
+import Navbar from "./components/Navbar.tsx";
+import LandingPage from "./pages/LandingPage.tsx";
+import ChatPage from "./pages/ChatPage.tsx";
+import WelcomePage from "./pages/WelcomePage.tsx";
 
 const { loadData } = dataHandler;
 
@@ -22,12 +26,26 @@ interface RouteConfig {
 
 const router = createBrowserRouter([
   {
-    errorElement: <ErrorPage />,
+    path: "/",
     children: [
+      { index: true, element: <LandingPage /> },
       { path: "/login", element: <LoginPage />, loader: loadData },
       { path: "/register", element: <RegisterPage />, loader: loadData },
-      { path: "/home", element: <HomePage /> },
-      { path: "/profile", element: <ProfilePage /> },
+      {
+        element: <Navbar />,
+        errorElement: <ErrorPage />,
+        children: [
+          {
+            path: "/home",
+            element: <HomePage />,
+            children: [
+              { index: true, element: <WelcomePage /> },
+              { path: "chat/:friendId", element: <ChatPage /> },
+            ],
+          },
+          { path: "/profile", element: <ProfilePage /> },
+        ],
+      },
     ],
   },
 ]);
