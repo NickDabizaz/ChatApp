@@ -143,12 +143,30 @@ const UserController = {
         (friendObj) => friendObj.friendId.toString() === userId
       );
 
-      if (userMessages) {
-        // If user has chat history, return that history
-        return res.status(200).json(userMessages.messages);
+      if (userMessages && friendMessages) {
+        // If both users have chat history, combine and sort the history
+        const combinedMessages = userMessages.messages.concat(
+          friendMessages.messages
+        );
+
+        // Sort messages based on timestamp (assuming timestamp is a Date object)
+        const sortedMessages = combinedMessages.sort(
+          (a, b) => a.timestamp - b.timestamp
+        );
+
+        return res.status(200).json(sortedMessages);
+      } else if (userMessages) {
+        // If only user has chat history, sort and return that history
+        const sortedMessages = userMessages.messages.sort(
+          (a, b) => a.timestamp - b.timestamp
+        );
+        return res.status(200).json(sortedMessages);
       } else if (friendMessages) {
-        // If friend has chat history, return that history
-        return res.status(200).json(friendMessages.messages);
+        // If only friend has chat history, sort and return that history
+        const sortedMessages = friendMessages.messages.sort(
+          (a, b) => a.timestamp - b.timestamp
+        );
+        return res.status(200).json(sortedMessages);
       } else {
         // If no chat history found for either user, return an empty array
         return res.status(200).json([]);

@@ -51,6 +51,7 @@ function Navbar() {
             >
               Logout
             </button>
+            <button>Setting</button>
           </Sidebar>
           <OutletWrapper>
             <Outlet />
