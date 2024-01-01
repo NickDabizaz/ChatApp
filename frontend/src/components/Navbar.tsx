@@ -5,9 +5,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 
 const Sidebar = styled(Box)({
-  flex: 1,
-  backgroundColor: "#f0f0f0",
-  //   padding: "1rem",
+  width: "5rem",
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
@@ -16,14 +14,22 @@ const Sidebar = styled(Box)({
 });
 
 const OutletWrapper = styled(Box)({
-  flex: 20,
   /* Add additional styles as needed */
 });
 
 const Container = styled(Box)({
+  height: "96vh",
   display: "flex",
-  height: "100vh",
+  alignItems: "center",
+  justifyContent: "center",
+});
+
+const SubContainer = styled(Box)({
+  display: "flex",
+  height: "90vh",
   padding: 0,
+  width: "auto",
+  border: "1px solid lightgray",
 });
 
 function Navbar() {
@@ -32,22 +38,24 @@ function Navbar() {
   return (
     <>
       <Container>
-        <Sidebar>
-          ini navigasi nnti ada home, pinned msg, profile, dsb
-          <button onClick={() => navigate("/home")}>Home</button>
-          <button onClick={() => navigate("/profile")}>Profile</button>
-          <button
-            onClick={() => {
-              navigate("/login");
-              removeCookie("user_id");
-            }}
-          >
-            Logout
-          </button>
-        </Sidebar>
-        <OutletWrapper>
-          <Outlet />
-        </OutletWrapper>
+        <SubContainer>
+          <Sidebar>
+            {/* ini navigasi nnti ada home, pinned msg, profile, dsb */}
+            <button onClick={() => navigate("/home")}>Home</button>
+            <button onClick={() => navigate("/profile")}>Profile</button>
+            <button
+              onClick={() => {
+                navigate("/login");
+                removeCookie("user_id");
+              }}
+            >
+              Logout
+            </button>
+          </Sidebar>
+          <OutletWrapper>
+            <Outlet />
+          </OutletWrapper>
+        </SubContainer>
       </Container>
     </>
   );

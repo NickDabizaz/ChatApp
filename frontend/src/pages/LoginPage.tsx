@@ -28,16 +28,18 @@ const PaperContainerStyle = {
 };
 
 const TextFieldStyle = {
-  marginLeft: "3%",
-  width: "94%",
+  marginLeft: "auto",
+  marginRight: "auto",
+  width: "40rem",
 };
 
 const ButtonStyle = {
   // backgroundColor: "#C46E85",
-  marginTop: "8%",
-  marginLeft: "3%",
+  marginTop: "3rem",
+  marginLeft: "auto",
+  marginRight: "auto",
   fontWeight: 700,
-  width: "94%",
+  width: "40rem",
   color: "white",
 };
 
@@ -95,53 +97,12 @@ function LoginPage() {
           sx={PaperContainerStyle}
         >
           <Grid container spacing={2} justifyContent="center">
-            <Grid item xs={12}>
-              {/* logo petcommerce di petcommerce */}
-              {/* <Link to="/">
-                <img
-                  src="https://i.pinimg.com/originals/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.png" // Replace with your actual logo import
-                  style={{
-                    width: "30vh",
-                    height: "30vh",
-                    margin: "0 auto",
-                    display: "block",
-                    zIndex: 2,
-                  }}
-                  alt="Logo"
-                />
-              </Link> */}
-            </Grid>
+            <Grid item xs={12}></Grid>
 
-            <Grid item xs={12}>
-              {/* image page login di petcommerce*/}
-              {/* <img
-                src="https://i.pinimg.com/originals/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.png" // Replace with your actual loginpict import
-                style={{
-                  width: "120vh",
-                  height: "38rem",
-                  margin: "0 auto",
-                  display: "block",
-                  zIndex: 1,
-                }}
-                className="rounded"
-                alt="Login Picture"
-              /> */}
-            </Grid>
+            <Grid item xs={12}></Grid>
 
-            <Grid item xs={12}>
-              {/* tulisan LOGIN di petcommerce */}
-              {/* <img
-                src="https://i.pinimg.com/originals/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.png" // Replace with your actual login import
-                style={{
-                  width: "12rem",
-                  height: "6rem",
-                  margin: "0 auto",
-                  display: "block",
-                  marginTop: "4%",
-                }}
-                alt="Login"
-              /> */}
-            </Grid>
+            <Grid item xs={12}></Grid>
+
             <Grid item xs={12}>
               <form onSubmit={handleSubmit(onSubmit)}>
                 <TextField
@@ -193,7 +154,7 @@ function LoginPage() {
                   style={{
                     color: "red",
                     textAlign: "center",
-                    marginTop: "5%",
+                    marginTop: "1rem",
                   }}
                 >
                   {errorMessage}

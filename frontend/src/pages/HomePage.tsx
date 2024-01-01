@@ -17,11 +17,13 @@ interface ProfileData {
 
 const Container = styled(Box)({
   display: "flex",
-  height: "100vh",
+  height: "90vh",
+  // justifyContent: "center",
+  // alignItems: "center",
 });
 
 const Sidebar = styled(Box)({
-  flex: 1,
+  width: "20rem",
   backgroundColor: "#f0f0f0",
   padding: "1rem",
   display: "flex",
@@ -36,7 +38,7 @@ const ProfileContainer = styled(Box)({
 });
 
 const Line = styled("hr")({
-  width: "80%",
+  width: "100%",
   border: "1px solid #ccc",
   margin: "1rem 0",
 });
@@ -52,22 +54,58 @@ const NameContainer = styled(Box)({
 });
 
 const ContentContainer = styled(Box)({
-  flex: 3,
+  width: "60rem",
   display: "flex",
   // justifyContent: "center",
   // alignItems: "center",
 });
 
 const AvatarImage = styled(Avatar)({
-  width: "10rem",
-  height: "10rem",
+  width: "4rem",
+  height: "4rem",
+});
+
+const PaperContainer = styled(Paper)({
+  padding: "1rem",
+  width: "100%",
+  height: "fit-content",
   margin: "auto",
+  textAlign: "center",
+  borderRadius: "0",
+  boxShadow: "none",
+});
+
+const ChatContainer = styled(Paper)({
+  backgroundColor: "yellow",
+  width: "100%",
+  borderRadius: "0",
+  boxShadow: "none",
+});
+
+const FriendDetailContainer = styled(Box)({
+  padding: "1rem",
+  display: "flex",
+  alignItems: "center",
+  textAlign: "center",
+  backgroundColor: "red",
+  fontSize: "1.2rem",
+});
+
+const ChatMessageContainer = styled(Box)({
+  height: "auto",
+  backgroundColor: "yellow",
+});
+
+const UserInputField = styled(Box)({
+  height: "10rem",
+  backgroundColor: "red",
 });
 
 function HomePage() {
   const [userData, setUserData] = useState(null);
   const [cookie, setCookie] = useCookies("user_id");
   const [loading, setLoading] = useState(true);
+  const [curFriend, setCurFriend] = useState(null);
 
   useEffect(() => {
     setLoading(true);
@@ -88,6 +126,10 @@ function HomePage() {
 
     fetchUserData();
   }, []);
+
+  useEffect(() => {
+    console.log(curFriend);
+  });
 
   if (!userData) {
     // You can show a loading indicator while data is being fetched
@@ -115,7 +157,7 @@ function HomePage() {
         <Line />
 
         <Suspense fallback={<div>Loading...</div>}>
-          <ContactCard friends={userData.friends} />
+          <ContactCard friends={userData.friends} setCurFriend={setCurFriend} />
         </Suspense>
         {/* <ContactCard elevation={3}>
           <Typography variant="h6">Contact Name</Typography>
@@ -127,7 +169,40 @@ function HomePage() {
 
       {/* content kanan */}
       <ContentContainer>
-        <Outlet />
+        {/* <Outlet /> */}
+        {curFriend ? (
+          <ChatContainer>
+            <button onClick={() => setCurFriend(null)}>↩️ Back</button>
+
+            {/* gambar teman, nama dan status */}
+            <FriendDetailContainer>
+              {curFriend ? (
+                <>
+                  <AvatarImage
+                    alt="Friend Avatar"
+                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQE1gis2dLLKJ_dBWVyf4j1fJ3tDvKzO2g7yQ&usqp=CAU"
+                  />
+                  <Paper style={{ textAlign: "left" }}>
+                    {curFriend.name} <br />
+                    🟢online
+                  </Paper>
+                </>
+              ) : (
+                "loading"
+              )}
+            </FriendDetailContainer>
+
+            {/* tempat message nya */}
+            <ChatMessageContainer></ChatMessageContainer>
+
+            {/* input */}
+            <UserInputField></UserInputField>
+          </ChatContainer>
+        ) : (
+          <PaperContainer>
+            <Typography variant="h6">Start a Conversation!</Typography>
+          </PaperContainer>
+        )}
       </ContentContainer>
     </Container>
   );

@@ -1,5 +1,5 @@
 import { Avatar } from "@mui/material";
-import { Container, styled } from "@mui/system";
+import { Box, Container, styled } from "@mui/system";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
@@ -9,6 +9,11 @@ const FriendImage = styled(Avatar)({
   width: "5rem",
   height: "5rem",
   //   margin: "auto",
+});
+
+const FriendDetailContainer = styled(Box)({
+  display: "flex",
+  alignItems: "center",
 });
 
 function ChatPage() {
@@ -58,11 +63,20 @@ function ChatPage() {
   return (
     <>
       <Container>
-        <FriendImage
-          alt="User Avatar"
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQE1gis2dLLKJ_dBWVyf4j1fJ3tDvKzO2g7yQ&usqp=CAU"
-        />
-        <div style={{ width: "100%", height: "100%", backgroundColor: "red" }}>
+        <FriendDetailContainer>
+          {curFriend ? (
+            <>
+              <FriendImage
+                alt="User Avatar"
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQE1gis2dLLKJ_dBWVyf4j1fJ3tDvKzO2g7yQ&usqp=CAU"
+              />
+              {curFriend.name}
+            </>
+          ) : (
+            "loading"
+          )}
+        </FriendDetailContainer>
+        <div style={{ width: "100%", height: "auto", backgroundColor: "red" }}>
           {curUser && curFriend ? (
             <div
               style={{ width: "100%", height: "100%", backgroundColor: "red" }}
