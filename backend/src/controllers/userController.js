@@ -1,4 +1,5 @@
 // src/controllers/userController.js
+const { default: mongoose } = require("mongoose");
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 
@@ -113,31 +114,48 @@ const UserController = {
   getChatHistory: async (req, res) => {
     try {
       const { userId, friendId } = req.params;
+
+      // Check if userId and friendId are valid ObjectId
+      if (
+        !mongoose.Types.ObjectId.isValid(userId) ||
+        !mongoose.Types.ObjectId.isValid(friendId)
+      ) {
+        return res
+          .status(400)
+          .json({ error: "Invalid user or friend ID format" });
+      }
+
       const user = await User.findById(userId);
       const friend = await User.findById(friendId);
 
+      // Check if user and friend exist
       if (!user || !friend) {
-        return res
-          .status(404)
-          .json({ error: "User atau teman tidak ditemukan" });
+        return res.status(404).json({ error: "User or friend not found" });
       }
 
+      // Check if user has messages with the specified friend
       const userMessages = user.friends.find(
-        (friendObj) => friendObj.friendId._id.toString() === friendId
-      ).messages;
-
-      const friendMessages = friend.friends.find(
-        (friendObj) => friendObj.friendId._id.toString() === userId
-      ).messages;
-
-      const chatHistory = [...userMessages, ...friendMessages].sort(
-        (a, b) => a.timestamp - b.timestamp
+        (friendObj) => friendObj.friendId.toString() === friendId
       );
 
-      res.status(200).json(chatHistory);
+      // Check if friend has messages with the specified user
+      const friendMessages = friend.friends.find(
+        (friendObj) => friendObj.friendId.toString() === userId
+      );
+
+      if (userMessages) {
+        // If user has chat history, return that history
+        return res.status(200).json(userMessages.messages);
+      } else if (friendMessages) {
+        // If friend has chat history, return that history
+        return res.status(200).json(friendMessages.messages);
+      } else {
+        // If no chat history found for either user, return an empty array
+        return res.status(200).json([]);
+      }
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: "Kesalahan Server Internal" });
+      res.status(500).json({ error: "Internal Server Error" });
     }
   },
 

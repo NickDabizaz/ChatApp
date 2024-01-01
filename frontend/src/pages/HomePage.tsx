@@ -18,6 +18,7 @@ interface ProfileData {
 const Container = styled(Box)({
   display: "flex",
   height: "90vh",
+  maxHeight: "90vh",
   // justifyContent: "center",
   // alignItems: "center",
 });
@@ -80,25 +81,32 @@ const ChatContainer = styled(Paper)({
   width: "100%",
   borderRadius: "0",
   boxShadow: "none",
+  maxHeight: "100%",
+  overflow: "auto",
 });
 
 const FriendDetailContainer = styled(Box)({
-  padding: "1rem",
+  // padding: "1rem",
   display: "flex",
   alignItems: "center",
   textAlign: "center",
-  backgroundColor: "red",
+  backgroundColor: "gray",
   fontSize: "1.2rem",
+  height: "15%",
 });
 
 const ChatMessageContainer = styled(Box)({
   height: "auto",
   backgroundColor: "yellow",
+  height: "70%",
+  overflow: "auto",
 });
 
 const UserInputField = styled(Box)({
-  height: "10rem",
-  backgroundColor: "red",
+  height: "15%",
+  backgroundColor: "gray",
+  display: "flex",
+  alignItems: "center",
 });
 
 function HomePage() {
@@ -106,6 +114,41 @@ function HomePage() {
   const [cookie, setCookie] = useCookies("user_id");
   const [loading, setLoading] = useState(true);
   const [curFriend, setCurFriend] = useState(null);
+  const [chat, setChat] = useState(null);
+  const [newMessage, setNewMessage] = useState("");
+
+  const fetchChat = async () => {
+    try {
+      // Replace with your actual API endpoint
+      const response = await axios.get(
+        `http://localhost:3000/api/users/chat-history/${cookie.user_id}/${curFriend.friendId}`
+      );
+      setChat(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error fetching user data", error);
+    }
+  };
+
+  const handleSendMessage = async () => {
+    try {
+      // Replace with your actual API endpoint
+      const response = await axios.post(
+        "http://localhost:3000/api/users/send-message",
+        {
+          userId: cookie.user_id,
+          friendId: curFriend.friendId,
+          content: newMessage,
+        }
+      );
+
+      // Update the chat after sending the message
+      fetchChat();
+      setNewMessage(""); // Clear the input field
+    } catch (error) {
+      console.error("Error sending message", error);
+    }
+  };
 
   useEffect(() => {
     setLoading(true);
@@ -125,11 +168,15 @@ function HomePage() {
     };
 
     fetchUserData();
-  }, []);
+  }, [cookie.user_id]);
 
   useEffect(() => {
-    console.log(curFriend);
-  });
+    setChat(null);
+
+    if (curFriend) {
+      fetchChat();
+    }
+  }, [curFriend]);
 
   if (!userData) {
     // You can show a loading indicator while data is being fetched
@@ -172,10 +219,9 @@ function HomePage() {
         {/* <Outlet /> */}
         {curFriend ? (
           <ChatContainer>
-            <button onClick={() => setCurFriend(null)}>↩️ Back</button>
-
             {/* gambar teman, nama dan status */}
             <FriendDetailContainer>
+              <div onClick={() => setCurFriend(null)}>↩️</div>
               {curFriend ? (
                 <>
                   <AvatarImage
@@ -193,10 +239,44 @@ function HomePage() {
             </FriendDetailContainer>
 
             {/* tempat message nya */}
-            <ChatMessageContainer></ChatMessageContainer>
+            <ChatMessageContainer>
+              {chat
+                ? chat.map((message) => (
+                    <div
+                      style={{
+                        padding: "1rem",
+                        border: "1px solid black",
+                        width: "fit-content",
+                        margin: "1rem",
+                        float: `${
+                          message.senderId === cookie.user_id ? "right" : "left"
+                        }`,
+                        borderRadius: `${
+                          message.senderId === cookie.user_id
+                            ? "10px 10px 0px 10px"
+                            : "10px 10px 10px 0px"
+                        }`,
+                        clear: "both",
+                      }}
+                    >
+                      {message.content}
+                    </div>
+                  ))
+                : "loading..."}
+            </ChatMessageContainer>
 
             {/* input */}
-            <UserInputField></UserInputField>
+            <UserInputField>
+              😊
+              <input
+                type="text"
+                placeholder="Type your message..."
+                value={newMessage}
+                onChange={(e) => setNewMessage(e.target.value)}
+                style={{ flex: 1, padding: "0.5rem", marginRight: "0.5rem" }}
+              />
+              <button onClick={handleSendMessage}>Send</button>
+            </UserInputField>
           </ChatContainer>
         ) : (
           <PaperContainer>
