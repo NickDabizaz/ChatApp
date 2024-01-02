@@ -17,20 +17,25 @@ interface ProfileData {
 }
 
 const Container = styled(Box)({
+  width: "20rem",
+  maxWidth: "20rem",
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
-  height: "100vh",
+  height: "100%",
+  backgroundColor: "red",
 });
 
 const PaperContainer = styled(Paper)({
+  height: "100%",
   padding: "1rem",
   textAlign: "center",
+  backgroundColor: "yellow",
 });
 
 const AvatarImage = styled(Avatar)({
-  width: "10rem",
-  height: "10rem",
+  width: "7rem",
+  height: "7rem",
   margin: "auto",
 });
 
@@ -44,9 +49,7 @@ const EditProfilePage: React.FC = () => {
 
   useEffect(() => {
     axios
-      .get(
-        `http://localhost:3000/api/users/pic/${cookie.user_id}`
-      )
+      .get(`http://localhost:3000/api/users/pic/${cookie.user_id}`)
       .then((res) => {
         setProfPic(res.data);
       })
@@ -118,19 +121,19 @@ const EditProfilePage: React.FC = () => {
 
   return (
     <Container>
-      <PaperContainer elevation={10}>
+      <PaperContainer>
         <div
           className="mx-auto"
           style={{
-            width: "15rem",
-            height: "20rem",
+            width: "100%",
+            height: "50%",
             objectFit: "cover",
             display: "flex",
           }}
         >
           <div
             className=" text-center"
-            style={{ display: "block", width: "15rem" }}
+            style={{ display: "block", width: "100%" }}
           >
             {selectedFile ? (
               <div id="imageContainer"></div>
@@ -180,7 +183,6 @@ const EditProfilePage: React.FC = () => {
     </Container>
   );
 };
-
 
 const FileUploader = ({ setSelectedFile }) => {
   const [tempFile, setTempFile] = useState("");

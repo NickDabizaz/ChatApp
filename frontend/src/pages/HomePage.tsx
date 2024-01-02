@@ -8,9 +8,10 @@ import { style, styled } from "@mui/system";
 import ContactCard from "../components/ContactCard";
 import axios from "axios";
 import { useCookies } from "react-cookie";
-import { Button } from "@mui/material";
+import { Button, IconButton, TextField } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import EmojiIcon from "@mui/icons-material/EmojiEmotions";
+import EditProfilePage from "./ProfilePage";
 
 interface ProfileData {
   name: string;
@@ -26,8 +27,16 @@ const Container = styled(Box)({
   // alignItems: "center",
 });
 
+const LeftContainer = styled(Box)({
+  minWidth: "20rem",
+  height: "100%",
+  backgroundColor: "blue",
+});
+
 const Sidebar = styled(Box)({
+  height: "100%",
   width: "20rem",
+  minWidth: "20rem",
   backgroundColor: "#f0f0f0",
   padding: "1rem",
   display: "flex",
@@ -114,7 +123,7 @@ const UserInputField = styled(Box)({
   paddingRight: "1rem",
 });
 
-function HomePage() {
+function HomePage(props) {
   const [userData, setUserData] = useState(null);
   const [cookie, setCookie] = useCookies("user_id");
   const [loading, setLoading] = useState(true);
@@ -123,6 +132,9 @@ function HomePage() {
   const [newMessage, setNewMessage] = useState("");
   const [profpic, setProfPic] = useState();
   const [curFriendprofpic, setCurFriendprofpic] = useState();
+  const [search, setSearch] = useState("");
+  const route = props.route;
+  console.log(route);
 
   useEffect(() => {
     axios
@@ -204,46 +216,37 @@ function HomePage() {
     }
   }, [curFriend]);
 
-  if (!userData) {
-    // You can show a loading indicator while data is being fetched
-    return <div>Loading...</div>;
-  }
-
   return (
     <Container>
-      {/* sidebar kiri */}
-      <Sidebar>
-        <ProfileContainer>
-          <AvatarImage
-            alt="User Avatar"
-            src={
-              profpic
-                ? `http://localhost:3000/api/users/pic/${cookie.user_id}`
-                : "https://i.pinimg.com/736x/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.jpg"
-            }
-          />
-          <NameContainer>
-            <Typography variant="h6" gutterBottom>
-              {userData.name}
-            </Typography>
-            <Typography variant="body2" color="textSecondary">
-              {/* {userData.status} */}online
-            </Typography>
-          </NameContainer>
-        </ProfileContainer>
-        <Line />
-
-        <Suspense fallback={<div>Loading...</div>}>
-          <ContactCard friends={userData.friends} setCurFriend={setCurFriend} />
-        </Suspense>
-        {/* <ContactCard elevation={3}>
-          <Typography variant="h6">Contact Name</Typography>
-          <Typography variant="body2" color="textSecondary">
-            contact@example.com
-          </Typography>
-        </ContactCard> */}
-      </Sidebar>
-
+      {/* content kiri */}
+      <LeftContainer>
+        {userData ? (
+          route === "home" ? (
+            <Sidebar>
+              <TextField
+                label="Search"
+                variant="outlined"
+                margin="normal"
+                fullWidth
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+              <Suspense fallback={<div>Loading...</div>}>
+                <ContactCard
+                  friends={userData.friends}
+                  setCurFriend={setCurFriend}
+                />
+              </Suspense>
+            </Sidebar>
+          ) : route === "profile" ? (
+            <EditProfilePage />
+          ) : (
+            "asd"
+          )
+        ) : (
+          "loading..."
+        )}
+      </LeftContainer>
       {/* content kanan */}
       <ContentContainer>
         {/* <Outlet /> */}
@@ -301,13 +304,9 @@ function HomePage() {
 
             {/* input */}
             <UserInputField>
-              <Button
-                variant="contained"
-                endIcon={<EmojiIcon />}
-                onClick={handleSendMessage}
-              >
-                Send
-              </Button>
+              <IconButton aria-label="emoji" color="secondary">
+                <EmojiIcon />
+              </IconButton>
               <input
                 type="text"
                 placeholder="Type your message..."
