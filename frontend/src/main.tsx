@@ -31,24 +31,36 @@ const router = createBrowserRouter([
       { index: true, element: <LandingPage /> },
       { path: "/login", element: <LoginPage />, loader: loadData },
       { path: "/register", element: <RegisterPage />, loader: loadData },
-      {
-        element: <Navbar />,
-        errorElement: <ErrorPage />,
-        children: [
-          {
-            path: "/home",
-            element: <HomePage />,
-            children: [
-              { index: true, element: <WelcomePage /> },
-              { path: "chat/:friendId", element: <ChatPage /> },
-            ],
-          },
-          { path: "/profile", element: <ProfilePage /> },
-        ],
-      },
+      { path: "/home", element: <Navbar />, errorElement: <ErrorPage /> },
     ],
   },
 ]);
+
+// const router = createBrowserRouter([
+//   {
+//     path: "/",
+//     children: [
+//       { index: true, element: <LandingPage /> },
+//       { path: "/login", element: <LoginPage />, loader: loadData },
+//       { path: "/register", element: <RegisterPage />, loader: loadData },
+//       {
+//         element: <Navbar />,
+//         errorElement: <ErrorPage />,
+//         children: [
+//           {
+//             path: "/home",
+//             element: <HomePage />,
+//             children: [
+//               { index: true, element: <WelcomePage /> },
+//               { path: "chat/:friendId", element: <ChatPage /> },
+//             ],
+//           },
+//           { path: "/profile", element: <ProfilePage /> },
+//         ],
+//       },
+//     ],
+//   },
+// ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>

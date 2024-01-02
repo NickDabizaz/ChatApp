@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import Box from "@mui/system/Box";
 import { styled } from "@mui/system";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import { Button } from "@mui/material";
+import HomePage from "../pages/HomePage";
 
 const Sidebar = styled(Box)({
   width: "5rem",
@@ -35,6 +36,7 @@ const SubContainer = styled(Box)({
 
 function Navbar() {
   const [cookie, setCookie, removeCookie] = useCookies(["user_id"]);
+  const [route, setRoute] = useState("home");
   const navigate = useNavigate();
   return (
     <>
@@ -42,11 +44,11 @@ function Navbar() {
         <SubContainer>
           <Sidebar>
             {/* ini navigasi nnti ada home, pinned msg, profile, dsb */}
-            <Button variant="contained" onClick={() => navigate("/home")}>
+            <Button variant="contained" onClick={() => setRoute("home")}>
               Home
             </Button>
             <br />
-            <Button variant="contained" onClick={() => navigate("/profile")}>
+            <Button variant="contained" onClick={() => setRoute("profile")}>
               Profile
             </Button>
             <br />
@@ -60,10 +62,12 @@ function Navbar() {
               Logout
             </Button>
             <br />
-            <Button variant="contained">Setting</Button>
+            <Button variant="contained" onClick={() => setRoute("setting")}>
+              Setting
+            </Button>
           </Sidebar>
           <OutletWrapper>
-            <Outlet />
+            <HomePage route={route} />
           </OutletWrapper>
         </SubContainer>
       </Container>
