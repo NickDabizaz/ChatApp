@@ -133,8 +133,11 @@ function HomePage(props) {
   const [profpic, setProfPic] = useState();
   const [curFriendprofpic, setCurFriendprofpic] = useState();
   const [search, setSearch] = useState("");
+  const [userFriends, setUserFriends] = useState(null);
+  const [filteredFriends, setFilteredFriends] = useState(null);
   const route = props.route;
   console.log(route);
+  console.log({ curFriend });
 
   useEffect(() => {
     axios
@@ -189,6 +192,7 @@ function HomePage(props) {
           `http://localhost:3000/api/users/user-details/${cookie.user_id}`
         );
         setUserData(response.data);
+        setUserFriends(response.data.friends);
         console.log(response.data);
       } catch (error) {
         console.error("Error fetching user data", error);
@@ -216,6 +220,24 @@ function HomePage(props) {
     }
   }, [curFriend]);
 
+  console.log({ userFriends });
+  const handlingSearch = (e) => {
+    const searchTerm = e.target.value.toLowerCase();
+
+    if (userFriends) {
+      // Filter userFriends based on the search term
+      const filteredData = userFriends.filter((friend) =>
+        friend.name.toLowerCase().includes(searchTerm)
+      );
+  
+      // Update the state with the filtered data
+      setFilteredFriends(filteredData);
+    }
+    setSearch(searchTerm);
+  };
+
+  const displayFriends = filteredFriends || userFriends;
+  
   return (
     <Container>
       {/* content kiri */}
@@ -229,11 +251,11 @@ function HomePage(props) {
                 margin="normal"
                 fullWidth
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={handlingSearch}
               />
               <Suspense fallback={<div>Loading...</div>}>
                 <ContactCard
-                  friends={userData.friends}
+                  friends={displayFriends}
                   setCurFriend={setCurFriend}
                 />
               </Suspense>
