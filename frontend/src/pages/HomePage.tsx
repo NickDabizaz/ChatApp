@@ -8,6 +8,9 @@ import { style, styled } from "@mui/system";
 import ContactCard from "../components/ContactCard";
 import axios from "axios";
 import { useCookies } from "react-cookie";
+import { Button } from "@mui/material";
+import SendIcon from "@mui/icons-material/Send";
+import EmojiIcon from "@mui/icons-material/EmojiEmotions";
 
 interface ProfileData {
   name: string;
@@ -107,6 +110,8 @@ const UserInputField = styled(Box)({
   backgroundColor: "gray",
   display: "flex",
   alignItems: "center",
+  paddingLeft: "1rem",
+  paddingRight: "1rem",
 });
 
 function HomePage() {
@@ -119,12 +124,9 @@ function HomePage() {
   const [profpic, setProfPic] = useState();
   const [curFriendprofpic, setCurFriendprofpic] = useState();
 
-
   useEffect(() => {
     axios
-      .get(
-        `http://localhost:3000/api/users/pic/${cookie.user_id}`
-      )
+      .get(`http://localhost:3000/api/users/pic/${cookie.user_id}`)
       .then((res) => {
         setProfPic(res.data);
       })
@@ -191,26 +193,22 @@ function HomePage() {
 
     if (curFriend) {
       axios
-      .get(
-        `http://localhost:3000/api/users/pic/${curFriend.friendId}`
-      )
-      .then((res) => {
-        setCurFriendprofpic(res.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
+        .get(`http://localhost:3000/api/users/pic/${curFriend.friendId}`)
+        .then((res) => {
+          setCurFriendprofpic(res.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
       fetchChat();
     }
   }, [curFriend]);
-
 
   if (!userData) {
     // You can show a loading indicator while data is being fetched
     return <div>Loading...</div>;
   }
 
-  
   return (
     <Container>
       {/* sidebar kiri */}
@@ -278,30 +276,38 @@ function HomePage() {
             <ChatMessageContainer>
               {chat
                 ? chat.map((message) => (
-                  <div
-                    style={{
-                      padding: "1rem",
-                      border: "1px solid black",
-                      width: "fit-content",
-                      margin: "1rem",
-                      float: `${message.senderId === cookie.user_id ? "right" : "left"
+                    <div
+                      style={{
+                        padding: "1rem",
+                        border: "1px solid black",
+                        width: "fit-content",
+                        margin: "1rem",
+                        float: `${
+                          message.senderId === cookie.user_id ? "right" : "left"
                         }`,
-                      borderRadius: `${message.senderId === cookie.user_id
-                        ? "10px 10px 0px 10px"
-                        : "10px 10px 10px 0px"
+                        borderRadius: `${
+                          message.senderId === cookie.user_id
+                            ? "10px 10px 0px 10px"
+                            : "10px 10px 10px 0px"
                         }`,
-                      clear: "both",
-                    }}
-                  >
-                    {message.content}
-                  </div>
-                ))
+                        clear: "both",
+                      }}
+                    >
+                      {message.content}
+                    </div>
+                  ))
                 : "loading..."}
             </ChatMessageContainer>
 
             {/* input */}
             <UserInputField>
-              😊
+              <Button
+                variant="contained"
+                endIcon={<EmojiIcon />}
+                onClick={handleSendMessage}
+              >
+                Send
+              </Button>
               <input
                 type="text"
                 placeholder="Type your message..."
@@ -309,7 +315,13 @@ function HomePage() {
                 onChange={(e) => setNewMessage(e.target.value)}
                 style={{ flex: 1, padding: "0.5rem", marginRight: "0.5rem" }}
               />
-              <button onClick={handleSendMessage}>Send</button>
+              <Button
+                variant="contained"
+                endIcon={<SendIcon />}
+                onClick={handleSendMessage}
+              >
+                Send
+              </Button>
             </UserInputField>
           </ChatContainer>
         ) : (

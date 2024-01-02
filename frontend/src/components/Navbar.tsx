@@ -3,6 +3,7 @@ import Box from "@mui/system/Box";
 import { styled } from "@mui/system";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
+import { Button } from "@mui/material";
 
 const Sidebar = styled(Box)({
   width: "5rem",
@@ -41,17 +42,25 @@ function Navbar() {
         <SubContainer>
           <Sidebar>
             {/* ini navigasi nnti ada home, pinned msg, profile, dsb */}
-            <button onClick={() => navigate("/home")}>Home</button>
-            <button onClick={() => navigate("/profile")}>Profile</button>
-            <button
+            <Button variant="contained" onClick={() => navigate("/home")}>
+              Home
+            </Button>
+            <br />
+            <Button variant="contained" onClick={() => navigate("/profile")}>
+              Profile
+            </Button>
+            <br />
+            <Button
+              variant="contained"
               onClick={() => {
                 navigate("/login");
                 removeCookie("user_id");
               }}
             >
               Logout
-            </button>
-            <button>Setting</button>
+            </Button>
+            <br />
+            <Button variant="contained">Setting</Button>
           </Sidebar>
           <OutletWrapper>
             <Outlet />

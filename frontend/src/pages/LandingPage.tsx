@@ -1,3 +1,4 @@
+import { Button } from "@mui/material";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -13,7 +14,7 @@ function LandingPage() {
       >
         <div>Welcome to ChatApp!</div>
         <div>a duplicate of WhatsApp</div>
-        <button onClick={() => navigate("/login")}>Login</button>
+        <Button onClick={() => navigate("/login")}>Login</Button>
       </div>
     </>
   );
