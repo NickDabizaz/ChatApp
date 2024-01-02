@@ -9,6 +9,7 @@ import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import styled from "@mui/system/styled";
+import Swal from "sweetalert2";
 
 const PaperContainer = styled(Paper)({
   padding: "1rem",
@@ -70,13 +71,11 @@ function LoginPage() {
       setCookie("user_id", responseData.userId);
       navigate("/home");
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        if (error.response) {
-          setErrorMessage(error.response.data);
-        } else {
-          setErrorMessage("Terjadi kesalahan. Silakan coba lagi.");
-        }
-      }
+      Swal.fire({
+        icon: "error",
+        title: "Invalid Phone Number or Password",
+        text: "The phone number or password you entered is incorrect.",
+      });
     }
   };
 
