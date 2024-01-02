@@ -17,9 +17,15 @@
         "url": {
           "raw": "http://localhost:3000/api/users/register",
           "protocol": "http",
-          "host": ["localhost"],
+          "host": [
+            "localhost"
+          ],
           "port": "3000",
-          "path": ["api", "users", "register"]
+          "path": [
+            "api",
+            "users",
+            "register"
+          ]
         }
       },
       "response": []
@@ -36,9 +42,15 @@
         "url": {
           "raw": "http://localhost:3000/api/users/login",
           "protocol": "http",
-          "host": ["localhost"],
+          "host": [
+            "localhost"
+          ],
           "port": "3000",
-          "path": ["api", "users", "login"]
+          "path": [
+            "api",
+            "users",
+            "login"
+          ]
         }
       },
       "response": []
@@ -55,9 +67,15 @@
         "url": {
           "raw": "http://localhost:3000/api/users/add-friend",
           "protocol": "http",
-          "host": ["localhost"],
+          "host": [
+            "localhost"
+          ],
           "port": "3000",
-          "path": ["api", "users", "add-friend"]
+          "path": [
+            "api",
+            "users",
+            "add-friend"
+          ]
         }
       },
       "response": []
@@ -74,9 +92,15 @@
         "url": {
           "raw": "http://localhost:3000/api/users/send-message",
           "protocol": "http",
-          "host": ["localhost"],
+          "host": [
+            "localhost"
+          ],
           "port": "3000",
-          "path": ["api", "users", "send-message"]
+          "path": [
+            "api",
+            "users",
+            "send-message"
+          ]
         }
       },
       "response": []
@@ -93,9 +117,15 @@
         "url": {
           "raw": "http://localhost:3000/api/users/accept-friend-request",
           "protocol": "http",
-          "host": ["localhost"],
+          "host": [
+            "localhost"
+          ],
           "port": "3000",
-          "path": ["api", "users", "accept-friend-request"]
+          "path": [
+            "api",
+            "users",
+            "accept-friend-request"
+          ]
         }
       },
       "response": []
@@ -112,9 +142,15 @@
         "url": {
           "raw": "http://localhost:3000/api/users/reject-friend-request",
           "protocol": "http",
-          "host": ["localhost"],
+          "host": [
+            "localhost"
+          ],
           "port": "3000",
-          "path": ["api", "users", "reject-friend-request"]
+          "path": [
+            "api",
+            "users",
+            "reject-friend-request"
+          ]
         }
       },
       "response": []
@@ -127,9 +163,17 @@
         "url": {
           "raw": "http://localhost:3000/api/users/chat-history/:user_id/:friend_id",
           "protocol": "http",
-          "host": ["localhost"],
+          "host": [
+            "localhost"
+          ],
           "port": "3000",
-          "path": ["api", "users", "chat-history", ":user_id", ":friend_id"]
+          "path": [
+            "api",
+            "users",
+            "chat-history",
+            ":user_id",
+            ":friend_id"
+          ]
         }
       },
       "response": []
@@ -142,9 +186,16 @@
         "url": {
           "raw": "http://localhost:3000/api/users/user-details/:user_id",
           "protocol": "http",
-          "host": ["localhost"],
+          "host": [
+            "localhost"
+          ],
           "port": "3000",
-          "path": ["api", "users", "user-details", ":user_id"]
+          "path": [
+            "api",
+            "users",
+            "user-details",
+            ":user_id"
+          ]
         }
       },
       "response": []
@@ -157,9 +208,16 @@
         "url": {
           "raw": "http://localhost:3000/api/users/user-friends/:user_id",
           "protocol": "http",
-          "host": ["localhost"],
+          "host": [
+            "localhost"
+          ],
           "port": "3000",
-          "path": ["api", "users", "user-friends", ":user_id"]
+          "path": [
+            "api",
+            "users",
+            "user-friends",
+            ":user_id"
+          ]
         }
       },
       "response": []
@@ -172,9 +230,18 @@
         "url": {
           "raw": "http://localhost:3000/api/users/read-message/:user_id/:friend_id/:message_id",
           "protocol": "http",
-          "host": ["localhost"],
+          "host": [
+            "localhost"
+          ],
           "port": "3000",
-          "path": ["api", "users", "read-message", ":user_id", ":friend_id", ":message_id"]
+          "path": [
+            "api",
+            "users",
+            "read-message",
+            ":user_id",
+            ":friend_id",
+            ":message_id"
+          ]
         },
         "description": "Mark a message as read.",
         "response": []
@@ -188,9 +255,17 @@
         "url": {
           "raw": "http://localhost:3000/api/users/last-message/:user_id/:friend_id",
           "protocol": "http",
-          "host": ["localhost"],
+          "host": [
+            "localhost"
+          ],
           "port": "3000",
-          "path": ["api", "users", "last-message", ":user_id", ":friend_id"]
+          "path": [
+            "api",
+            "users",
+            "last-message",
+            ":user_id",
+            ":friend_id"
+          ]
         }
       },
       "response": []
@@ -203,9 +278,102 @@
         "url": {
           "raw": "http://localhost:3000/api/users/all-users",
           "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "users",
+            "all-users"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create Group Chat",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Friends Group\",\n  \"admin\": \"admin_user_id_here\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/group-chats/create",
+          "protocol": "http",
           "host": ["localhost"],
           "port": "3000",
-          "path": ["api", "users", "all-users"]
+          "path": ["api", "group-chats", "create"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Add Member to Group Chat",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"memberId\": \"new_member_id_here\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/group-chats/group_chat_id_here/addMember",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "group-chats", "group_chat_id_here", "addMember"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Send Message to Group Chat",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"senderId\": \"sender_user_id_here\",\n  \"content\": \"Hello, group!\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/group-chats/group_chat_id_here/sendMessage",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "group-chats", "group_chat_id_here", "sendMessage"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get All Messages in Group Chat",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/group-chats/group_chat_id_here/messages",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "group-chats", "group_chat_id_here", "messages"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Group Chat Details",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/group-chats/group_chat_id_here/details",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "group-chats", "group_chat_id_here", "details"]
         }
       },
       "response": []
