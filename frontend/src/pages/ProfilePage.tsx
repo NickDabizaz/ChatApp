@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useLoaderData } from "react-router-dom";
 import Box from "@mui/system/Box";
 import Paper from "@mui/material/Paper";
@@ -39,6 +39,21 @@ const EditProfilePage: React.FC = () => {
   const [editedName, setEditedName] = useState<string>("");
   const [editedPhoneNumber, setEditedPhoneNumber] = useState<string>("");
   const [cookie, setCookie] = useCookies(["user_id"]);
+  const [profpic, setProfPic] = useState();
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  useEffect(() => {
+    axios
+      .get(
+        `http://localhost:3000/api/users/pic/${cookie.user_id}`
+      )
+      .then((res) => {
+        setProfPic(res.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, [selectedFile]);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -62,6 +77,20 @@ const EditProfilePage: React.FC = () => {
   const handleSaveChanges = async () => {
     try {
       // Replace with your actual API endpoint
+      const formData = new FormData();
+      if (selectedFile) {
+        formData.append("file", selectedFile);
+      }
+      const response = await axios.post(
+        `http://localhost:3000/api/users/profilpic/${cookie.user_id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
       await axios.put(
         `http://localhost:3000/api/users/update/${cookie.user_id}`,
         {
@@ -90,10 +119,44 @@ const EditProfilePage: React.FC = () => {
   return (
     <Container>
       <PaperContainer elevation={10}>
-        <AvatarImage
-          alt="User Avatar"
-          src="https://i.pinimg.com/736x/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.jpg"
-        />
+        <div
+          className="mx-auto"
+          style={{
+            width: "15rem",
+            height: "20rem",
+            objectFit: "cover",
+            display: "flex",
+          }}
+        >
+          <div
+            className=" text-center"
+            style={{ display: "block", width: "15rem" }}
+          >
+            {selectedFile ? (
+              <div id="imageContainer"></div>
+            ) : (
+              <AvatarImage
+                alt="User Avatar"
+                src={
+                  profpic
+                    ? `http://localhost:3000/api/users/pic/${cookie.user_id}`
+                    : "https://i.pinimg.com/736x/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.jpg"
+                }
+              />
+            )}
+            <div className="mx-auto mt-3">
+              <button className="mx-auto btn btn-secondary">
+                <FileUploader setSelectedFile={setSelectedFile} />
+              </button>
+            </div>
+            <br />
+            <div className="mx-auto">
+              File size: maximum 1 MB <br />
+              File extension: .JPEG, .PNG
+            </div>
+          </div>
+        </div>
+
         <TextField
           label="Name"
           variant="outlined"
@@ -115,6 +178,88 @@ const EditProfilePage: React.FC = () => {
         </Button>
       </PaperContainer>
     </Container>
+  );
+};
+
+
+const FileUploader = ({ setSelectedFile }) => {
+  const [tempFile, setTempFile] = useState("");
+  const fileInputRef = useRef(null);
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    setSelectedFile(file);
+    setTempFile(file);
+    displayImage(file);
+  };
+
+  const handleDrop = (event) => {
+    event.preventDefault();
+    const file = event.dataTransfer.files[0];
+    setSelectedFile(file);
+    setTempFile(file);
+    displayImage(file);
+  };
+
+  const handleDragOver = (event) => {
+    event.preventDefault();
+  };
+
+  const handleClick = () => {
+    // Trigger the file input when the drop zone is clicked
+    fileInputRef.current.click();
+  };
+
+  const displayImage = (file) => {
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        // Create an image element and set the data URL as its source
+        const imgElement = document.createElement("img");
+        imgElement.src = e.target.result;
+        imgElement.alt = "Selected Image";
+
+        imgElement.style.marginLeft = "auto";
+        imgElement.style.marginRight = "auto";
+        imgElement.style.height = "10rem";
+        imgElement.style.width = "10rem";
+        imgElement.style.objectFit = "cover";
+        imgElement.style.borderRadius = "50%";
+        imgElement.style.border = "1px solid black";
+
+        // Append the image element to the component
+        document.getElementById("imageContainer").innerHTML = "";
+        document.getElementById("imageContainer").appendChild(imgElement);
+      };
+
+      // Use readAsDataURL for images
+      reader.readAsDataURL(file);
+    }
+  };
+
+  return (
+    <div>
+      <input
+        type="file"
+        id="fileInput"
+        style={{ display: "none" }}
+        onChange={handleFileChange}
+        ref={fileInputRef}
+        accept=".jpeg, .jpg, .png"
+      />
+      <div
+        onClick={handleClick}
+        onDrop={handleDrop}
+        onDragOver={handleDragOver}
+        style={{
+          textAlign: "center",
+          cursor: "pointer",
+          height: "auto",
+        }}
+      >
+        <p>Select Image</p>
+      </div>
+    </div>
   );
 };
 

@@ -116,6 +116,22 @@ function HomePage() {
   const [curFriend, setCurFriend] = useState(null);
   const [chat, setChat] = useState(null);
   const [newMessage, setNewMessage] = useState("");
+  const [profpic, setProfPic] = useState();
+  const [curFriendprofpic, setCurFriendprofpic] = useState();
+
+
+  useEffect(() => {
+    axios
+      .get(
+        `http://localhost:3000/api/users/pic/${cookie.user_id}`
+      )
+      .then((res) => {
+        setProfPic(res.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, [profpic]);
 
   const fetchChat = async () => {
     try {
@@ -174,15 +190,27 @@ function HomePage() {
     setChat(null);
 
     if (curFriend) {
+      axios
+      .get(
+        `http://localhost:3000/api/users/pic/${curFriend.friendId}`
+      )
+      .then((res) => {
+        setCurFriendprofpic(res.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
       fetchChat();
     }
   }, [curFriend]);
+
 
   if (!userData) {
     // You can show a loading indicator while data is being fetched
     return <div>Loading...</div>;
   }
 
+  
   return (
     <Container>
       {/* sidebar kiri */}
@@ -190,7 +218,11 @@ function HomePage() {
         <ProfileContainer>
           <AvatarImage
             alt="User Avatar"
-            src="https://i.pinimg.com/736x/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.jpg"
+            src={
+              profpic
+                ? `http://localhost:3000/api/users/pic/${cookie.user_id}`
+                : "https://i.pinimg.com/736x/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.jpg"
+            }
           />
           <NameContainer>
             <Typography variant="h6" gutterBottom>
@@ -226,7 +258,11 @@ function HomePage() {
                 <>
                   <AvatarImage
                     alt="Friend Avatar"
-                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQE1gis2dLLKJ_dBWVyf4j1fJ3tDvKzO2g7yQ&usqp=CAU"
+                    src={
+                      curFriendprofpic
+                        ? `http://localhost:3000/api/users/pic/${curFriend.friendId}`
+                        : "https://i.pinimg.com/736x/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.jpg"
+                    }
                   />
                   <Paper style={{ textAlign: "left" }}>
                     {curFriend.name} <br />
@@ -242,26 +278,24 @@ function HomePage() {
             <ChatMessageContainer>
               {chat
                 ? chat.map((message) => (
-                    <div
-                      style={{
-                        padding: "1rem",
-                        border: "1px solid black",
-                        width: "fit-content",
-                        margin: "1rem",
-                        float: `${
-                          message.senderId === cookie.user_id ? "right" : "left"
+                  <div
+                    style={{
+                      padding: "1rem",
+                      border: "1px solid black",
+                      width: "fit-content",
+                      margin: "1rem",
+                      float: `${message.senderId === cookie.user_id ? "right" : "left"
                         }`,
-                        borderRadius: `${
-                          message.senderId === cookie.user_id
-                            ? "10px 10px 0px 10px"
-                            : "10px 10px 10px 0px"
+                      borderRadius: `${message.senderId === cookie.user_id
+                        ? "10px 10px 0px 10px"
+                        : "10px 10px 10px 0px"
                         }`,
-                        clear: "both",
-                      }}
-                    >
-                      {message.content}
-                    </div>
-                  ))
+                      clear: "both",
+                    }}
+                  >
+                    {message.content}
+                  </div>
+                ))
                 : "loading..."}
             </ChatMessageContainer>
 

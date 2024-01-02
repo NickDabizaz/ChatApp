@@ -407,6 +407,17 @@ const UserController = {
       res.status(500).json({ error: "Kesalahan Server Internal" });
     }
   },
+
+  profilpic : async (req, res) => {
+    return res.status(201).json({ msg: "profile picture berhasil di upload" });
+  },
+
+  getProfilpic : (req, res) => {
+    const user_id = req.params.user_id;
+    const lokasinya = `uploads/profilpic/${user_id}.jpg`;
+    // ./uploads/esther/profpic.jpg
+    return res.status(200).sendFile(lokasinya, { root: "." });
+  },
 };
 
 module.exports = UserController;

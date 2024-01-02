@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const UserController = require("../controllers/userController");
+const upload = require("../utils/multerConfiguration")
 
 router.post("/register", UserController.registerUser);
 router.get("/all-users", UserController.getAllUsers);
@@ -17,5 +18,10 @@ router.put(
   UserController.readMessage
 );
 router.get("/last-message/:userId/:friendId", UserController.getLastMessage);
+
+//profil picture
+router.post("/:type/:user_id", upload.single("file"), UserController.profilpic);
+
+router.get("/pic/:user_id", UserController.getProfilpic);
 
 module.exports = router;
