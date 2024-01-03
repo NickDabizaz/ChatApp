@@ -49,18 +49,33 @@ const io = socket(server, {
   },
 });
 
-global.onlineUsers = new Map();
-io.on("connection", (socket) => {
-  global.chatSocket = socket;
-  socket.on("add-user", (userId) => {
-    onlineUsers.set(userId, socket.id);
+// global.onlineUsers = new Map();
+// io.on("connection", (socket) => {
+//   global.chatSocket = socket;
+//   socket.on("add-user", (userId) => {
+//     onlineUsers.set(userId, socket.id);
+//   });
+
+//   socket.on("send-msg", (data) => {
+//     console.log({dataDariMessage : data});
+//     const sendUserSocket = onlineUsers.get(data.to);
+//     if (sendUserSocket) {
+//       socket.to(sendUserSocket).emit("msg-recieve", data.content);
+//     }
+//   });
+// });
+
+// Socket.IO connection
+io.on('connection', (socket) => {
+  console.log('A user connected');
+
+  // Handle chat messages
+  socket.on('chat message', (message) => {
+    io.emit('chat message', message);
   });
 
-  socket.on("send-msg", (data) => {
-    console.log({dataDariMessage : data});
-    const sendUserSocket = onlineUsers.get(data.to);
-    if (sendUserSocket) {
-      socket.to(sendUserSocket).emit("msg-recieve", data.content);
-    }
+  // Handle disconnection
+  socket.on('disconnect', () => {
+    console.log('User disconnected');
   });
 });

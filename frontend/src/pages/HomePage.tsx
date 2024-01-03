@@ -23,6 +23,7 @@ import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import Popper from "@mui/material/Popper";
 import AddCommentIcon from "@mui/icons-material/AddComment";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { io } from "socket.io-client";
 
 interface ProfileData {
   name: string;
@@ -172,6 +173,7 @@ function HomePage(props) {
   console.log(route);
   console.log({ curFriend });
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const socket = io('http://localhost:3000');
 
   const handleClickPopper = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(anchorEl ? null : event.currentTarget);
@@ -276,6 +278,8 @@ function HomePage(props) {
         }
       );
 
+      socket.emit('chat message', selectedFile ? selectedFile.name : newMessage);
+
       if (selectedFile) {
         const formData = new FormData();
         formData.append("file", selectedFile);
@@ -298,6 +302,18 @@ function HomePage(props) {
       console.error("Error sending message", error);
     }
   };
+
+  useEffect(() => {
+    // Listen for incoming chat messages
+    socket.on('chat message', (msg) => {
+      // alert(msg)
+      fetchChat()
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [newMessage]);
 
   useEffect(() => {
     setLoading(true);
