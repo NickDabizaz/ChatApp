@@ -19,14 +19,10 @@ import {
 import SendIcon from "@mui/icons-material/Send";
 import EmojiIcon from "@mui/icons-material/EmojiEmotions";
 import EditProfilePage from "./ProfilePage";
-<<<<<<< Updated upstream
-import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
-import Popper from '@mui/material/Popper';
-
-=======
+import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
+import Popper from "@mui/material/Popper";
 import AddCommentIcon from "@mui/icons-material/AddComment";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
->>>>>>> Stashed changes
 
 interface ProfileData {
   name: string;
@@ -182,7 +178,7 @@ function HomePage(props) {
   };
 
   const open = Boolean(anchorEl);
-  const id = open ? 'simple-popper' : undefined;
+  const id = open ? "simple-popper" : undefined;
 
   // chat image
   const [tempFile, setTempFile] = useState("");
@@ -291,10 +287,9 @@ function HomePage(props) {
               "Content-Type": "multipart/form-data",
             },
           }
-        )
-        setAnchorEl(null)
+        );
+        setAnchorEl(null);
       }
-
 
       // Update the chat after sending the message
       fetchChat();
@@ -490,32 +485,34 @@ function HomePage(props) {
             <ChatMessageContainer>
               {chat
                 ? chat.map((message) => (
-                  <div
-                    style={{
-                      padding: "1rem",
-                      border: "1px solid black",
-                      width: "fit-content",
-                      margin: "1rem",
-                      float: `${message.senderId === cookie.user_id ? "right" : "left"
+                    <div
+                      style={{
+                        padding: "1rem",
+                        border: "1px solid black",
+                        width: "fit-content",
+                        margin: "1rem",
+                        float: `${
+                          message.senderId === cookie.user_id ? "right" : "left"
                         }`,
-                      borderRadius: `${message.senderId === cookie.user_id
-                        ? "10px 10px 0px 10px"
-                        : "10px 10px 10px 0px"
+                        borderRadius: `${
+                          message.senderId === cookie.user_id
+                            ? "10px 10px 0px 10px"
+                            : "10px 10px 10px 0px"
                         }`,
-                      clear: "both",
-                    }}
-                  >
-                    {
-                      message.content.includes("jpg")
-                        ? <img
+                        clear: "both",
+                      }}
+                    >
+                      {message.content.includes("jpg") ? (
+                        <img
                           alt="Image Chat"
                           src={`http://localhost:3000/api/users/messagePic/${message._id}`}
                           width={300}
                         />
-                        : message.content
-                    }
-                  </div>
-                ))
+                      ) : (
+                        message.content
+                      )}
+                    </div>
+                  ))
                 : "loading..."}
             </ChatMessageContainer>
 
@@ -524,13 +521,15 @@ function HomePage(props) {
               <IconButton aria-label="emoji" color="secondary">
                 <EmojiIcon />
               </IconButton>
-              <button aria-describedby={id} type="button" onClick={handleClickPopper}>
-                <AddAPhotoIcon
-                  color="secondary"
-                />
+              <button
+                aria-describedby={id}
+                type="button"
+                onClick={handleClickPopper}
+              >
+                <AddAPhotoIcon color="secondary" />
               </button>
               <Popper id={id} open={open} anchorEl={anchorEl} placement="top">
-                <Box sx={{ border: 1, p: 1, bgcolor: 'background.paper' }}>
+                <Box sx={{ border: 1, p: 1, bgcolor: "background.paper" }}>
                   <div
                     className=" text-center"
                     style={{ display: "block", width: "100%" }}
@@ -540,7 +539,9 @@ function HomePage(props) {
                     ) : (
                       <img
                         alt="Image Chat"
-                        src={"https://i.pinimg.com/originals/41/7f/16/417f163906fc4d42f8e8af681894d05f.jpg"}
+                        src={
+                          "https://i.pinimg.com/originals/41/7f/16/417f163906fc4d42f8e8af681894d05f.jpg"
+                        }
                         width={200}
                       />
                     )}
@@ -592,6 +593,5 @@ function HomePage(props) {
     </Container>
   );
 }
-
 
 export default HomePage;
