@@ -194,7 +194,7 @@ function HomePage(props) {
         imgElement.style.height = "10rem";
         imgElement.style.width = "10rem";
         imgElement.style.objectFit = "cover";
-        imgElement.style.borderRadius = "50%";
+        // imgElement.style.borderRadius = "50%";
         imgElement.style.border = "1px solid black";
 
         // Append the image element to the component
@@ -405,9 +405,10 @@ function HomePage(props) {
                   >
                     {
                       message.content.includes("jpg")
-                        ? <AvatarImage
+                        ? <img
                           alt="Image Chat"
                           src={`http://localhost:3000/api/users/messagePic/${message._id}`}
+                          width={300}
                         />
                         : message.content
                     }
@@ -435,9 +436,10 @@ function HomePage(props) {
                     {selectedFile ? (
                       <div id="imageContainer"></div>
                     ) : (
-                      <AvatarImage
+                      <img
                         alt="Image Chat"
-                        src={"https://i.pinimg.com/736x/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.jpg"}
+                        src={"https://i.pinimg.com/originals/41/7f/16/417f163906fc4d42f8e8af681894d05f.jpg"}
+                        width={200}
                       />
                     )}
                     <input
