@@ -174,6 +174,7 @@ function HomePage(props) {
   console.log({ curFriend });
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const socket = io('http://localhost:3000');
+  const scrollRef = useRef();
 
   const handleClickPopper = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(anchorEl ? null : event.currentTarget);
@@ -313,7 +314,12 @@ function HomePage(props) {
     return () => {
       socket.disconnect();
     };
-  }, [newMessage]);
+  }, [chat]);
+
+  useEffect(() => {
+    console.log('scroll');
+    scrollRef.current?.scrollIntoView({ behavior: "smooth", block: 'end', inline: 'end' });
+  }, [chat]);
 
   useEffect(() => {
     setLoading(true);
@@ -517,6 +523,7 @@ function HomePage(props) {
                         }`,
                         clear: "both",
                       }}
+                      ref={scrollRef}
                     >
                       {message.content.includes("jpg") ? (
                         <img
