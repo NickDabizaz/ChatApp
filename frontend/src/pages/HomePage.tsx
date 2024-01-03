@@ -8,13 +8,25 @@ import { style, styled } from "@mui/system";
 import ContactCard from "../components/ContactCard";
 import axios from "axios";
 import { useCookies } from "react-cookie";
-import { Button, IconButton, TextField } from "@mui/material";
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Button,
+  IconButton,
+  TextField,
+} from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import EmojiIcon from "@mui/icons-material/EmojiEmotions";
 import EditProfilePage from "./ProfilePage";
+<<<<<<< Updated upstream
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import Popper from '@mui/material/Popper';
 
+=======
+import AddCommentIcon from "@mui/icons-material/AddComment";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+>>>>>>> Stashed changes
 
 interface ProfileData {
   name: string;
@@ -44,7 +56,6 @@ const Sidebar = styled(Box)({
   padding: "1rem",
   display: "flex",
   flexDirection: "column",
-  alignItems: "center",
 });
 
 const ProfileContainer = styled(Box)({
@@ -125,6 +136,28 @@ const UserInputField = styled(Box)({
   paddingRight: "1rem",
 });
 
+const FlexContainer = styled(Box)({
+  display: "flex",
+  width: "100%",
+});
+
+const NewChatContainer = styled(Box)({
+  flex: "auto",
+  textAlign: "end",
+});
+
+const HomeContainer = styled(Box)({
+  width: "100%",
+  height: "100%",
+  backgroundColor: "yellow",
+  overflow: "auto",
+});
+
+const FriendListContainer = styled(Box)({
+  width: "100%",
+  height: "auto",
+});
+
 function HomePage(props) {
   const [userData, setUserData] = useState(null);
   const [cookie, setCookie] = useCookies("user_id");
@@ -133,6 +166,7 @@ function HomePage(props) {
   const [chat, setChat] = useState(null);
   const [newMessage, setNewMessage] = useState("");
   const [profpic, setProfPic] = useState();
+  const [curUserprofpic, setCurUserprofpic] = useState();
   const [curFriendprofpic, setCurFriendprofpic] = useState();
   const [search, setSearch] = useState("");
   const [userFriends, setUserFriends] = useState(null);
@@ -288,6 +322,22 @@ function HomePage(props) {
       }
     };
 
+    const fetchUserProfpic = async () => {
+      try {
+        // Replace with your actual API endpoint
+        const response = await axios.get(
+          `http://localhost:3000/api/users/pic/${cookie.user_id}`
+        );
+        setCurUserprofpic(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.error("Error fetching user profpic", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserProfpic();
     fetchUserData();
   }, [cookie.user_id]);
 
@@ -303,11 +353,11 @@ function HomePage(props) {
         .catch((error) => {
           console.error("Error fetching data:", error);
         });
+
       fetchChat();
     }
   }, [curFriend]);
 
-  console.log({ userFriends });
   const handlingSearch = (e) => {
     const searchTerm = e.target.value.toLowerCase();
 
@@ -331,7 +381,59 @@ function HomePage(props) {
       <LeftContainer>
         {userData ? (
           route === "home" ? (
+            <HomeContainer>
+              <FlexContainer>
+                <AvatarImage
+                  alt="Profile picture"
+                  src={
+                    curUserprofpic
+                      ? `http://localhost:3000/api/users/pic/${cookie.user_id}`
+                      : "https://i.pinimg.com/736x/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.jpg"
+                  }
+                />
+                {userData.name}
+              </FlexContainer>
+              <FriendListContainer>
+                <Accordion sx={{ boxShadow: "none" }}>
+                  <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                  >
+                    Accordion 1
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <ContactCard friends={userData.friends} />
+                  </AccordionDetails>
+                </Accordion>
+                <Accordion>
+                  <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel2a-content"
+                    id="panel2a-header"
+                  >
+                    <Typography>Accordion 2</Typography>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Typography>
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                      Suspendisse malesuada lacus ex, sit amet blandit leo
+                      lobortis eget.
+                    </Typography>
+                  </AccordionDetails>
+                </Accordion>
+              </FriendListContainer>
+            </HomeContainer>
+          ) : route === "chat" ? (
             <Sidebar>
+              <FlexContainer>
+                Chats
+                <NewChatContainer>
+                  <Button>
+                    <AddCommentIcon />
+                  </Button>
+                </NewChatContainer>
+              </FlexContainer>
               <TextField
                 label="Search"
                 variant="outlined"

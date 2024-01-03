@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Card = styled(Paper)({
-  width: "80%",
+  width: "100%",
   padding: "1rem",
   marginBottom: "1rem",
 });

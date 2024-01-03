@@ -5,6 +5,11 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import { Button } from "@mui/material";
 import HomePage from "../pages/HomePage";
+import HomeIcon from "@mui/icons-material/Home";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import SettingsIcon from "@mui/icons-material/Settings";
+import LogoutIcon from "@mui/icons-material/Logout";
+import TextsmsIcon from "@mui/icons-material/Textsms";
 
 const Sidebar = styled(Box)({
   width: "5rem",
@@ -45,11 +50,15 @@ function Navbar() {
           <Sidebar>
             {/* ini navigasi nnti ada home, pinned msg, profile, dsb */}
             <Button variant="contained" onClick={() => setRoute("home")}>
-              Home
+              <HomeIcon />
+            </Button>
+            <br />
+            <Button variant="contained" onClick={() => setRoute("chat")}>
+              <TextsmsIcon />
             </Button>
             <br />
             <Button variant="contained" onClick={() => setRoute("profile")}>
-              Profile
+              <AccountCircleIcon />
             </Button>
             <br />
             <Button
@@ -59,11 +68,11 @@ function Navbar() {
                 removeCookie("user_id");
               }}
             >
-              Logout
+              <LogoutIcon />
             </Button>
             <br />
             <Button variant="contained" onClick={() => setRoute("setting")}>
-              Setting
+              <SettingsIcon />
             </Button>
           </Sidebar>
           <OutletWrapper>
