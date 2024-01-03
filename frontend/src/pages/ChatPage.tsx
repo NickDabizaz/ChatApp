@@ -1,28 +1,15 @@
 import React, { Suspense, useEffect, useState, useRef } from "react";
-import { Outlet, useLoaderData } from "react-router-dom";
 import Box from "@mui/system/Box";
 import Paper from "@mui/material/Paper";
 import Avatar from "@mui/material/Avatar";
-import Typography from "@mui/material/Typography";
-import { style, styled } from "@mui/system";
-import ContactCard from "../components/ContactCard";
+import { styled } from "@mui/system";
 import axios from "axios";
-import { useCookies } from "react-cookie";
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Button,
-  IconButton,
-  TextField,
-} from "@mui/material";
+import { Button, IconButton, TextField } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import EmojiIcon from "@mui/icons-material/EmojiEmotions";
-import EditProfilePage from "./ProfilePage";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import Popper from "@mui/material/Popper";
-import AddCommentIcon from "@mui/icons-material/AddComment";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { io } from "socket.io-client";
 
 const Container = styled(Box)({
   width: "100%",
@@ -67,6 +54,8 @@ function ChatPage(props) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [tempFile, setTempFile] = useState("");
   const fileInputRef = useRef(null);
+  const socket = io("http://localhost:3000");
+  const scrollRef = useRef();
 
   const open = Boolean(anchorEl);
   const id = open ? "simple-popper" : undefined;
@@ -143,6 +132,11 @@ function ChatPage(props) {
         }
       );
 
+      socket.emit(
+        "chat message",
+        selectedFile ? selectedFile.name : newMessage
+      );
+
       if (selectedFile) {
         const formData = new FormData();
         formData.append("file", selectedFile);
@@ -165,7 +159,6 @@ function ChatPage(props) {
       console.error("Error sending message", error);
     }
   };
-
   const fetchChat = async () => {
     try {
       // Replace with your actual API endpoint
@@ -196,6 +189,27 @@ function ChatPage(props) {
     }
   }, [curFriend]);
 
+  useEffect(() => {
+    // Listen for incoming chat messages
+    socket.on("chat message", (msg) => {
+      // alert(msg)
+      fetchChat();
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [chat]);
+
+  useEffect(() => {
+    console.log("scroll");
+    scrollRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "end",
+      inline: "end",
+    });
+  }, [chat]);
+
   return (
     <>
       <Container>
@@ -225,8 +239,10 @@ function ChatPage(props) {
         {/* tempat message nya */}
         <ChatMessageContainer>
           {chat
-            ? chat.map((message) => (
+            ? chat.map((message, index) => (
                 <div
+                  key={index}
+                  ref={scrollRef}
                   style={{
                     padding: "1rem",
                     border: "1px solid black",
@@ -241,6 +257,7 @@ function ChatPage(props) {
                         : "10px 10px 10px 0px"
                     }`,
                     clear: "both",
+                    wordBreak: "break-all",
                   }}
                 >
                   {message.content.includes("jpg") ? (
