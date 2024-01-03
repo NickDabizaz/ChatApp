@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState, useRef } from "react";
 import { Outlet, useLoaderData } from "react-router-dom";
 import Box from "@mui/system/Box";
 import Paper from "@mui/material/Paper";
@@ -12,6 +12,9 @@ import { Button, IconButton, TextField } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import EmojiIcon from "@mui/icons-material/EmojiEmotions";
 import EditProfilePage from "./ProfilePage";
+import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
+import Popper from '@mui/material/Popper';
+
 
 interface ProfileData {
   name: string;
@@ -108,9 +111,8 @@ const FriendDetailContainer = styled(Box)({
 });
 
 const ChatMessageContainer = styled(Box)({
-  height: "auto",
-  backgroundColor: "yellow",
   height: "70%",
+  backgroundColor: "silver",
   overflow: "auto",
 });
 
@@ -136,8 +138,74 @@ function HomePage(props) {
   const [userFriends, setUserFriends] = useState(null);
   const [filteredFriends, setFilteredFriends] = useState(null);
   const route = props.route;
+  const [selectedFile, setSelectedFile] = useState(null);
   console.log(route);
   console.log({ curFriend });
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+  const handleClickPopper = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(anchorEl ? null : event.currentTarget);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popper' : undefined;
+
+  // chat image
+  const [tempFile, setTempFile] = useState("");
+  const fileInputRef = useRef(null);
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    setSelectedFile(file);
+    setTempFile(file);
+    displayImage(file);
+    console.log("masuk sini ");
+  };
+
+  const handleDrop = (event) => {
+    event.preventDefault();
+    const file = event.dataTransfer.files[0];
+    setSelectedFile(file);
+    setTempFile(file);
+    displayImage(file);
+    console.log("masuk handle drop");
+  };
+
+  const handleDragOver = (event) => {
+    event.preventDefault();
+  };
+
+  const handleClick = () => {
+    // Trigger the file input when the drop zone is clicked
+    fileInputRef.current.click();
+  };
+
+  const displayImage = (file) => {
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        // Create an image element and set the data URL as its source
+        const imgElement = document.createElement("img");
+        imgElement.src = e.target.result;
+        imgElement.alt = "Selected Image";
+
+        imgElement.style.marginLeft = "auto";
+        imgElement.style.marginRight = "auto";
+        imgElement.style.height = "10rem";
+        imgElement.style.width = "10rem";
+        imgElement.style.objectFit = "cover";
+        imgElement.style.borderRadius = "50%";
+        imgElement.style.border = "1px solid black";
+
+        // Append the image element to the component
+        document.getElementById("imageContainer").innerHTML = "";
+        document.getElementById("imageContainer").appendChild(imgElement);
+      };
+
+      // Use readAsDataURL for images
+      reader.readAsDataURL(file);
+    }
+  };
 
   useEffect(() => {
     axios
@@ -166,14 +234,33 @@ function HomePage(props) {
   const handleSendMessage = async () => {
     try {
       // Replace with your actual API endpoint
+
+      console.log(selectedFile);
+
       const response = await axios.post(
         "http://localhost:3000/api/users/send-message",
         {
           userId: cookie.user_id,
           friendId: curFriend.friendId,
-          content: newMessage,
+          content: selectedFile ? selectedFile.name : newMessage,
         }
       );
+
+      if (selectedFile) {
+        const formData = new FormData();
+        formData.append("file", selectedFile);
+        const result = await axios.post(
+          `http://localhost:3000/api/users/chatImage/${cookie.user_id}/${curFriend.friendId}`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        )
+        setAnchorEl(null)
+      }
+
 
       // Update the chat after sending the message
       fetchChat();
@@ -229,7 +316,7 @@ function HomePage(props) {
       const filteredData = userFriends.filter((friend) =>
         friend.name.toLowerCase().includes(searchTerm)
       );
-  
+
       // Update the state with the filtered data
       setFilteredFriends(filteredData);
     }
@@ -237,7 +324,7 @@ function HomePage(props) {
   };
 
   const displayFriends = filteredFriends || userFriends;
-  
+
   return (
     <Container>
       {/* content kiri */}
@@ -301,26 +388,31 @@ function HomePage(props) {
             <ChatMessageContainer>
               {chat
                 ? chat.map((message) => (
-                    <div
-                      style={{
-                        padding: "1rem",
-                        border: "1px solid black",
-                        width: "fit-content",
-                        margin: "1rem",
-                        float: `${
-                          message.senderId === cookie.user_id ? "right" : "left"
+                  <div
+                    style={{
+                      padding: "1rem",
+                      border: "1px solid black",
+                      width: "fit-content",
+                      margin: "1rem",
+                      float: `${message.senderId === cookie.user_id ? "right" : "left"
                         }`,
-                        borderRadius: `${
-                          message.senderId === cookie.user_id
-                            ? "10px 10px 0px 10px"
-                            : "10px 10px 10px 0px"
+                      borderRadius: `${message.senderId === cookie.user_id
+                        ? "10px 10px 0px 10px"
+                        : "10px 10px 10px 0px"
                         }`,
-                        clear: "both",
-                      }}
-                    >
-                      {message.content}
-                    </div>
-                  ))
+                      clear: "both",
+                    }}
+                  >
+                    {
+                      message.content.includes("jpg")
+                        ? <AvatarImage
+                          alt="Image Chat"
+                          src={`http://localhost:3000/api/users/messagePic/${message._id}`}
+                        />
+                        : message.content
+                    }
+                  </div>
+                ))
                 : "loading..."}
             </ChatMessageContainer>
 
@@ -329,6 +421,48 @@ function HomePage(props) {
               <IconButton aria-label="emoji" color="secondary">
                 <EmojiIcon />
               </IconButton>
+              <button aria-describedby={id} type="button" onClick={handleClickPopper}>
+                <AddAPhotoIcon
+                  color="secondary"
+                />
+              </button>
+              <Popper id={id} open={open} anchorEl={anchorEl} placement="top">
+                <Box sx={{ border: 1, p: 1, bgcolor: 'background.paper' }}>
+                  <div
+                    className=" text-center"
+                    style={{ display: "block", width: "100%" }}
+                  >
+                    {selectedFile ? (
+                      <div id="imageContainer"></div>
+                    ) : (
+                      <AvatarImage
+                        alt="Image Chat"
+                        src={"https://i.pinimg.com/736x/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.jpg"}
+                      />
+                    )}
+                    <input
+                      type="file"
+                      id="fileInput"
+                      style={{ display: "none" }}
+                      onChange={handleFileChange}
+                      ref={fileInputRef}
+                      accept=".jpeg, .jpg, .png"
+                    />
+                    <div
+                      onClick={handleClick}
+                      onDrop={handleDrop}
+                      onDragOver={handleDragOver}
+                      style={{
+                        textAlign: "center",
+                        cursor: "pointer",
+                        height: "auto",
+                      }}
+                    >
+                      <p>Select Image</p>
+                    </div>
+                  </div>
+                </Box>
+              </Popper>
               <input
                 type="text"
                 placeholder="Type your message..."
@@ -354,5 +488,6 @@ function HomePage(props) {
     </Container>
   );
 }
+
 
 export default HomePage;

@@ -395,6 +395,7 @@ const UserController = {
         return res.status(404).json({ error: "Pesan tidak ditemukan" });
       }
 
+
       return res.status(200).json({
         senderId: lastMessage.senderId,
         receiverId: lastMessage.receiverId,
@@ -415,7 +416,16 @@ const UserController = {
   getProfilpic : (req, res) => {
     const user_id = req.params.user_id;
     const lokasinya = `uploads/profilpic/${user_id}.jpg`;
-    // ./uploads/esther/profpic.jpg
+    return res.status(200).sendFile(lokasinya, { root: "." });
+  },
+
+  chatImage : async (req, res) => {
+    return res.status(201).json({ msg: "image berhasil dikirim" });
+  },
+
+  getChatImage : (req, res) => {
+    const messageId = req.params.messageId;
+    const lokasinya = `uploads/chatImage/${messageId}.jpg`;
     return res.status(200).sendFile(lokasinya, { root: "." });
   },
 };

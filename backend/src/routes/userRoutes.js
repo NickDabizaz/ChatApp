@@ -24,4 +24,9 @@ router.post("/:type/:user_id", upload.single("file"), UserController.profilpic);
 
 router.get("/pic/:user_id", UserController.getProfilpic);
 
+//image chat
+router.post("/:type/:userId/:friendId", upload.single("file"), UserController.chatImage);
+
+router.get("/messagePic/:messageId", UserController.getChatImage);
+
 module.exports = router;

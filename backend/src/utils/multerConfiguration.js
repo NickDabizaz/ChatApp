@@ -1,7 +1,7 @@
 const multer = require("multer");
 const fs = require("fs-extra");
 const path = require("path");
-// const models = require("../models");
+const User = require("../models/User");
 
 const upload = multer({
     storage: multer.diskStorage({
@@ -11,13 +11,9 @@ const upload = multer({
             if (type === "profilpic") {
                 path = `./uploads/${type}`;
             }
-            //   else if (type === "post") {
-            //     path = `./uploads/${type}`;
-            //   } else if (type === "product") {
-            //     path = `./uploads/${type}`;
-            //   } else if (type === "store"){
-            //     path = `./uploads/${type}`;
-            //   }
+            else if (type === "chatImage") {
+                path = `./uploads/${type}`;
+            }
 
             if (!fs.existsSync(path)) {
                 fs.mkdirSync(path, { recursive: true });
@@ -30,6 +26,18 @@ const upload = multer({
 
             let type = req.params.type;
             let user_id = req.params.user_id;
+
+            
+            const { userId, friendId } = req.params;
+
+            const user = await User.findById(userId);
+            const friendObj = user.friends.find(
+                (friend) => friend.friendId.toString() === friendId
+            );
+
+            const lastMessage = friendObj.messages.reduce((prev, current) =>
+                prev.timestamp > current.timestamp ? prev : current
+            );
 
             //   const latestProduct = await models.Product.findOne({
             //     paranoid : false,
@@ -67,14 +75,9 @@ const upload = multer({
             const fileExtension = path.extname(file.originalname).toLowerCase();
             if (user_id != undefined && type === "profilpic") {
                 callback(null, `${user_id}.jpg`);
+            } else if (friendId != undefined && type === "chatImage") {
+                callback(null, `${lastMessage.id}.jpg`);
             }
-            //   else if (post_id != undefined && type === "post") {
-            //     callback(null, `${post_id}.jpg`);
-            //   } else if (product_id != undefined && type === "product") {
-            //     callback(null, `${product_id}.jpg`);
-            //   } else if(store_id != undefined && type === "store"){
-            //     callback(null, `${store_id}.jpg`);
-            //   }
         },
     }),
 });
