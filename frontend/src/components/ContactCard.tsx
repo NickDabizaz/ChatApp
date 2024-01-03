@@ -10,6 +10,7 @@ const Card = styled(Paper)({
   width: "100%",
   padding: "1rem",
   marginBottom: "1rem",
+  wordBreak: "break-all",
 });
 
 function ContactCard(props) {

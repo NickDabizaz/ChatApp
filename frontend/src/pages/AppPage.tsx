@@ -27,14 +27,15 @@ import Navbar from "../components/Navbar";
 import ChatListPage from "./ChatListPage";
 import ChatPage from "./ChatPage";
 import SettingPage from "./SettingPage";
+import HomePage from "./HomePage";
 
 const Container = styled(Box)({
   margin: "auto",
   display: "flex",
   width: "90vw",
   minWidth: "90vw",
-  height: "100vh",
-  minHeight: "100vh",
+  height: "90vh",
+  minHeight: "90vh",
   backgroundColor: "lightgray",
 });
 
@@ -114,7 +115,7 @@ function AppPage() {
 
           {route === "home" ? (
             //ini kalo routenya home
-            "asd"
+            <HomePage curUserId={cookie.user_id} />
           ) : route === "chat" ? (
             //ini kalo routenya chat
             <ChatListPage
