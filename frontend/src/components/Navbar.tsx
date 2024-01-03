@@ -25,7 +25,9 @@ const OutletWrapper = styled(Box)({
 });
 
 const Container = styled(Box)({
-  height: "96vh",
+  height: "100%",
+  width: "100%",
+  maxWidth: "100%",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
@@ -33,16 +35,16 @@ const Container = styled(Box)({
 
 const SubContainer = styled(Box)({
   display: "flex",
-  height: "90vh",
+  height: "100%",
   padding: 0,
   width: "auto",
   border: "1px solid lightgray",
 });
 
-function Navbar() {
+function Navbar(props) {
   const [cookie, setCookie, removeCookie] = useCookies(["user_id"]);
-  const [route, setRoute] = useState("home");
   const navigate = useNavigate();
+  const setRoute = props.setRoute;
   return (
     <>
       <Container>
@@ -75,9 +77,6 @@ function Navbar() {
               <SettingsIcon />
             </Button>
           </Sidebar>
-          <OutletWrapper>
-            <HomePage route={route} />
-          </OutletWrapper>
         </SubContainer>
       </Container>
     </>

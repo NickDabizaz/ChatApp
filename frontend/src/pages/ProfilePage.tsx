@@ -17,8 +17,8 @@ interface ProfileData {
 }
 
 const Container = styled(Box)({
-  width: "20rem",
-  maxWidth: "20rem",
+  width: "100%",
+  maxWidth: "100%",
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
@@ -39,7 +39,7 @@ const AvatarImage = styled(Avatar)({
   margin: "auto",
 });
 
-const EditProfilePage: React.FC = () => {
+const ProfilePage: React.FC = () => {
   const [userData, setUserData] = useState<ProfileData | null>(null);
   const [editedName, setEditedName] = useState<string>("");
   const [editedPhoneNumber, setEditedPhoneNumber] = useState<string>("");
@@ -265,4 +265,4 @@ const FileUploader = ({ setSelectedFile }) => {
   );
 };
 
-export default EditProfilePage;
+export default ProfilePage;

@@ -1,6 +1,5 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import App from "./App.tsx";
 import "./index.css";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import ErrorPage from "./pages/ErrorPage.tsx";
@@ -13,6 +12,7 @@ import Navbar from "./components/Navbar.tsx";
 import LandingPage from "./pages/LandingPage.tsx";
 import ChatPage from "./pages/ChatPage.tsx";
 import WelcomePage from "./pages/WelcomePage.tsx";
+import AppPage from "./pages/AppPage.tsx";
 
 const { loadData } = dataHandler;
 
@@ -31,7 +31,7 @@ const router = createBrowserRouter([
       { index: true, element: <LandingPage /> },
       { path: "/login", element: <LoginPage />, loader: loadData },
       { path: "/register", element: <RegisterPage />, loader: loadData },
-      { path: "/home", element: <Navbar />, errorElement: <ErrorPage /> },
+      { path: "/app", element: <AppPage />, errorElement: <ErrorPage /> },
     ],
   },
 ]);
@@ -64,8 +64,6 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <RouterProvider router={router}>
-      <App />
-    </RouterProvider>
+    <RouterProvider router={router}></RouterProvider>
   </React.StrictMode>
 );

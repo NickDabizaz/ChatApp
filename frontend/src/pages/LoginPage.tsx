@@ -69,7 +69,7 @@ function LoginPage() {
       console.log(responseData);
 
       setCookie("user_id", responseData.userId);
-      navigate("/home");
+      navigate("/app");
     } catch (error) {
       Swal.fire({
         icon: "error",
@@ -80,7 +80,7 @@ function LoginPage() {
   };
 
   useEffect(() => {
-    if (cookies.user_id) navigate("/home");
+    if (cookies.user_id) navigate("/app");
   }, [cookies.user_id, navigate]);
 
   return (
