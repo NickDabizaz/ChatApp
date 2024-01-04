@@ -26,51 +26,20 @@ const upload = multer({
 
             let type = req.params.type;
             let user_id = req.params.user_id;
+            let lastMessage
 
-            
             const { userId, friendId } = req.params;
 
-            const user = await User.findById(userId);
-            const friendObj = user.friends.find(
-                (friend) => friend.friendId.toString() === friendId
-            );
+            if (userId && friendId) {
+                const user = await User.findById(userId);
+                const friendObj = user.friends.find(
+                    (friend) => friend.friendId.toString() === friendId
+                );
 
-            const lastMessage = friendObj.messages.reduce((prev, current) =>
-                prev.timestamp > current.timestamp ? prev : current
-            );
-
-            //   const latestProduct = await models.Product.findOne({
-            //     paranoid : false,
-            //     order: [["product_id", "DESC"]],
-            //     attributes: ["product_id"],
-            //   });
-
-            //   const latestPost = await models.Post.findOne({
-            //     paranoid : false,
-            //     order: [["post_id", "DESC"]],
-            //     attributes: ["post_id"],
-            //   });
-
-            //   const lastestStore = await models.Store.findOne({
-            //     paranoid : false,
-            //     order: [["store_id", "DESC"]],
-            //     attributes: ["store_id"]
-            //   })
-
-            //   let product_id = 1;
-            //   if (latestProduct) {
-            //     product_id = latestProduct.dataValues.product_id + 1;
-            //   }
-
-            //   let post_id = 1;
-            //   if (latestPost) {
-            //     post_id = latestPost.dataValues.post_id + 1;
-            //   }
-
-            //   let store_id = 1;
-            //   if(lastestStore){
-            //     store_id = lastestStore.dataValues.store_id + 1;
-            //   }
+                lastMessage = friendObj.messages.reduce((prev, current) =>
+                    prev.timestamp > current.timestamp ? prev : current
+                );
+            }
 
             const fileExtension = path.extname(file.originalname).toLowerCase();
             if (user_id != undefined && type === "profilpic") {

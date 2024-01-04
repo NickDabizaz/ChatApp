@@ -81,6 +81,7 @@ const ProfilePage: React.FC = () => {
       const formData = new FormData();
       if (selectedFile) {
         formData.append("file", selectedFile);
+        alert("profile picture berhasil diubah")
       }
       const response = await axios.post(
         `http://localhost:3000/api/users/profilpic/${cookie.user_id}`,
