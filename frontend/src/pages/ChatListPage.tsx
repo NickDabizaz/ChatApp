@@ -4,7 +4,7 @@ import Box from "@mui/system/Box";
 import Paper from "@mui/material/Paper";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
-import { style, styled } from "@mui/system";
+import { style, styled, useTheme } from "@mui/system"; // Tambahkan useTheme
 import ChatCard from "../components/chatlistpage/ChatCard";
 import axios from "axios";
 import { useCookies } from "react-cookie";
@@ -24,42 +24,41 @@ import Popper from "@mui/material/Popper";
 import AddCommentIcon from "@mui/icons-material/AddComment";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-const Container = styled(Box)({
+// Tambahkan `theme` ke dalam properti styled
+const Container = styled(Box)(({ theme }) => ({
   height: "100%",
-  //   width: "20rem",
-  //   minWidth: "20rem",
-  backgroundColor: "#f0f0f0",
+  backgroundColor: theme.palette.background.default,
   padding: "1rem",
   display: "flex",
   flexDirection: "column",
-});
+}));
 
-const FlexContainer = styled(Box)({
+const FlexContainer = styled(Box)(({ theme }) => ({
   display: "flex",
   width: "100%",
-});
+  color: theme.palette.text.primary, // Sesuaikan dengan properti yang diinginkan
+}));
 
-const NewChatContainer = styled(Box)({
+const NewChatContainer = styled(Box)(({ theme }) => ({
   flex: "auto",
   textAlign: "end",
-});
+}));
 
 function ChatListPage(props) {
   const [search, setSearch] = useState("");
   const [filteredFriends, setFilteredFriends] = useState(null);
 
   const userFriends = props.userFriends;
+  const theme = useTheme(); // Gunakan hook useTheme untuk mendapatkan tema
 
   const handlingSearch = (e) => {
     const searchTerm = e.target.value.toLowerCase();
 
     if (userFriends) {
-      // Filter userFriends based on the search term
       const filteredData = userFriends.filter((friend) =>
         friend.name.toLowerCase().includes(searchTerm)
       );
 
-      // Update the state with the filtered data
       setFilteredFriends(filteredData);
     }
     setSearch(searchTerm);
@@ -85,6 +84,11 @@ function ChatListPage(props) {
           fullWidth
           value={search}
           onChange={handlingSearch}
+          InputProps={{
+            style: {
+              color: theme.palette.text.primary, // Sesuaikan dengan properti yang diinginkan
+            },
+          }}
         />
         <Suspense fallback={<div>Loading...</div>}>
           <ChatCard

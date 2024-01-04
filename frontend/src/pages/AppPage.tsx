@@ -29,6 +29,7 @@ import ChatPage from "./ChatPage";
 import SettingPage from "./SettingPage";
 import HomePage from "./HomePage";
 import AddFriendPage from "./AddFriendPage";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
 
 const Container = styled(Box)({
   margin: "auto",
@@ -70,6 +71,50 @@ function AppPage() {
   const [userProfpic, setUserProfpic] = useState(null);
   const [userFriends, setUserFriends] = useState(null);
   const [curFriend, setCurFriend] = useState(null);
+  const [isDarkMode, setDarkMode] = useState(false);
+
+  const toggleDarkMode = () => {
+    setDarkMode(!isDarkMode);
+  };
+
+  const lightModePalette = {
+    mode: "light",
+    primary: {
+      main: "#2196F3", // Biru
+    },
+    secondary: {
+      main: "#FFC107", // Kuning
+    },
+    background: {
+      default: "#FFFFFF", // Putih
+    },
+    text: {
+      primary: "#333333", // Abu-abu tua
+    },
+    // ... (Tambahkan palet warna lainnya sesuai kebutuhan)
+  };
+
+  const darkModePalette = {
+    mode: "dark",
+    primary: {
+      main: "#9C27B0", // Ungu
+    },
+    secondary: {
+      main: "#FF5722", // Oranye
+    },
+    background: {
+      default: "#121212", // Hitam (latar belakang utama)
+      paper: "#1E1E1E", // Hitam gelap (misalnya untuk kertas atau elemen lainnya)
+    },
+    text: {
+      primary: "#FFFFFF", // Putih
+    },
+    // ... (Tambahkan palet warna lainnya sesuai kebutuhan)
+  };
+
+  const currentTheme = createTheme({
+    palette: isDarkMode ? darkModePalette : lightModePalette,
+  });
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -104,62 +149,67 @@ function AppPage() {
 
   return (
     <>
-      <Container>
-        {/* ini navbar dikiri */}
-        <ContainerNavbar>
-          <Navbar setRoute={setRoute} />
-        </ContainerNavbar>
+      <ThemeProvider theme={currentTheme}>
+        <Container>
+          {/* ini navbar dikiri */}
+          <ContainerNavbar>
+            <Navbar setRoute={setRoute} />
+          </ContainerNavbar>
 
-        {/* ini konten yang kiri */}
-        <ContainerContentLeft>
-          {/* ini nampilin konten sesuai route */}
+          {/* ini konten yang kiri */}
+          <ContainerContentLeft>
+            {/* ini nampilin konten sesuai route */}
 
-          {route === "home" ? (
-            //ini kalo routenya home
-            <HomePage
-              curUserId={cookie.user_id}
-              setCurFriend={setCurFriend}
-              userData={userData}
-              userProfpic={userProfpic}
-            />
-          ) : route === "chat" ? (
-            //ini kalo routenya chat
-            <ChatListPage
-              userFriends={userFriends}
-              setCurFriend={setCurFriend}
-            />
-          ) : route === "addfriend" ? (
-            //ini kalo routenya addfriend
-            <AddFriendPage
-              userFriends={userFriends}
-              curUserId={cookie.user_id}
-            />
-          ) : route === "profile" ? (
-            //ini kalo routenya profile
-            <ProfilePage
-              curUserId={cookie.user_id}
-              userData={userData}
-              userProfpic={userProfpic}
-            />
-          ) : (
-            //ini kalo routenya setting
-            <SettingPage />
-          )}
-        </ContainerContentLeft>
-        <ContainerContentRight>
-          {curFriend ? (
-            <ChatPage
-              curFriend={curFriend}
-              setCurFriend={setCurFriend}
-              curUserId={cookie.user_id}
-            />
-          ) : (
-            <PaperContainer>
-              <Typography variant="h6">Start a Conversation!</Typography>
-            </PaperContainer>
-          )}
-        </ContainerContentRight>
-      </Container>
+            {route === "home" ? (
+              //ini kalo routenya home
+              <HomePage
+                curUserId={cookie.user_id}
+                setCurFriend={setCurFriend}
+                userData={userData}
+                userProfpic={userProfpic}
+              />
+            ) : route === "chat" ? (
+              //ini kalo routenya chat
+              <ChatListPage
+                userFriends={userFriends}
+                setCurFriend={setCurFriend}
+              />
+            ) : route === "addfriend" ? (
+              //ini kalo routenya addfriend
+              <AddFriendPage
+                userFriends={userFriends}
+                curUserId={cookie.user_id}
+              />
+            ) : route === "profile" ? (
+              //ini kalo routenya profile
+              <ProfilePage
+                curUserId={cookie.user_id}
+                userData={userData}
+                userProfpic={userProfpic}
+              />
+            ) : (
+              //ini kalo routenya setting
+              <SettingPage
+                removeCookie={removeCookie}
+                toggleDarkMode={toggleDarkMode}
+              />
+            )}
+          </ContainerContentLeft>
+          <ContainerContentRight>
+            {curFriend ? (
+              <ChatPage
+                curFriend={curFriend}
+                setCurFriend={setCurFriend}
+                curUserId={cookie.user_id}
+              />
+            ) : (
+              <PaperContainer>
+                <Typography variant="h6">Start a Conversation!</Typography>
+              </PaperContainer>
+            )}
+          </ContainerContentRight>
+        </Container>
+      </ThemeProvider>
     </>
   );
 }

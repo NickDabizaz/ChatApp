@@ -33,11 +33,11 @@ const Container = styled(Box)({
   // alignItems: "center",
 });
 
-const LeftContainer = styled(Box)({
+const LeftContainer = styled(Box)(({ theme }) => ({
   minWidth: "20rem",
   height: "100%",
-  backgroundColor: "blue",
-});
+  backgroundColor: theme.palette.background.default, // Sesuaikan latar belakang dengan tema
+}));
 
 const AvatarImage = styled(Avatar)({
   width: "4rem",
@@ -49,18 +49,19 @@ const FlexContainer = styled(Box)({
   width: "100%",
 });
 
-const HomeContainer = styled(Box)({
+const HomeContainer = styled(Box)(({ theme }) => ({
   width: "100%",
   height: "100%",
-  backgroundColor: "yellow",
+  backgroundColor: theme.palette.background.default, // Sesuaikan latar belakang dengan tema
   overflow: "auto",
-});
+  color: theme.palette.primary.contrastText,
+}));
 
-const FriendListContainer = styled(Box)({
+const FriendListContainer = styled(Box)(({ theme }) => ({
   width: "100%",
   height: "auto",
-  backgroundColor: "red",
-});
+  backgroundColor: theme.palette.secondary.main, // Sesuaikan latar belakang dengan tema
+}));
 
 const FriendListCardContainer = styled(Box)({
   width: "100%",

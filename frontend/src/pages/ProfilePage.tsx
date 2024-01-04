@@ -7,28 +7,28 @@ import Button from "@mui/material/Button";
 import { styled } from "@mui/system";
 import axios from "axios";
 
-const Container = styled(Box)({
+const Container = styled(Box)(({ theme }) => ({
   width: "100%",
   maxWidth: "100%",
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
   height: "100%",
-  backgroundColor: "red",
-});
+  backgroundColor: theme.palette.primary.main,
+}));
 
-const PaperContainer = styled(Paper)({
+const PaperContainer = styled(Paper)(({ theme }) => ({
   height: "100%",
   padding: "1rem",
   textAlign: "center",
-  backgroundColor: "yellow",
-});
+  backgroundColor: theme.palette.secondary.main,
+}));
 
-const AvatarImage = styled(Avatar)({
+const AvatarImage = styled(Avatar)(({ theme }) => ({
   width: "7rem",
   height: "7rem",
   margin: "auto",
-});
+}));
 
 function ProfilePage(props) {
   const curUserId = props.curUserId;
@@ -51,11 +51,10 @@ function ProfilePage(props) {
 
   const handleSaveChanges = async () => {
     try {
-      // Replace with your actual API endpoint
       const formData = new FormData();
       if (selectedFile) {
         formData.append("file", selectedFile);
-        alert("profile picture berhasil diubah");
+        alert("Profile picture berhasil diubah");
       }
       const response = await axios.post(
         `http://localhost:3000/api/users/profilpic/${curUserId}`,
@@ -73,7 +72,6 @@ function ProfilePage(props) {
         // Add other properties as needed
       });
 
-      // Optionally, you can update the local state with the edited data
       setUserData({
         ...userData,
         name: editedName,
@@ -85,7 +83,6 @@ function ProfilePage(props) {
   };
 
   if (!userData) {
-    // You can show a loading indicator while data is being fetched
     return <div>Loading...</div>;
   }
 
@@ -178,7 +175,6 @@ const FileUploader = ({ setSelectedFile }) => {
   };
 
   const handleClick = () => {
-    // Trigger the file input when the drop zone is clicked
     fileInputRef.current.click();
   };
 
@@ -186,7 +182,6 @@ const FileUploader = ({ setSelectedFile }) => {
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
-        // Create an image element and set the data URL as its source
         const imgElement = document.createElement("img");
         imgElement.src = e.target.result;
         imgElement.alt = "Selected Image";
@@ -199,12 +194,10 @@ const FileUploader = ({ setSelectedFile }) => {
         imgElement.style.borderRadius = "50%";
         imgElement.style.border = "1px solid black";
 
-        // Append the image element to the component
         document.getElementById("imageContainer").innerHTML = "";
         document.getElementById("imageContainer").appendChild(imgElement);
       };
 
-      // Use readAsDataURL for images
       reader.readAsDataURL(file);
     }
   };

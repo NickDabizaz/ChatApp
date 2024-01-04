@@ -1,29 +1,27 @@
-import React, { useState } from "react";
+import React from "react";
 import Box from "@mui/system/Box";
-import { styled } from "@mui/system";
-import { Outlet, useNavigate } from "react-router-dom";
-import { useCookies } from "react-cookie";
-import { Button } from "@mui/material";
-import HomePage from "../pages/HomePage";
+import { styled, useTheme } from "@mui/system";
+import { Button, IconButton } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import SettingsIcon from "@mui/icons-material/Settings";
-import LogoutIcon from "@mui/icons-material/Logout";
 import TextsmsIcon from "@mui/icons-material/Textsms";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 
-const Sidebar = styled(Box)({
+const Sidebar = styled(Box)(({ theme }) => ({
   width: "5rem",
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
-  background: "gray",
-  wordBreak: "break-all",
-});
+  background: theme.palette.primary.main,
+  color: theme.palette.primary.contrastText, // Warna teks disesuaikan dengan tema
+}));
 
-const OutletWrapper = styled(Box)({
-  /* Add additional styles as needed */
-});
+const SidebarButton = styled(IconButton)(({ theme }) => ({
+  margin: "10px 0",
+  backgroundColor: theme.palette.secondary.main, // Warna latar belakang tombol disesuaikan dengan tema
+  color: theme.palette.secondary.contrastText, // Warna teks tombol disesuaikan dengan tema
+}));
 
 const Container = styled(Box)({
   height: "100%",
@@ -43,44 +41,33 @@ const SubContainer = styled(Box)({
 });
 
 function Navbar(props) {
-  const [cookie, setCookie, removeCookie] = useCookies(["user_id"]);
-  const navigate = useNavigate();
   const setRoute = props.setRoute;
+  const theme = useTheme(); // Tidak perlu meneruskan tema sebagai prop
+
   return (
     <>
       <Container>
         <SubContainer>
-          <Sidebar>
-            {/* ini navigasi nnti ada home, pinned msg, profile, dsb */}
-            <Button variant="contained" onClick={() => setRoute("home")}>
+          <Sidebar theme={theme}>
+            <SidebarButton onClick={() => setRoute("home")}>
               <HomeIcon />
-            </Button>
+            </SidebarButton>
             <br />
-            <Button variant="contained" onClick={() => setRoute("chat")}>
+            <SidebarButton onClick={() => setRoute("chat")}>
               <TextsmsIcon />
-            </Button>
+            </SidebarButton>
             <br />
-            <Button variant="contained" onClick={() => setRoute("addfriend")}>
+            <SidebarButton onClick={() => setRoute("addfriend")}>
               <PersonAddAlt1Icon />
-            </Button>
+            </SidebarButton>
             <br />
-            <Button variant="contained" onClick={() => setRoute("profile")}>
+            <SidebarButton onClick={() => setRoute("profile")}>
               <AccountCircleIcon />
-            </Button>
+            </SidebarButton>
             <br />
-            <Button
-              variant="contained"
-              onClick={() => {
-                navigate("/login");
-                removeCookie("user_id");
-              }}
-            >
-              <LogoutIcon />
-            </Button>
-            <br />
-            <Button variant="contained" onClick={() => setRoute("setting")}>
+            <SidebarButton onClick={() => setRoute("setting")}>
               <SettingsIcon />
-            </Button>
+            </SidebarButton>
           </Sidebar>
         </SubContainer>
       </Container>

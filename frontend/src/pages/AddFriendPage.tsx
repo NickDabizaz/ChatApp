@@ -1,58 +1,35 @@
-import React, { Suspense, useEffect, useState, useRef } from "react";
-import { Outlet, useLoaderData } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import Box from "@mui/system/Box";
-import Paper from "@mui/material/Paper";
-import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
-import { style, styled } from "@mui/system";
-import ContactCard from "../components/homepage/ContactCard";
-import axios from "axios";
-import { useCookies } from "react-cookie";
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Button,
-  IconButton,
-  TextField,
-} from "@mui/material";
-import SendIcon from "@mui/icons-material/Send";
-import EmojiIcon from "@mui/icons-material/EmojiEmotions";
-import ProfilePage from "./ProfilePage";
-import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
-import Popper from "@mui/material/Popper";
-import AddCommentIcon from "@mui/icons-material/AddComment";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import Navbar from "../components/Navbar";
-import ChatListPage from "./ChatListPage";
-import ChatPage from "./ChatPage";
-import SettingPage from "./SettingPage";
-import HomePage from "./HomePage";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import Avatar from "@mui/material/Avatar";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import PersonSearchIcon from "@mui/icons-material/PersonSearch";
 import GroupIcon from "@mui/icons-material/Group";
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import { styled, useTheme } from "@mui/system";
+import axios from "axios";
 
-const Container = styled(Box)({
+const Container = styled(Box)(({ theme }) => ({
   height: "100%",
-  //   width: "20rem",
-  //   minWidth: "20rem",
-  backgroundColor: "#f0f0f0",
+  backgroundColor: theme.palette.background.default,
   padding: "1rem",
   display: "flex",
   flexDirection: "column",
-});
+}));
 
-const FlexContainer = styled(Box)({
+const FlexContainer = styled(Box)(({ theme }) => ({
   display: "flex",
   width: "100%",
-});
+  color: theme.palette.text.primary,
+}));
 
-const Card = styled(Box)({
+const Card = styled(Box)(({ theme }) => ({
   width: "100%",
-  border: "1px solid black",
+  border: `1px solid ${theme.palette.divider}`,
   padding: "1rem",
   marginBottom: "1rem",
-});
+}));
 
 function AddFriendPage(props) {
   const [add, setAdd] = useState("");
@@ -61,16 +38,19 @@ function AddFriendPage(props) {
   const [searchResultProfpic, setSearchResultProfpic] = useState(null);
   const [searchLoading, setSearchLoading] = useState(false);
   const curUserId = props.curUserId;
-  const userFriends = props.userFriends;
+
+  const theme = useTheme();
 
   const handleSearchTextChange = (e) => {
     setSearch(e.target.value);
   };
 
   const handleSearch = async () => {
-    console.log(userFriends);
+    console.log(props.userFriends);
 
-    let temp = userFriends.filter((friend) => friend.phoneNumber === search);
+    let temp = props.userFriends.filter(
+      (friend) => friend.phoneNumber === search
+    );
     console.log(temp);
 
     if (temp.length > 0) {
@@ -78,7 +58,6 @@ function AddFriendPage(props) {
       setSearchResult(null);
     } else {
       try {
-        // Replace with your actual API endpoint
         const response = await axios.get(
           `http://localhost:3000/api/users/user-details-by-phone/${search}`
         );
@@ -94,7 +73,6 @@ function AddFriendPage(props) {
 
   const handleAddFriend = async () => {
     try {
-      // Replace with your actual API endpoint
       const response = await axios.post(
         "http://localhost:3000/api/users/add-friend",
         {
@@ -103,11 +81,9 @@ function AddFriendPage(props) {
         }
       );
 
-      console.log(response.data); // Log the response if needed
-      // Handle success, show a message, update state, etc.
+      console.log(response.data);
     } catch (error) {
       console.error("Error adding friend:", error);
-      // Handle error, show an error message, etc.
     }
   };
 
@@ -115,7 +91,6 @@ function AddFriendPage(props) {
     if (search && searchResult) {
       const fetchUserProfpic = async () => {
         try {
-          // Replace with your actual API endpoint
           const response = await axios.get(
             `http://localhost:3000/api/users/pic/${searchResult.userId}`
           );
@@ -131,72 +106,70 @@ function AddFriendPage(props) {
   }, [searchResult]);
 
   return (
-    <>
-      <Container>
-        <FlexContainer onClick={() => setAdd("request")}>
-          <Card>
-            <PersonAddIcon />
-            Friend Request
-          </Card>
-        </FlexContainer>
-        <FlexContainer onClick={() => setAdd("friend")}>
-          <Card>
-            <PersonSearchIcon />
-            Friend Search
-          </Card>
-        </FlexContainer>
-        <FlexContainer onClick={() => setAdd("group")}>
-          <Card>
-            <GroupIcon />
-            Create a Group
-          </Card>
-        </FlexContainer>
+    <Container>
+      <FlexContainer onClick={() => setAdd("request")}>
+        <Card>
+          <PersonAddIcon />
+          Friend Request
+        </Card>
+      </FlexContainer>
+      <FlexContainer onClick={() => setAdd("friend")}>
+        <Card>
+          <PersonSearchIcon />
+          Friend Search
+        </Card>
+      </FlexContainer>
+      <FlexContainer onClick={() => setAdd("group")}>
+        <Card>
+          <GroupIcon />
+          Create a Group
+        </Card>
+      </FlexContainer>
 
-        <br />
-        <br />
+      <br />
+      <br />
 
-        {add === "request" ? (
-          <Typography>Friend Request</Typography>
-        ) : add === "friend" ? (
-          <>
-            <Typography>Add friend</Typography>
-            <TextField
-              label="Phone Number"
-              variant="outlined"
-              margin="normal"
-              fullWidth
-              value={search}
-              onChange={handleSearchTextChange}
-            />
-            <Button onClick={handleSearch}>Search</Button>
-            {searchResult ? (
-              searchLoading ? (
-                "loading..."
-              ) : (
-                <FlexContainer>
-                  <Avatar
-                    alt="Friend Search Avatar"
-                    src={
-                      searchResultProfpic
-                        ? `http://localhost:3000/api/users/pic/${searchResult.userId}`
-                        : "https://i.pinimg.com/736x/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.jpg"
-                    }
-                  />
-                  {searchResult.name}
-                  <Button onClick={handleAddFriend}>
-                    <PersonAddIcon />
-                  </Button>
-                </FlexContainer>
-              )
+      {add === "request" ? (
+        <Typography>Friend Request</Typography>
+      ) : add === "friend" ? (
+        <>
+          <Typography>Add friend</Typography>
+          <TextField
+            label="Phone Number"
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            value={search}
+            onChange={handleSearchTextChange}
+          />
+          <Button onClick={handleSearch}>Search</Button>
+          {searchResult ? (
+            searchLoading ? (
+              "loading..."
             ) : (
-              "No User Found"
-            )}
-          </>
-        ) : (
-          <Typography>Create Group</Typography>
-        )}
-      </Container>
-    </>
+              <FlexContainer>
+                <Avatar
+                  alt="Friend Search Avatar"
+                  src={
+                    searchResultProfpic
+                      ? `http://localhost:3000/api/users/pic/${searchResult.userId}`
+                      : "https://i.pinimg.com/736x/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.jpg"
+                  }
+                />
+                {searchResult.name}
+                <Button onClick={handleAddFriend}>
+                  <PersonAddIcon />
+                </Button>
+              </FlexContainer>
+            )
+          ) : (
+            "No User Found"
+          )}
+        </>
+      ) : (
+        <Typography>Create Group</Typography>
+      )}
+    </Container>
   );
 }
 

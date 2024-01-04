@@ -28,20 +28,51 @@ const AvatarImage = styled(Avatar)({
   height: "4rem",
 });
 
-const ChatMessageContainer = styled(Box)({
-  height: "78%",
-  backgroundColor: "silver",
-  overflow: "auto",
-});
-
-const UserInputField = styled(Box)({
+const FriendDetailContainer = styled(Box)(({ theme }) => ({
   height: "15%",
-  backgroundColor: "gray",
+  backgroundColor: theme.palette.primary.main, // Sesuaikan latar belakang dengan tema
   display: "flex",
   alignItems: "center",
   paddingLeft: "1rem",
   paddingRight: "1rem",
-});
+  color: theme.palette.primary.contrastText,
+}));
+
+const ChatMessageContainer = styled(Box)(({ theme }) => ({
+  height: "70%",
+  backgroundColor: theme.palette.background.default, // Sesuaikan latar belakang dengan tema
+  overflow: "auto",
+}));
+
+const UserInputField = styled(Box)(({ theme }) => ({
+  height: "15%",
+  backgroundColor: theme.palette.primary.main, // Sesuaikan latar belakang dengan tema
+  display: "flex",
+  alignItems: "center",
+  paddingLeft: "1rem",
+  paddingRight: "1rem",
+  color: theme.palette.primary.contrastText,
+}));
+
+const IconButtonContainer = styled(IconButton)(({ theme }) => ({
+  color: theme.palette.secondary.main, // Sesuaikan warna ikon dengan tema
+}));
+
+const ButtonContainer = styled(Button)(({ theme }) => ({
+  backgroundColor: theme.palette.primary.main, // Sesuaikan latar belakang tombol dengan tema
+  color: theme.palette.primary.contrastText, // Sesuaikan warna teks tombol dengan tema
+}));
+
+const ChatBubble = styled(Box)(({ theme }) => ({
+  padding: "1rem",
+  border: "1px solid black",
+  width: "fit-content",
+  margin: "1rem",
+  clear: "both",
+  wordBreak: "break-all",
+  backgroundColor: theme.palette.primary.main, // Sesuaikan latar belakang tombol dengan tema
+  color: theme.palette.primary.contrastText,
+}));
 
 function ChatPage(props) {
   const curFriend = props.curFriend;
@@ -216,53 +247,48 @@ function ChatPage(props) {
     <>
       <Container>
         {/* gambar teman, nama dan status */}
-        <FlexContainer>
-          <div onClick={() => setCurFriend(null)}>↩️</div>
-          {curFriend ? (
-            <>
-              <AvatarImage
-                alt="Friend Avatar"
-                src={
-                  curFriendprofpic
-                    ? `http://localhost:3000/api/users/pic/${curFriend.friendId}`
-                    : "https://i.pinimg.com/736x/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.jpg"
-                }
-              />
-              <Paper style={{ textAlign: "left" }}>
-                {curFriend.name} <br />
-                🟢online
-              </Paper>
-            </>
-          ) : (
-            "loading"
-          )}
-        </FlexContainer>
+        <FriendDetailContainer>
+          <FlexContainer>
+            <div onClick={() => setCurFriend(null)}>↩️</div>
+            {curFriend ? (
+              <>
+                <AvatarImage
+                  alt="Friend Avatar"
+                  src={
+                    curFriendprofpic
+                      ? `http://localhost:3000/api/users/pic/${curFriend.friendId}`
+                      : "https://i.pinimg.com/736x/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.jpg"
+                  }
+                />
+                <Paper style={{ textAlign: "left" }}>
+                  {curFriend.name} <br />
+                  🟢online
+                </Paper>
+              </>
+            ) : (
+              "loading"
+            )}
+          </FlexContainer>
+        </FriendDetailContainer>
 
         {/* tempat message nya */}
         <ChatMessageContainer>
           {chat
             ? chat.map((message, index) => (
-                <div
+                <ChatBubble
                   key={index}
                   ref={scrollRef}
                   style={{
-                    padding: "1rem",
-                    border: "1px solid black",
-                    width: "fit-content",
-                    margin: "1rem",
-                    float: `${
-                      message.senderId === curUserId ? "right" : "left"
-                    }`,
-                    borderRadius: `${
+                    float: message.senderId === curUserId ? "right" : "left",
+                    borderRadius:
                       message.senderId === curUserId
                         ? "10px 10px 0px 10px"
-                        : "10px 10px 10px 0px"
-                    }`,
-                    clear: "both",
-                    wordBreak: "break-all",
+                        : "10px 10px 10px 0px",
                   }}
                 >
-                  {message.content.includes("jpg") || message.content.includes("png") || message.content.includes("jpeg") ? (
+                  {message.content.includes("jpg") ||
+                  message.content.includes("png") ||
+                  message.content.includes("jpeg") ? (
                     <img
                       alt="Image Chat"
                       src={`http://localhost:3000/api/users/messagePic/${message._id}`}
@@ -271,7 +297,7 @@ function ChatPage(props) {
                   ) : (
                     message.content
                   )}
-                </div>
+                </ChatBubble>
               ))
             : "loading..."}
         </ChatMessageContainer>
@@ -279,18 +305,17 @@ function ChatPage(props) {
         {/* input */}
         <UserInputField>
           {/* button emoji */}
-          <IconButton aria-label="emoji" color="secondary">
+          <IconButtonContainer aria-label="emoji" color="secondary">
             <EmojiIcon />
-          </IconButton>
+          </IconButtonContainer>
 
           {/* button upload foto */}
-          <button
+          <IconButtonContainer
             aria-describedby={id}
-            type="button"
             onClick={handleClickPopper}
           >
             <AddAPhotoIcon color="secondary" />
-          </button>
+          </IconButtonContainer>
 
           {/* pop up upload foto */}
           <Popper id={id} open={open} anchorEl={anchorEl} placement="top">
@@ -340,13 +365,13 @@ function ChatPage(props) {
             onChange={(e) => setNewMessage(e.target.value)}
             style={{ flex: 1, padding: "0.5rem", marginRight: "0.5rem" }}
           />
-          <Button
+          <ButtonContainer
             variant="contained"
             endIcon={<SendIcon />}
             onClick={handleSendMessage}
           >
             Send
-          </Button>
+          </ButtonContainer>
         </UserInputField>
       </Container>
     </>
