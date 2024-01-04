@@ -5,7 +5,7 @@ import Paper from "@mui/material/Paper";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import { style, styled } from "@mui/system";
-import ContactCard from "../components/ContactCard";
+import ContactCard from "../components/homepage/ContactCard";
 import axios from "axios";
 import { useCookies } from "react-cookie";
 import {
@@ -28,6 +28,7 @@ import ChatListPage from "./ChatListPage";
 import ChatPage from "./ChatPage";
 import SettingPage from "./SettingPage";
 import HomePage from "./HomePage";
+import AddFriendPage from "./AddFriendPage";
 
 const Container = styled(Box)({
   margin: "auto",
@@ -66,6 +67,7 @@ function AppPage() {
 
   const [cookie, setCookie, removeCookie] = useCookies("user_id");
   const [userData, setUserData] = useState(null);
+  const [userProfpic, setUserProfpic] = useState(null);
   const [userFriends, setUserFriends] = useState(null);
   const [curFriend, setCurFriend] = useState(null);
 
@@ -84,20 +86,19 @@ function AppPage() {
       }
     };
 
-    // const fetchUserProfpic = async () => {
-    //   try {
-    //     // Replace with your actual API endpoint
-    //     const response = await axios.get(
-    //       `http://localhost:3000/api/users/pic/${cookie.user_id}`
-    //     );
-    //     setCurUserprofpic(response.data);
-    //     console.log(response.data);
-    //   } catch (error) {
-    //     console.error("Error fetching user profpic", error);
-    //   }
-    // };
+    const fetchUserProfpic = async () => {
+      try {
+        // Replace with your actual API endpoint
+        const response = await axios.get(
+          `http://localhost:3000/api/users/pic/${cookie.user_id}`
+        );
+        setUserProfpic(response.data);
+      } catch (error) {
+        console.error("Error fetching user profpic", error);
+      }
+    };
 
-    // fetchUserProfpic();
+    fetchUserProfpic();
     fetchUserData();
   }, [cookie.user_id]);
 
@@ -115,16 +116,31 @@ function AppPage() {
 
           {route === "home" ? (
             //ini kalo routenya home
-            <HomePage curUserId={cookie.user_id} />
+            <HomePage
+              curUserId={cookie.user_id}
+              setCurFriend={setCurFriend}
+              userData={userData}
+              userProfpic={userProfpic}
+            />
           ) : route === "chat" ? (
             //ini kalo routenya chat
             <ChatListPage
               userFriends={userFriends}
               setCurFriend={setCurFriend}
             />
+          ) : route === "addfriend" ? (
+            //ini kalo routenya addfriend
+            <AddFriendPage
+              userFriends={userFriends}
+              curUserId={cookie.user_id}
+            />
           ) : route === "profile" ? (
             //ini kalo routenya profile
-            <ProfilePage />
+            <ProfilePage
+              curUserId={cookie.user_id}
+              userData={userData}
+              userProfpic={userProfpic}
+            />
           ) : (
             //ini kalo routenya setting
             <SettingPage />

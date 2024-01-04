@@ -177,6 +177,27 @@ const UserController = {
     }
   },
 
+  getUserByPhoneNumber: async (req, res) => {
+    try {
+      const { phoneNumber } = req.params;
+      const user = await User.findOne({ phoneNumber });
+
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      const userDetails = {
+        userId: user._id,
+        name: user.name,
+      };
+
+      res.status(200).json(userDetails);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  },
+
   // src/controllers/userController.js
 
   getUserDetails: async (req, res) => {
@@ -184,7 +205,7 @@ const UserController = {
       const { userId } = req.params;
       const user = await User.findById(userId).populate(
         "friends.friendId",
-        "name status messages"
+        "name phoneNumber status messages"
       );
 
       if (!user) {
@@ -201,6 +222,7 @@ const UserController = {
       userDetails.friends = user.friends.map((friend) => ({
         friendId: friend.friendId._id,
         name: friend.friendId.name,
+        phoneNumber: friend.friendId.phoneNumber, // Include phoneNumber here
         status: friend.status,
         messages: (friend.messages || []).map((message) => ({
           senderId: message.senderId,
@@ -395,7 +417,6 @@ const UserController = {
         return res.status(404).json({ error: "Pesan tidak ditemukan" });
       }
 
-
       return res.status(200).json({
         senderId: lastMessage.senderId,
         receiverId: lastMessage.receiverId,
@@ -409,21 +430,21 @@ const UserController = {
     }
   },
 
-  profilpic : async (req, res) => {
+  profilpic: async (req, res) => {
     return res.status(201).json({ msg: "profile picture berhasil di upload" });
   },
 
-  getProfilpic : (req, res) => {
+  getProfilpic: (req, res) => {
     const user_id = req.params.user_id;
     const lokasinya = `uploads/profilpic/${user_id}.jpg`;
     return res.status(200).sendFile(lokasinya, { root: "." });
   },
 
-  chatImage : async (req, res) => {
+  chatImage: async (req, res) => {
     return res.status(201).json({ msg: "image berhasil dikirim" });
   },
 
-  getChatImage : (req, res) => {
+  getChatImage: (req, res) => {
     const messageId = req.params.messageId;
     const lokasinya = `uploads/chatImage/${messageId}.jpg`;
     return res.status(200).sendFile(lokasinya, { root: "." });

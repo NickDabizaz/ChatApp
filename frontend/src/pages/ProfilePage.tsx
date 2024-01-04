@@ -6,13 +6,6 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/system";
 import axios from "axios";
-import { useCookies } from "react-cookie";
-
-interface ProfileData {
-  name: string;
-  phoneNumber: string;
-  // Add other properties as needed
-}
 
 const Container = styled(Box)({
   width: "100%",
@@ -37,17 +30,17 @@ const AvatarImage = styled(Avatar)({
   margin: "auto",
 });
 
-const ProfilePage: React.FC = () => {
-  const [userData, setUserData] = useState<ProfileData | null>(null);
+function ProfilePage(props) {
+  const curUserId = props.curUserId;
+  const userData = props.userData;
+  const [profpic, setProfPic] = useState(props.userProfpic);
   const [editedName, setEditedName] = useState<string>("");
   const [editedPhoneNumber, setEditedPhoneNumber] = useState<string>("");
-  const [cookie, setCookie] = useCookies(["user_id"]);
-  const [profpic, setProfPic] = useState();
   const [selectedFile, setSelectedFile] = useState(null);
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3000/api/users/pic/${cookie.user_id}`)
+      .get(`http://localhost:3000/api/users/pic/${curUserId}`)
       .then((res) => {
         setProfPic(res.data);
       })
@@ -56,35 +49,16 @@ const ProfilePage: React.FC = () => {
       });
   }, [selectedFile]);
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        // Replace with your actual API endpoint
-        const response = await axios.get(
-          `http://localhost:3000/api/users/user-details/${cookie.user_id}`
-        );
-        setUserData(response.data);
-        setEditedName(response.data.name);
-        setEditedPhoneNumber(response.data.phoneNumber);
-        console.log(response.data);
-      } catch (error) {
-        console.error("Error fetching user data", error);
-      }
-    };
-
-    fetchUserData();
-  }, [cookie.user_id]);
-
   const handleSaveChanges = async () => {
     try {
       // Replace with your actual API endpoint
       const formData = new FormData();
       if (selectedFile) {
         formData.append("file", selectedFile);
-        alert("profile picture berhasil diubah")
+        alert("profile picture berhasil diubah");
       }
       const response = await axios.post(
-        `http://localhost:3000/api/users/profilpic/${cookie.user_id}`,
+        `http://localhost:3000/api/users/profilpic/${curUserId}`,
         formData,
         {
           headers: {
@@ -93,14 +67,11 @@ const ProfilePage: React.FC = () => {
         }
       );
 
-      await axios.put(
-        `http://localhost:3000/api/users/update/${cookie.user_id}`,
-        {
-          name: editedName,
-          phoneNumber: editedPhoneNumber,
-          // Add other properties as needed
-        }
-      );
+      await axios.put(`http://localhost:3000/api/users/update/${curUserId}`, {
+        name: editedName,
+        phoneNumber: editedPhoneNumber,
+        // Add other properties as needed
+      });
 
       // Optionally, you can update the local state with the edited data
       setUserData({
@@ -141,7 +112,7 @@ const ProfilePage: React.FC = () => {
                 alt="User Avatar"
                 src={
                   profpic
-                    ? `http://localhost:3000/api/users/pic/${cookie.user_id}`
+                    ? `http://localhost:3000/api/users/pic/${curUserId}`
                     : "https://i.pinimg.com/736x/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.jpg"
                 }
               />
@@ -181,7 +152,7 @@ const ProfilePage: React.FC = () => {
       </PaperContainer>
     </Container>
   );
-};
+}
 
 const FileUploader = ({ setSelectedFile }) => {
   const [tempFile, setTempFile] = useState("");

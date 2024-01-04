@@ -13,7 +13,7 @@ const Card = styled(Paper)({
   wordBreak: "break-all",
 });
 
-function ContactCard(props) {
+function ChatCard(props) {
   const [cookie] = useCookies(["user_id"]);
   const navigate = useNavigate();
 
@@ -37,4 +37,4 @@ function ContactCard(props) {
   ));
 }
 
-export default ContactCard;
+export default ChatCard;

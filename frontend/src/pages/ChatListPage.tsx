@@ -5,7 +5,7 @@ import Paper from "@mui/material/Paper";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import { style, styled } from "@mui/system";
-import ContactCard from "../components/ContactCard";
+import ChatCard from "../components/chatlistpage/ChatCard";
 import axios from "axios";
 import { useCookies } from "react-cookie";
 import {
@@ -87,7 +87,7 @@ function ChatListPage(props) {
           onChange={handlingSearch}
         />
         <Suspense fallback={<div>Loading...</div>}>
-          <ContactCard
+          <ChatCard
             friends={displayFriends}
             setCurFriend={props.setCurFriend}
           />

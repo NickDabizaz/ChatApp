@@ -1,20 +1,20 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const GroupChatController = require('../controllers/groupChatController.js');
+const GroupChatController = require("../controllers/groupChatController.js");
 
 // Membuat Group Chat
-router.post('/create', GroupChatController.createGroupChat);
+router.post("/create", GroupChatController.createGroupChat);
 
 // Menambahkan Anggota ke dalam Group Chat
-router.post('/:groupId/addMember', GroupChatController.addMemberToGroup);
+router.post("/:groupId/addMember", GroupChatController.addMemberToGroup);
 
 // Mengirim Pesan ke dalam Group Chat
-router.post('/:groupId/sendMessage', GroupChatController.sendMessageToGroup);
+router.post("/:groupId/sendMessage", GroupChatController.sendMessageToGroup);
 
 // Mengambil Semua Pesan dalam Group Chat (diurutkan dari yang terlama sampai terbaru)
-router.get('/:groupId/messages', GroupChatController.getAllMessagesInGroup);
+router.get("/:groupId/messages", GroupChatController.getAllMessagesInGroup);
 
 // Mengambil Detail Group Chat
-router.get('/:groupId/details', GroupChatController.getGroupDetails);
+router.get("/:groupId/details", GroupChatController.getGroupDetails);
 
 module.exports = router;

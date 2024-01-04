@@ -10,6 +10,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
 import TextsmsIcon from "@mui/icons-material/Textsms";
+import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 
 const Sidebar = styled(Box)({
   width: "5rem",
@@ -57,6 +58,10 @@ function Navbar(props) {
             <br />
             <Button variant="contained" onClick={() => setRoute("chat")}>
               <TextsmsIcon />
+            </Button>
+            <br />
+            <Button variant="contained" onClick={() => setRoute("addfriend")}>
+              <PersonAddAlt1Icon />
             </Button>
             <br />
             <Button variant="contained" onClick={() => setRoute("profile")}>
