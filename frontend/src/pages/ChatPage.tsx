@@ -29,7 +29,7 @@ const AvatarImage = styled(Avatar)({
 });
 
 const ChatMessageContainer = styled(Box)({
-  height: "70%",
+  height: "78%",
   backgroundColor: "silver",
   overflow: "auto",
 });
@@ -138,6 +138,7 @@ function ChatPage(props) {
       );
 
       if (selectedFile) {
+        console.log("masuk ga");
         const formData = new FormData();
         formData.append("file", selectedFile);
         const result = await axios.post(
@@ -150,6 +151,7 @@ function ChatPage(props) {
           }
         );
         setAnchorEl(null);
+        setSelectedFile(null);
       }
 
       // Update the chat after sending the message
@@ -260,7 +262,7 @@ function ChatPage(props) {
                     wordBreak: "break-all",
                   }}
                 >
-                  {message.content.includes("jpg") ? (
+                  {message.content.includes("jpg") || message.content.includes("png") || message.content.includes("jpeg") ? (
                     <img
                       alt="Image Chat"
                       src={`http://localhost:3000/api/users/messagePic/${message._id}`}
