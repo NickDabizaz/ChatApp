@@ -37,4 +37,6 @@ router.post(
 
 router.get("/messagePic/:messageId", UserController.getChatImage);
 
+router.get("/friend-requests/:userId", UserController.getFriendRequests);
+
 module.exports = router;

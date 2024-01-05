@@ -183,6 +183,49 @@ const GroupChatController = {
       res.status(500).json({ error: "Internal Server Error" });
     }
   },
+
+  getUserGroups: async (req, res) => {
+    try {
+      const userId = req.params.userId;
+
+      // Cari semua group dimana user adalah admin
+      const adminGroups = await GroupChat.find({ admin: userId })
+        .populate("admin", "_id name") // Menggunakan populate untuk mengambil detail admin
+        .populate("members", "_id name"); // Menggunakan populate untuk mengambil detail members
+
+      // Cari semua group dimana user adalah member
+      const memberGroups = await GroupChat.find({ members: userId })
+        .populate("admin", "_id name") // Menggunakan populate untuk mengambil detail admin
+        .populate("members", "_id name"); // Menggunakan populate untuk mengambil detail members
+
+      // Gabungkan kedua array group
+      const allGroups = adminGroups.concat(memberGroups);
+
+      // Format ulang output sesuai kebutuhan
+      const formattedGroups = allGroups.map((group) => ({
+        idGroup: group._id,
+        name: group.name,
+        admin: {
+          idUser: group.admin._id,
+          name: group.admin.name,
+        },
+        members: group.members.map((member) => ({
+          idUser: member._id,
+          name: member.name,
+        })),
+      }));
+
+      const response = {
+        totalGroups: formattedGroups.length,
+        groups: formattedGroups,
+      };
+
+      res.status(200).json(response);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  },
 };
 
 module.exports = GroupChatController;

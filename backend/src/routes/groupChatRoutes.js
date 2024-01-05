@@ -17,4 +17,7 @@ router.get("/:groupId/messages", GroupChatController.getAllMessagesInGroup);
 // Mengambil Detail Group Chat
 router.get("/:groupId/details", GroupChatController.getGroupDetails);
 
+// Menampilkan Semua Group User
+router.get("/userGroups/:userId", GroupChatController.getUserGroups);
+
 module.exports = router;

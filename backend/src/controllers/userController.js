@@ -449,6 +449,32 @@ const UserController = {
     const lokasinya = `uploads/chatImage/${messageId}.jpg`;
     return res.status(200).sendFile(lokasinya, { root: "." });
   },
+
+  getFriendRequests: async (req, res) => {
+    try {
+      const { userId } = req.params;
+
+      // Find the user by ID and populate the friends array
+      const user = await User.findById(userId).populate({
+        path: "friends.friendId",
+        select: "name", // You can select other fields if needed
+      });
+
+      if (!user) {
+        return res.status(404).json({ error: "User not found." });
+      }
+
+      // Filter the friends array to get only pending friend requests
+      const friendRequests = user.friends.filter(
+        (friend) => friend.status === "pending"
+      );
+
+      res.status(200).json({ friendRequests });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Internal server error." });
+    }
+  },
 };
 
 module.exports = UserController;
