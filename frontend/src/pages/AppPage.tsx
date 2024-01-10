@@ -39,6 +39,7 @@ const Container = styled(Box)({
   height: "90vh",
   minHeight: "90vh",
   backgroundColor: "lightgray",
+  border: "1px solid black",
 });
 
 const ContainerNavbar = styled(Box)({
@@ -47,6 +48,9 @@ const ContainerNavbar = styled(Box)({
 
 const ContainerContentLeft = styled(Box)({
   flex: 20,
+  border: "1px solid black",
+  borderTop: "none",
+  borderBottom: "none",
 });
 
 const ContainerContentRight = styled(Box)({
@@ -124,7 +128,9 @@ function AppPage() {
           `http://localhost:3000/api/users/user-details/${cookie.user_id}`
         );
         setUserData(response.data);
-        setUserFriends(response.data.friends);
+        setUserFriends(
+          response.data.friends.filter((friend) => friend.status == "accepted")
+        );
         console.log(response.data);
       } catch (error) {
         console.error("Error fetching user data", error);
@@ -166,6 +172,7 @@ function AppPage() {
                 curUserId={cookie.user_id}
                 setCurFriend={setCurFriend}
                 userData={userData}
+                userFriends={userFriends}
                 userProfpic={userProfpic}
               />
             ) : route === "chat" ? (
@@ -185,6 +192,7 @@ function AppPage() {
               <ProfilePage
                 curUserId={cookie.user_id}
                 userData={userData}
+                setUserData={setUserData}
                 userProfpic={userProfpic}
               />
             ) : (
@@ -195,6 +203,8 @@ function AppPage() {
               />
             )}
           </ContainerContentLeft>
+
+          {/* ini bagian kanan */}
           <ContainerContentRight>
             {curFriend ? (
               <ChatPage

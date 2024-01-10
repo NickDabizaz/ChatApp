@@ -167,7 +167,25 @@ function AddFriendPage(props) {
           )}
         </>
       ) : (
-        <Typography>Create Group</Typography>
+        <>
+          <Typography>Create Group</Typography>
+
+          <TextField
+            label="Group Name"
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            // value={search}
+            // onChange={handlingSearch}
+            InputProps={{
+              style: {
+                color: theme.palette.text.primary, // Sesuaikan dengan properti yang diinginkan
+              },
+            }}
+          />
+
+          <Button>Create Group</Button>
+        </>
       )}
     </Container>
   );

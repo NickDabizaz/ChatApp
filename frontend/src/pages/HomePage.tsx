@@ -73,6 +73,7 @@ function HomePage(props) {
   const userData = props.userData;
   const userProfpic = props.userProfpic;
   const curUserId = props.curUserId;
+  const userFriends = props.userFriends;
   const setCurFriend = props.setCurFriend;
   console.log(curUserId);
 
@@ -113,7 +114,7 @@ function HomePage(props) {
                   <FriendListCardContainer>
                     {/* ini contact card */}
                     <ContactCard
-                      friends={userData.friends}
+                      friends={userFriends}
                       setCurFriend={setCurFriend}
                     />
                   </FriendListCardContainer>
