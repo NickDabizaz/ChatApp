@@ -68,7 +68,7 @@ const UserController = {
       }
 
       user.friends.push({ friendId: friend._id, status: "pending" });
-      friend.friends.push({ friendId: user._id, status: "pending" });
+      friend.friends.push({ friendId: user._id, status: "requested" });
 
       await user.save();
       await friend.save();
@@ -286,16 +286,23 @@ const UserController = {
           .json({ error: "User atau teman tidak ditemukan" });
       }
 
-      const friendObj = user.friends.find(
+      const userObj = user.friends.find(
         (friend) => friend.friendId.toString() === friendId
       );
-      if (!friendObj) {
+
+      const friendObj = friend.friends.find(
+        (friend) => friend.friendId.toString() === userId
+      );
+
+      if (!friendObj || !userObj) {
         return res.status(404).json({ error: "Teman tidak ditemukan" });
       }
 
       friendObj.status = "accepted";
+      userObj.status = "accepted";
 
       await user.save();
+      await friend.save();
 
       res.status(200).json({ message: "Permintaan pertemanan diterima" });
     } catch (error) {
@@ -466,7 +473,7 @@ const UserController = {
 
       // Filter the friends array to get only pending friend requests
       const friendRequests = user.friends.filter(
-        (friend) => friend.status === "pending"
+        (friend) => friend.status === "requested"
       );
 
       res.status(200).json({ friendRequests });

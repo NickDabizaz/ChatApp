@@ -20,6 +20,7 @@ const GroupChatController = {
     try {
       const { name, admin } = req.body;
 
+      console.log(name + " " + admin);
       const { error } = createGroupChatValidation.validate({ name, admin });
       if (error) {
         return res.status(400).json({ error: error.details[0].message });

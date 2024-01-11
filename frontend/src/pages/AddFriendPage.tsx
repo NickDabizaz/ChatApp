@@ -37,7 +37,10 @@ function AddFriendPage(props) {
   const [searchResult, setSearchResult] = useState(null);
   const [searchResultProfpic, setSearchResultProfpic] = useState(null);
   const [searchLoading, setSearchLoading] = useState(false);
+  const [groupName, setGroupName] = useState("");
   const curUserId = props.curUserId;
+  const userFriendRequests = props.userFriendRequests;
+  console.log(props);
 
   const theme = useTheme();
 
@@ -87,6 +90,27 @@ function AddFriendPage(props) {
     }
   };
 
+  const handleGroupNameChange = (e) => {
+    setGroupName(e.target.value);
+  };
+
+  const handleCreateGroup = async () => {
+    alert("asd");
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/group-chats/create",
+        {
+          name: groupName,
+          admin: curUserId,
+        }
+      );
+
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error adding friend:", error);
+    }
+  };
+
   useEffect(() => {
     if (search && searchResult) {
       const fetchUserProfpic = async () => {
@@ -107,18 +131,23 @@ function AddFriendPage(props) {
 
   return (
     <Container>
+      {/* tombol friend request */}
       <FlexContainer onClick={() => setAdd("request")}>
         <Card>
           <PersonAddIcon />
           Friend Request
         </Card>
       </FlexContainer>
+
+      {/* tombol friend search */}
       <FlexContainer onClick={() => setAdd("friend")}>
         <Card>
           <PersonSearchIcon />
           Friend Search
         </Card>
       </FlexContainer>
+
+      {/* tombol create group */}
       <FlexContainer onClick={() => setAdd("group")}>
         <Card>
           <GroupIcon />
@@ -130,7 +159,12 @@ function AddFriendPage(props) {
       <br />
 
       {add === "request" ? (
-        <Typography>Friend Request</Typography>
+        <>
+          <Typography>Friend Request</Typography>
+
+          {userFriendRequests &&
+            userFriendRequests.map((friend) => <div>{friend.name}</div>)}
+        </>
       ) : add === "friend" ? (
         <>
           <Typography>Add friend</Typography>
@@ -167,25 +201,27 @@ function AddFriendPage(props) {
           )}
         </>
       ) : (
-        <>
-          <Typography>Create Group</Typography>
+        add === "group" && (
+          <>
+            <Typography>Create Group</Typography>
 
-          <TextField
-            label="Group Name"
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            // value={search}
-            // onChange={handlingSearch}
-            InputProps={{
-              style: {
-                color: theme.palette.text.primary, // Sesuaikan dengan properti yang diinginkan
-              },
-            }}
-          />
+            <TextField
+              label="Group Name"
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              value={groupName}
+              onChange={handleGroupNameChange}
+              InputProps={{
+                style: {
+                  color: theme.palette.text.primary, // Sesuaikan dengan properti yang diinginkan
+                },
+              }}
+            />
 
-          <Button>Create Group</Button>
-        </>
+            <Button onClick={handleCreateGroup}>Create Group</Button>
+          </>
+        )
       )}
     </Container>
   );

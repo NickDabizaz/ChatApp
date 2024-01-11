@@ -38,7 +38,6 @@ const Container = styled(Box)({
   minWidth: "90vw",
   height: "90vh",
   minHeight: "90vh",
-  backgroundColor: "lightgray",
   border: "1px solid black",
 });
 
@@ -47,14 +46,14 @@ const ContainerNavbar = styled(Box)({
 });
 
 const ContainerContentLeft = styled(Box)({
-  flex: 20,
+  flex: 6,
   border: "1px solid black",
   borderTop: "none",
   borderBottom: "none",
 });
 
 const ContainerContentRight = styled(Box)({
-  flex: 40,
+  flex: 12,
 });
 
 const PaperContainer = styled(Paper)({
@@ -74,6 +73,7 @@ function AppPage() {
   const [userData, setUserData] = useState(null);
   const [userProfpic, setUserProfpic] = useState(null);
   const [userFriends, setUserFriends] = useState(null);
+  const [userFriendRequests, setUserFriendRequests] = useState(null);
   const [curFriend, setCurFriend] = useState(null);
   const [isDarkMode, setDarkMode] = useState(false);
 
@@ -131,6 +131,11 @@ function AppPage() {
         setUserFriends(
           response.data.friends.filter((friend) => friend.status == "accepted")
         );
+        setUserFriendRequests(
+          response.data.friends.filter(
+            (friend) => friend.status === "requested"
+          )
+        );
         console.log(response.data);
       } catch (error) {
         console.error("Error fetching user data", error);
@@ -159,7 +164,7 @@ function AppPage() {
         <Container>
           {/* ini navbar dikiri */}
           <ContainerNavbar>
-            <Navbar setRoute={setRoute} />
+            <Navbar setRoute={setRoute} route={route} />
           </ContainerNavbar>
 
           {/* ini konten yang kiri */}
@@ -186,6 +191,7 @@ function AppPage() {
               <AddFriendPage
                 userFriends={userFriends}
                 curUserId={cookie.user_id}
+                userFriendRequests={userFriendRequests}
               />
             ) : route === "profile" ? (
               //ini kalo routenya profile

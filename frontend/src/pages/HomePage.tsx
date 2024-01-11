@@ -29,6 +29,7 @@ const Container = styled(Box)({
   display: "flex",
   height: "90vh",
   maxHeight: "90vh",
+  padding: "1rem",
   // justifyContent: "center",
   // alignItems: "center",
 });
@@ -54,13 +55,14 @@ const HomeContainer = styled(Box)(({ theme }) => ({
   height: "100%",
   backgroundColor: theme.palette.background.default, // Sesuaikan latar belakang dengan tema
   overflow: "auto",
-  color: theme.palette.primary.contrastText,
+  color: "black",
+  // color: theme.palette.primary.contrastText,
 }));
 
 const FriendListContainer = styled(Box)(({ theme }) => ({
   width: "100%",
   height: "auto",
-  backgroundColor: theme.palette.secondary.main, // Sesuaikan latar belakang dengan tema
+  // backgroundColor: theme.palette.secondary.main, // Sesuaikan latar belakang dengan tema
 }));
 
 const FriendListCardContainer = styled(Box)({
@@ -75,7 +77,7 @@ function HomePage(props) {
   const curUserId = props.curUserId;
   const userFriends = props.userFriends;
   const setCurFriend = props.setCurFriend;
-  console.log(curUserId);
+  console.log(userData);
 
   return (
     <Container>
@@ -124,7 +126,7 @@ function HomePage(props) {
 
             <FriendListContainer>
               {/* ini drop down Groups */}
-              <Accordion>
+              <Accordion sx={{ boxShadow: "none" }}>
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
                   aria-controls="panel2a-content"

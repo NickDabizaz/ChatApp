@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema({
       friendId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
       status: {
         type: String,
-        enum: ["pending", "accepted"],
+        enum: ["pending", "requested", "accepted"],
         default: "pending",
       },
       messages: [
