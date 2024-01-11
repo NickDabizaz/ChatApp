@@ -40,7 +40,6 @@ function AddFriendPage(props) {
   const [groupName, setGroupName] = useState("");
   const curUserId = props.curUserId;
   const userFriendRequests = props.userFriendRequests;
-  console.log(props);
 
   const theme = useTheme();
 
@@ -49,15 +48,11 @@ function AddFriendPage(props) {
   };
 
   const handleSearch = async () => {
-    console.log(props.userFriends);
-
     let temp = props.userFriends.filter(
       (friend) => friend.phoneNumber === search
     );
-    console.log(temp);
 
     if (temp.length > 0) {
-      console.log("udah temenan");
       setSearchResult(null);
     } else {
       try {
@@ -66,7 +61,6 @@ function AddFriendPage(props) {
         );
         setSearchResult(response.data);
         setSearchLoading(true);
-        console.log(response.data);
       } catch (error) {
         console.error("Error fetching user data", error);
         setSearchResult(null);
@@ -83,8 +77,6 @@ function AddFriendPage(props) {
           friendPhoneNumber: search,
         }
       );
-
-      console.log(response.data);
     } catch (error) {
       console.error("Error adding friend:", error);
     }
@@ -95,7 +87,6 @@ function AddFriendPage(props) {
   };
 
   const handleCreateGroup = async () => {
-    alert("asd");
     try {
       const response = await axios.post(
         "http://localhost:3000/api/group-chats/create",
@@ -104,8 +95,6 @@ function AddFriendPage(props) {
           admin: curUserId,
         }
       );
-
-      console.log(response.data);
     } catch (error) {
       console.error("Error adding friend:", error);
     }

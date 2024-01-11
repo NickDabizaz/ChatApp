@@ -1,38 +1,22 @@
-import React, { Suspense, useEffect, useState, useRef } from "react";
-import { Outlet, useLoaderData } from "react-router-dom";
+import React from "react";
 import Box from "@mui/system/Box";
-import Paper from "@mui/material/Paper";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
-import { style, styled } from "@mui/system";
-import ContactCard from "../components/homepage/ContactCard";
-import axios from "axios";
-import { useCookies } from "react-cookie";
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Button,
-  IconButton,
-  TextField,
-} from "@mui/material";
-import SendIcon from "@mui/icons-material/Send";
-import EmojiIcon from "@mui/icons-material/EmojiEmotions";
-import EditProfilePage from "./ProfilePage";
-import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
-import Popper from "@mui/material/Popper";
-import AddCommentIcon from "@mui/icons-material/AddComment";
+import { styled } from "@mui/system";
+import ContactCardFriend from "../components/homepage/ContactCardFriend";
+import ContactCardGroup from "../components/homepage/ContactCardGroup";
+import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { io } from "socket.io-client";
 
-const Container = styled(Box)({
+const Container = styled(Box)(({ theme }) => ({
   display: "flex",
   height: "90vh",
   maxHeight: "90vh",
   padding: "1rem",
+  backgroundColor: theme.palette.background.default,
   // justifyContent: "center",
   // alignItems: "center",
-});
+}));
 
 const LeftContainer = styled(Box)(({ theme }) => ({
   minWidth: "20rem",
@@ -77,77 +61,84 @@ function HomePage(props) {
   const curUserId = props.curUserId;
   const userFriends = props.userFriends;
   const setCurFriend = props.setCurFriend;
-  console.log(userData);
+  const userGroups = props.userGroups;
+  const setCurGroup = props.setCurGroup;
+  console.log(props);
 
   return (
     <Container>
       {/* content kiri */}
-      <LeftContainer>
-        {userData ? (
-          <HomeContainer>
-            {/* ini pp sama nama */}
-            <FlexContainer>
-              <AvatarImage
-                alt="Profile picture"
-                src={
-                  userProfpic
-                    ? `http://localhost:3000/api/users/pic/${curUserId}`
-                    : "https://i.pinimg.com/736x/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.jpg"
-                }
-              />
-              {userData.name}
-            </FlexContainer>
+      {userData ? (
+        <HomeContainer>
+          {/* ini pp sama nama */}
+          <FlexContainer>
+            <AvatarImage
+              alt="Profile picture"
+              src={
+                userProfpic
+                  ? `http://localhost:3000/api/users/pic/${curUserId}`
+                  : "https://i.pinimg.com/736x/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.jpg"
+              }
+            />
+            {userData.name}
+          </FlexContainer>
 
-            {/* ini container dropdown Friends */}
-            <FriendListContainer>
-              {/* ini dropdown Friends  */}
-              <Accordion sx={{ boxShadow: "none" }}>
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls="panel1a-content"
-                  id="panel1a-header"
-                >
-                  Friends
-                </AccordionSummary>
+          {/* ini container dropdown Friends */}
+          <FriendListContainer>
+            {/* ini dropdown Friends  */}
+            <Accordion sx={{ boxShadow: "none" }}>
+              {/* ini tulisan di dropdownnya */}
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                Friends
+              </AccordionSummary>
 
-                {/* ini isi dropdown Friends */}
-                <AccordionDetails>
-                  {/* ini container contact card */}
-                  <FriendListCardContainer>
-                    {/* ini contact card */}
-                    <ContactCard
-                      friends={userFriends}
-                      setCurFriend={setCurFriend}
-                    />
-                  </FriendListCardContainer>
-                </AccordionDetails>
-              </Accordion>
-            </FriendListContainer>
+              {/* ini isi dropdown Friends */}
+              <AccordionDetails>
+                {/* ini container contact card */}
+                <FriendListCardContainer>
+                  {/* ini contact card */}
+                  <ContactCardFriend
+                    friends={userFriends}
+                    setCurFriend={setCurFriend}
+                    setcurGroup={setCurGroup}
+                  />
+                </FriendListCardContainer>
+              </AccordionDetails>
+            </Accordion>
+          </FriendListContainer>
 
-            <FriendListContainer>
-              {/* ini drop down Groups */}
-              <Accordion sx={{ boxShadow: "none" }}>
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls="panel2a-content"
-                  id="panel2a-header"
-                >
-                  <Typography>Groups</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Typography>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Suspendisse malesuada lacus ex, sit amet blandit leo
-                    lobortis eget.
-                  </Typography>
-                </AccordionDetails>
-              </Accordion>
-            </FriendListContainer>
-          </HomeContainer>
-        ) : (
-          "loading..."
-        )}
-      </LeftContainer>
+          <FriendListContainer>
+            {/* ini drop down Groups */}
+            <Accordion sx={{ boxShadow: "none" }}>
+              {/* ini tulisan di dropdownnya */}
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel2a-content"
+                id="panel2a-header"
+              >
+                <Typography>Groups</Typography>
+              </AccordionSummary>
+
+              {/* ini isi dropdown Groups */}
+              <AccordionDetails>
+                <Typography>
+                  <ContactCardGroup
+                    groups={userGroups}
+                    setcurGroup={setCurGroup}
+                    setCurFriend={setCurFriend}
+                  />
+                </Typography>
+              </AccordionDetails>
+            </Accordion>
+          </FriendListContainer>
+        </HomeContainer>
+      ) : (
+        "loading..."
+      )}
     </Container>
   );
 }

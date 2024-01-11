@@ -17,17 +17,17 @@ const Text = styled(Box)({
   boxShadow: "none", // Remove the default box shadow
 });
 
-function ContactCard(props) {
-  const [cookie] = useCookies(["user_id"]);
-  const navigate = useNavigate();
-
-  console.log(props.friends);
-
+function ContactCardFriend(props) {
   return props.friends.map((friend) => (
-    <Card onClick={() => props.setCurFriend(friend)}>
+    <Card
+      onClick={() => {
+        props.setCurFriend(friend);
+        props.setCurGroup(null);
+      }}
+    >
       <Text>{friend.name}</Text>
     </Card>
   ));
 }
 
-export default ContactCard;
+export default ContactCardFriend;

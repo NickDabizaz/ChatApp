@@ -75,9 +75,11 @@ const ChatBubble = styled(Box)(({ theme }) => ({
 }));
 
 function ChatPage(props) {
+  const curUserId = props.curUserId;
   const curFriend = props.curFriend;
   const setCurFriend = props.setCurFriend;
-  const curUserId = props.curUserId;
+  const curGroup = props.curGroup;
+  const setCurGroup = props.setCurGroup;
   const [curFriendprofpic, setCurFriendprofpic] = useState();
   const [chat, setChat] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
@@ -265,6 +267,8 @@ function ChatPage(props) {
                   🟢online
                 </Paper>
               </>
+            ) : curGroup ? (
+              "group"
             ) : (
               "loading"
             )}

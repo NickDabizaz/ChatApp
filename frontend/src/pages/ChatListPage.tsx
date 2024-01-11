@@ -49,6 +49,7 @@ function ChatListPage(props) {
   const [filteredFriends, setFilteredFriends] = useState(null);
 
   const userFriends = props.userFriends;
+  const userGroups = props.userGroups;
   const theme = useTheme(); // Gunakan hook useTheme untuk mendapatkan tema
 
   const handlingSearch = (e) => {

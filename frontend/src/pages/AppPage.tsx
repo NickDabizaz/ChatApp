@@ -5,7 +5,7 @@ import Paper from "@mui/material/Paper";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import { style, styled } from "@mui/system";
-import ContactCard from "../components/homepage/ContactCard";
+import ContactCard from "../components/homepage/ContactCardFriend";
 import axios from "axios";
 import { useCookies } from "react-cookie";
 import {
@@ -73,8 +73,10 @@ function AppPage() {
   const [userData, setUserData] = useState(null);
   const [userProfpic, setUserProfpic] = useState(null);
   const [userFriends, setUserFriends] = useState(null);
-  const [userFriendRequests, setUserFriendRequests] = useState(null);
   const [curFriend, setCurFriend] = useState(null);
+  const [userGroups, setUserGroups] = useState(null);
+  const [curGroup, setCurGroup] = useState(null);
+  const [userFriendRequests, setUserFriendRequests] = useState(null);
   const [isDarkMode, setDarkMode] = useState(false);
 
   const toggleDarkMode = () => {
@@ -136,7 +138,6 @@ function AppPage() {
             (friend) => friend.status === "requested"
           )
         );
-        console.log(response.data);
       } catch (error) {
         console.error("Error fetching user data", error);
       }
@@ -154,9 +155,27 @@ function AppPage() {
       }
     };
 
+    const fetchUserGroup = async () => {
+      try {
+        // Replace with your actual API endpoint
+        const response = await axios.get(
+          `http://localhost:3000/api/group-chats/userGroups/${cookie.user_id}`
+        );
+        setUserGroups(response.data);
+      } catch (error) {
+        console.error("Error fetching user profpic", error);
+      }
+    };
+
     fetchUserProfpic();
     fetchUserData();
+    fetchUserGroup();
   }, [cookie.user_id]);
+
+  useEffect(() => {
+    console.log(userData);
+    console.log(userGroups);
+  }, [userData, userGroups]);
 
   return (
     <>
@@ -173,40 +192,62 @@ function AppPage() {
 
             {route === "home" ? (
               //ini kalo routenya home
-              <HomePage
-                curUserId={cookie.user_id}
-                setCurFriend={setCurFriend}
-                userData={userData}
-                userFriends={userFriends}
-                userProfpic={userProfpic}
-              />
+              cookie.user_id && userData && userFriends && userGroups ? (
+                <HomePage
+                  curUserId={cookie.user_id}
+                  userData={userData}
+                  userProfpic={userProfpic}
+                  userFriends={userFriends}
+                  setCurFriend={setCurFriend}
+                  userGroups={userGroups}
+                  setCurGroup={setCurGroup}
+                />
+              ) : (
+                "loading..."
+              )
             ) : route === "chat" ? (
               //ini kalo routenya chat
-              <ChatListPage
-                userFriends={userFriends}
-                setCurFriend={setCurFriend}
-              />
+              userFriends && userGroups ? (
+                <ChatListPage
+                  userFriends={userFriends}
+                  setCurFriend={setCurFriend}
+                  userGroups={userGroups}
+                  setCurGroups={setCurGroup}
+                />
+              ) : (
+                "loading..."
+              )
             ) : route === "addfriend" ? (
               //ini kalo routenya addfriend
-              <AddFriendPage
-                userFriends={userFriends}
-                curUserId={cookie.user_id}
-                userFriendRequests={userFriendRequests}
-              />
+              userFriends && cookie.user_id ? (
+                <AddFriendPage
+                  userFriends={userFriends}
+                  curUserId={cookie.user_id}
+                  userFriendRequests={userFriendRequests}
+                />
+              ) : (
+                "loading..."
+              )
             ) : route === "profile" ? (
               //ini kalo routenya profile
-              <ProfilePage
-                curUserId={cookie.user_id}
-                userData={userData}
-                setUserData={setUserData}
-                userProfpic={userProfpic}
-              />
+              cookie.user_id && userData ? (
+                <ProfilePage
+                  curUserId={cookie.user_id}
+                  userData={userData}
+                  setUserData={setUserData}
+                  userProfpic={userProfpic}
+                />
+              ) : (
+                "loading..."
+              )
             ) : (
-              //ini kalo routenya setting
-              <SettingPage
-                removeCookie={removeCookie}
-                toggleDarkMode={toggleDarkMode}
-              />
+              route === "setting" && (
+                //ini kalo routenya setting
+                <SettingPage
+                  removeCookie={removeCookie}
+                  toggleDarkMode={toggleDarkMode}
+                />
+              )
             )}
           </ContainerContentLeft>
 

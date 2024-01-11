@@ -14,11 +14,6 @@ const Card = styled(Paper)({
 });
 
 function ChatCard(props) {
-  const [cookie] = useCookies(["user_id"]);
-  const navigate = useNavigate();
-
-  console.log(props.friends);
-
   return props.friends.map(
     (friend) =>
       friend.messages.lenght > 0 && (
