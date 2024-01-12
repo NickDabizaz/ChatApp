@@ -289,6 +289,8 @@ function ChatPage(props) {
 
   const handleEmojiButtonClicked = () => {};
 
+  const handleInviteMember = async () => {};
+
   useEffect(() => {
     setChat(null);
     console.log(curFriend);
@@ -406,6 +408,8 @@ function ChatPage(props) {
               "loading"
             )}
           </FlexContainer>
+
+          {/* ini pop up detail group / friend */}
           <Popover
             open={Boolean(anchorE2)}
             anchorE2={anchorE2}
@@ -455,6 +459,15 @@ function ChatPage(props) {
                           </FlexContainer>
                         </ContainerMember>
                       ))}
+                      {console.log(curGroup)}
+                      {curGroup.admin.userId === curUserId && (
+                        <Button
+                          onClick={handleInviteMember}
+                          sx={{ color: "black" }}
+                        >
+                          invite member
+                        </Button>
+                      )}
                     </Box>
                   </ContainerDetail>
                 )

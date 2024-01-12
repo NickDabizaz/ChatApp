@@ -209,11 +209,11 @@ const GroupChatController = {
         idGroup: group._id,
         name: group.name,
         admin: {
-          idUser: group.admin._id,
+          userId: group.admin._id,
           name: group.admin.name,
         },
         members: group.members.map((member) => ({
-          idUser: member._id,
+          userId: member._id,
           name: member.name,
         })),
       }));
