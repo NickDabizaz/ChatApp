@@ -14,22 +14,24 @@ const Card = styled(Paper)({
 });
 
 function ChatCard(props) {
+  console.log(props);
+
   return props.friends.map(
-    (friend) =>
-      friend.messages.lenght > 0 && (
-        <Card
-          elevation={3}
-          onClick={() =>
-            // navigate(`/home/chat/${friend.friendId}`)
-            props.setCurFriend(friend)
-          }
-        >
-          <Typography variant="h6">{friend.name}</Typography>
-          <Typography variant="body2" color="textSecondary">
-            {/* masih salah, yang ditampilin message trakhir meskipun dari diri sendiri */}
-            {friend.messages[friend.messages.length - 1].content}
-          </Typography>
-        </Card>
+    (friend, index) =>
+      friend.messages.length > 0 && (
+        <>
+          <Card
+            key={index}
+            elevation={3}
+            onClick={() => props.setCurFriend(friend)}
+          >
+            <Typography variant="h6">{friend.name}</Typography>
+            <Typography variant="body2" color="textSecondary">
+              {/* masih salah, yang ditampilin message trakhir meskipun dari diri sendiri */}
+              {friend.messages[friend.messages.length - 1].content}
+            </Typography>
+          </Card>
+        </>
       )
   );
 }

@@ -7,7 +7,7 @@ import Avatar from "@mui/material/Avatar";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import PersonSearchIcon from "@mui/icons-material/PersonSearch";
 import GroupIcon from "@mui/icons-material/Group";
-import { styled, useTheme } from "@mui/system";
+import { margin, styled, useTheme } from "@mui/system";
 import axios from "axios";
 
 const Container = styled(Box)(({ theme }) => ({
@@ -123,8 +123,13 @@ function AddFriendPage(props) {
       {/* tombol friend request */}
       <FlexContainer onClick={() => setAdd("request")}>
         <Card>
-          <PersonAddIcon />
-          Friend Request
+          <FlexContainer>
+            <PersonAddIcon />
+            Friend Request
+            <Box sx={{ marginLeft: "auto", opacity: "50%" }}>
+              {userFriendRequests.length > 0 && "🔴"}
+            </Box>
+          </FlexContainer>
         </Card>
       </FlexContainer>
 

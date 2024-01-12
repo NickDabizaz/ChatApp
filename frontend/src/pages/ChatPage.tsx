@@ -2,12 +2,13 @@ import React, { Suspense, useEffect, useState, useRef } from "react";
 import Box from "@mui/system/Box";
 import Paper from "@mui/material/Paper";
 import Avatar from "@mui/material/Avatar";
-import { styled } from "@mui/system";
+import { border, styled } from "@mui/system";
 import axios from "axios";
 import { Button, IconButton, Popover, TextField } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import EmojiIcon from "@mui/icons-material/EmojiEmotions";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
+import ExpandCircleDownIcon from "@mui/icons-material/ExpandCircleDown";
 import Popper from "@mui/material/Popper";
 import { io } from "socket.io-client";
 
@@ -43,6 +44,7 @@ const ChatMessageContainer = styled(Box)(({ theme }) => ({
   height: "70%",
   backgroundColor: theme.palette.background.default, // Sesuaikan latar belakang dengan tema
   overflow: "auto",
+  position: "relative",
 }));
 
 const UserInputField = styled(Box)(({ theme }) => ({
@@ -76,6 +78,23 @@ const ChatBubble = styled(Box)(({ theme }) => ({
   color: theme.palette.primary.contrastText,
 }));
 
+const ContainerDetail = styled(Box)(({ theme }) => ({
+  border: "1px solid black",
+  backgroundColor: theme.palette.primary.main,
+}));
+
+const ContainerMember = styled(Box)(({ theme }) => ({
+  height: "50px",
+  width: "100%",
+  border: "1px solid black",
+  backgroundColor: theme.palette.primary.main,
+}));
+
+const MemberImage = styled(Avatar)(({ theme }) => ({
+  height: "40px",
+  width: "40px",
+}));
+
 function ChatPage(props) {
   const curUserId = props.curUserId;
   const curFriend = props.curFriend;
@@ -103,6 +122,10 @@ function ChatPage(props) {
 
   const handleClickPopperDetail = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorE2(anchorE2 ? null : event.currentTarget);
+  };
+
+  const handlePopDetailClose = () => {
+    setAnchorE2(null);
   };
 
   const handleFileChange = (event) => {
@@ -245,8 +268,9 @@ function ChatPage(props) {
         const response = await axios.get(
           `http://localhost:3000/api/group-chats/${curGroup.idGroup}/details`
         );
-        const members = response.data.members;
+        const members = [];
         members.push(response.data.admin);
+        response.data.members.map((member) => members.push(member));
         setMember(members);
         console.log(response.data);
       } catch (error) {
@@ -255,8 +279,19 @@ function ChatPage(props) {
     }
   };
 
+  const scrollToLatestMessage = () => {
+    scrollRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "end",
+      inline: "end",
+    });
+  };
+
+  const handleEmojiButtonClicked = () => {};
+
   useEffect(() => {
     setChat(null);
+    console.log(curFriend);
 
     if (curFriend) {
       axios
@@ -316,8 +351,8 @@ function ChatPage(props) {
     <>
       <Container>
         {/* gambar dan nama*/}
-        <FriendDetailContainer onClick={handleClickPopperDetail}>
-          <FlexContainer>
+        <FriendDetailContainer>
+          <FlexContainer onClick={handleClickPopperDetail}>
             <div
               onClick={() => {
                 setCurFriend(null);
@@ -374,9 +409,9 @@ function ChatPage(props) {
           <Popover
             open={Boolean(anchorE2)}
             anchorE2={anchorE2}
-            onClose={() => setAnchorE2(null)}
+            onClose={handlePopDetailClose}
             anchorOrigin={{
-              vertical: "bottom",
+              vertical: "top",
               horizontal: "center", // Sesuaikan agar Popover tepat berada di bawah FriendDetailContainer
             }}
             transformOrigin={{
@@ -384,9 +419,48 @@ function ChatPage(props) {
               horizontal: "center", // Sesuaikan agar Popover tepat berada di bawah FriendDetailContainer
             }}
           >
-            {/* Isi Popover disini */}
-            <Box sx={{ p: 2, width: 200, bgcolor: "red" }}>
-              Content dalam Popover
+            {/* Ini isi popup nya */}
+            <Box sx={{ width: "23vw" }}>
+              {curFriend ? (
+                <ContainerDetail>
+                  <Box>ini pp</Box>
+                  <Box>{curFriend.name}</Box>
+                </ContainerDetail>
+              ) : curGroup ? (
+                member && (
+                  <ContainerDetail>
+                    <Box>ini pp</Box>
+                    <Box>{curGroup.name}</Box>
+                    <Box>Members</Box>
+                    <Box>
+                      {member.map((user) => (
+                        <ContainerMember
+                          onClick={() => {
+                            setCurFriend({ friendId: user.userId });
+                            setCurGroup(null);
+                          }}
+                          style={{
+                            pointerEvents: `${
+                              user.userId === curUserId ? "none" : "auto"
+                            }`,
+                            cursor: "pointer",
+                          }}
+                        >
+                          <FlexContainer>
+                            <MemberImage alt="Member Profile Picture" />
+                            <Box>{user.name}</Box>
+                            {user.role === "admin" && (
+                              <Box sx={{ marginLeft: "auto" }}>admin</Box>
+                            )}
+                          </FlexContainer>
+                        </ContainerMember>
+                      ))}
+                    </Box>
+                  </ContainerDetail>
+                )
+              ) : (
+                "loading"
+              )}
             </Box>
           </Popover>
         </FriendDetailContainer>
@@ -404,6 +478,7 @@ function ChatPage(props) {
                       message.senderId === curUserId
                         ? "10px 10px 0px 10px"
                         : "10px 10px 10px 0px",
+                    maxWidth: "80%",
                   }}
                 >
                   {message.content.includes("jpg") ||
@@ -420,12 +495,27 @@ function ChatPage(props) {
                 </ChatBubble>
               ))
             : "loading..."}
+          <ExpandCircleDownIcon
+            onClick={scrollToLatestMessage}
+            sx={{
+              position: "fixed",
+              bottom: "20%",
+              right: "7%",
+              zIndex: 999,
+              height: "40px",
+              width: "40px",
+            }}
+          />
         </ChatMessageContainer>
 
         {/* input */}
         <UserInputField>
           {/* button emoji */}
-          <IconButtonContainer aria-label="emoji" color="secondary">
+          <IconButtonContainer
+            aria-label="emoji"
+            color="secondary"
+            onClick={handleEmojiButtonClicked}
+          >
             <EmojiIcon />
           </IconButtonContainer>
 

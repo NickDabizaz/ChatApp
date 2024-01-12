@@ -156,6 +156,7 @@ const GroupChatController = {
       const memberDetails = groupDetails.members.map((member) => ({
         userId: member._id,
         name: member.name,
+        role: "member",
       }));
 
       const chatDetails = groupDetails.messages.map((message) => ({
@@ -170,8 +171,9 @@ const GroupChatController = {
         groupId: groupDetails._id,
         groupName: groupDetails.name,
         admin: {
-          adminId: groupDetails.admin._id,
-          admin: groupDetails.admin.name,
+          userId: groupDetails.admin._id,
+          name: groupDetails.admin.name,
+          role: "admin",
         },
         memberCount: groupDetails.members.length,
         members: memberDetails,
