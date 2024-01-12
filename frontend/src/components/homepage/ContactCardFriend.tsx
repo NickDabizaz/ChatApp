@@ -18,8 +18,9 @@ const Text = styled(Box)({
 });
 
 function ContactCardFriend(props) {
-  return props.friends.map((friend) => (
+  return props.friends.map((friend, index) => (
     <Card
+      key={index}
       onClick={() => {
         props.setCurFriend(friend);
         props.setCurGroup(null);

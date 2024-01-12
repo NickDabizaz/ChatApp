@@ -38,6 +38,7 @@ const Container = styled(Box)({
   minWidth: "90vw",
   height: "90vh",
   minHeight: "90vh",
+  marginTop: "5vh",
   border: "1px solid black",
 });
 
@@ -212,7 +213,7 @@ function AppPage() {
                   userFriends={userFriends}
                   setCurFriend={setCurFriend}
                   userGroups={userGroups}
-                  setCurGroups={setCurGroup}
+                  setCurGroup={setCurGroup}
                 />
               ) : (
                 "loading..."
@@ -253,11 +254,13 @@ function AppPage() {
 
           {/* ini bagian kanan */}
           <ContainerContentRight>
-            {curFriend ? (
+            {curFriend || curGroup ? (
               <ChatPage
+                curUserId={cookie.user_id}
                 curFriend={curFriend}
                 setCurFriend={setCurFriend}
-                curUserId={cookie.user_id}
+                curGroup={curGroup}
+                setCurGroup={setCurGroup}
               />
             ) : (
               <PaperContainer>

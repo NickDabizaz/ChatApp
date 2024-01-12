@@ -104,7 +104,7 @@ function HomePage(props) {
                   <ContactCardFriend
                     friends={userFriends}
                     setCurFriend={setCurFriend}
-                    setcurGroup={setCurGroup}
+                    setCurGroup={setCurGroup}
                   />
                 </FriendListCardContainer>
               </AccordionDetails>
@@ -128,7 +128,7 @@ function HomePage(props) {
                 <Typography>
                   <ContactCardGroup
                     groups={userGroups}
-                    setcurGroup={setCurGroup}
+                    setCurGroup={setCurGroup}
                     setCurFriend={setCurFriend}
                   />
                 </Typography>

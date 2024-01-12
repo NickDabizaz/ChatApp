@@ -4,7 +4,7 @@ import Paper from "@mui/material/Paper";
 import Avatar from "@mui/material/Avatar";
 import { styled } from "@mui/system";
 import axios from "axios";
-import { Button, IconButton, TextField } from "@mui/material";
+import { Button, IconButton, Popover, TextField } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import EmojiIcon from "@mui/icons-material/EmojiEmotions";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
@@ -36,6 +36,7 @@ const FriendDetailContainer = styled(Box)(({ theme }) => ({
   paddingLeft: "1rem",
   paddingRight: "1rem",
   color: theme.palette.primary.contrastText,
+  cursor: "pointer",
 }));
 
 const ChatMessageContainer = styled(Box)(({ theme }) => ({
@@ -51,7 +52,8 @@ const UserInputField = styled(Box)(({ theme }) => ({
   alignItems: "center",
   paddingLeft: "1rem",
   paddingRight: "1rem",
-  color: theme.palette.primary.contrastText,
+  color: "black",
+  // color: theme.palette.primary.contrastText,
 }));
 
 const IconButtonContainer = styled(IconButton)(({ theme }) => ({
@@ -82,9 +84,11 @@ function ChatPage(props) {
   const setCurGroup = props.setCurGroup;
   const [curFriendprofpic, setCurFriendprofpic] = useState();
   const [chat, setChat] = useState(null);
+  const [member, setMember] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [newMessage, setNewMessage] = useState("");
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [anchorE2, setAnchorE2] = React.useState<null | HTMLElement>(null);
   const [tempFile, setTempFile] = useState("");
   const fileInputRef = useRef(null);
   const socket = io("http://localhost:3000");
@@ -95,6 +99,10 @@ function ChatPage(props) {
 
   const handleClickPopper = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(anchorEl ? null : event.currentTarget);
+  };
+
+  const handleClickPopperDetail = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorE2(anchorE2 ? null : event.currentTarget);
   };
 
   const handleFileChange = (event) => {
@@ -156,14 +164,24 @@ function ChatPage(props) {
 
       console.log(selectedFile);
 
-      const response = await axios.post(
-        "http://localhost:3000/api/users/send-message",
-        {
-          userId: curUserId,
-          friendId: curFriend.friendId,
-          content: selectedFile ? selectedFile.name : newMessage,
-        }
-      );
+      if (curFriend) {
+        const response = await axios.post(
+          "http://localhost:3000/api/users/send-message",
+          {
+            userId: curUserId,
+            friendId: curFriend.friendId,
+            content: selectedFile ? selectedFile.name : newMessage,
+          }
+        );
+      } else if (curGroup) {
+        const response = await axios.post(
+          `http://localhost:3000/api/group-chats/${curGroup.idGroup}/sendMessage`,
+          {
+            senderId: curUserId,
+            content: selectedFile ? selectedFile.name : newMessage,
+          }
+        );
+      }
 
       socket.emit(
         "chat message",
@@ -171,7 +189,6 @@ function ChatPage(props) {
       );
 
       if (selectedFile) {
-        console.log("masuk ga");
         const formData = new FormData();
         formData.append("file", selectedFile);
         const result = await axios.post(
@@ -194,16 +211,47 @@ function ChatPage(props) {
       console.error("Error sending message", error);
     }
   };
+
   const fetchChat = async () => {
-    try {
-      // Replace with your actual API endpoint
-      const response = await axios.get(
-        `http://localhost:3000/api/users/chat-history/${curUserId}/${curFriend.friendId}`
-      );
-      setChat(response.data);
-      console.log(response.data);
-    } catch (error) {
-      console.error("Error fetching user data", error);
+    if (curFriend) {
+      try {
+        // Replace with your actual API endpoint
+        const response = await axios.get(
+          `http://localhost:3000/api/users/chat-history/${curUserId}/${curFriend.friendId}`
+        );
+        setChat(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.error("Error fetching user data", error);
+      }
+    } else if (curGroup) {
+      try {
+        // Replace with your actual API endpoint
+        const response = await axios.get(
+          `http://localhost:3000/api/group-chats/${curGroup.idGroup}/messages`
+        );
+        setChat(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.error("Error fetching user data", error);
+      }
+    }
+  };
+
+  const fetchMember = async () => {
+    if (curGroup) {
+      try {
+        // Replace with your actual API endpoint
+        const response = await axios.get(
+          `http://localhost:3000/api/group-chats/${curGroup.idGroup}/details`
+        );
+        const members = response.data.members;
+        members.push(response.data.admin);
+        setMember(members);
+        console.log(response.data);
+      } catch (error) {
+        console.error("Error fetching user data", error);
+      }
     }
   };
 
@@ -221,8 +269,23 @@ function ChatPage(props) {
         });
 
       fetchChat();
+    } else if (curGroup) {
+      // axios
+      //   .get(`http://localhost:3000/api/group-chats/pi${curFriend.friendId}`)
+      //   .then((res) => {
+      //     setCurFriendprofpic(res.data);
+      //   })
+      //   .catch((error) => {
+      //     console.error("Error fetching data:", error);
+      //   });
+
+      fetchChat();
+      fetchMember();
     }
-  }, [curFriend]);
+
+    console.log(curFriend);
+    console.log(curGroup);
+  }, [curFriend, curGroup]);
 
   useEffect(() => {
     // Listen for incoming chat messages
@@ -245,34 +308,87 @@ function ChatPage(props) {
     });
   }, [chat]);
 
+  useEffect(() => {
+    console.log(member);
+  }, [member]);
+
   return (
     <>
       <Container>
-        {/* gambar teman, nama dan status */}
-        <FriendDetailContainer>
+        {/* gambar dan nama*/}
+        <FriendDetailContainer onClick={handleClickPopperDetail}>
           <FlexContainer>
-            <div onClick={() => setCurFriend(null)}>↩️</div>
+            <div
+              onClick={() => {
+                setCurFriend(null);
+                setCurGroup(null);
+              }}
+            >
+              ↩️
+            </div>
+
             {curFriend ? (
+              // ini kalau chat sama friend
               <>
+                {/* ini PP friend */}
                 <AvatarImage
-                  alt="Friend Avatar"
+                  alt="Friend Image"
                   src={
                     curFriendprofpic
                       ? `http://localhost:3000/api/users/pic/${curFriend.friendId}`
                       : "https://i.pinimg.com/736x/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.jpg"
                   }
                 />
+
+                {/* ini nama friend */}
                 <Paper style={{ textAlign: "left" }}>
                   {curFriend.name} <br />
                   🟢online
                 </Paper>
               </>
             ) : curGroup ? (
-              "group"
+              //ini kalau chat sama group
+              <>
+                {/* ini PP group */}
+                <AvatarImage
+                  alt="Group Image"
+                  src={
+                    "https://i.pinimg.com/736x/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.jpg"
+                    // curFriendprofpic
+                    //   ? `http://localhost:3000/api/users/pic/${curFriend.friendId}`
+                    //   : "https://i.pinimg.com/736x/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.jpg"
+                  }
+                />
+
+                {/* ini nama group */}
+                <Paper style={{ textAlign: "left" }}>
+                  {curGroup.name} <br />
+                  🟢online
+                </Paper>
+              </>
             ) : (
+              //ini kalau belum ke load
               "loading"
             )}
           </FlexContainer>
+          <Popover
+            open={Boolean(anchorE2)}
+            anchorE2={anchorE2}
+            onClose={() => setAnchorE2(null)}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "center", // Sesuaikan agar Popover tepat berada di bawah FriendDetailContainer
+            }}
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "center", // Sesuaikan agar Popover tepat berada di bawah FriendDetailContainer
+            }}
+          >
+            {/* Isi Popover disini */}
+            <Box sx={{ p: 2, width: 200, bgcolor: "red" }}>
+              Content dalam Popover
+            </Box>
+          </Popover>
         </FriendDetailContainer>
 
         {/* tempat message nya */}
@@ -362,6 +478,7 @@ function ChatPage(props) {
               </div>
             </Box>
           </Popper>
+
           <input
             type="text"
             placeholder="Type your message..."
