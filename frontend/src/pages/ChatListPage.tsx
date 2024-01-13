@@ -2,7 +2,14 @@ import React, { Suspense, useEffect, useState, useRef } from "react";
 import Box from "@mui/system/Box";
 import { styled, useTheme } from "@mui/system"; // Tambahkan useTheme
 import ChatCard from "../components/chatlistpage/ChatCard";
-import { Button, TextField } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  IconButton,
+  Popover,
+  Popper,
+  TextField,
+} from "@mui/material";
 import AddCommentIcon from "@mui/icons-material/AddComment";
 import axios from "axios";
 
@@ -27,13 +34,33 @@ const NewChatContainer = styled(Box)(({ theme }) => ({
   textAlign: "end",
 }));
 
+const ContainerMember = styled(Box)(({ theme }) => ({
+  height: "50px",
+  width: "100%",
+  border: "1px solid black",
+  backgroundColor: theme.palette.primary.main,
+}));
+
+const MemberImage = styled(Avatar)(({ theme }) => ({
+  height: "40px",
+  width: "40px",
+}));
+
 function ChatListPage(props) {
   const [search, setSearch] = useState("");
   const [filteredChats, setFilteredChats] = useState(null);
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const curUserId = props.curUserId;
   const userFriends = props.userFriends;
   const userGroups = props.userGroups;
+
+  const open = Boolean(anchorEl);
+  const id = open ? "simple-popper" : undefined;
+
+  const handleClickPopper = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(anchorEl ? null : event.currentTarget);
+  };
 
   const theme = useTheme(); // Gunakan hook useTheme untuk mendapatkan tema
 
@@ -75,6 +102,7 @@ function ChatListPage(props) {
   }, [props.curUserId, userFriends, userGroups.groups]);
 
   const displayChats = filteredChats;
+  console.log(userFriends);
 
   return (
     <>
@@ -82,9 +110,61 @@ function ChatListPage(props) {
         <FlexContainer>
           Chats
           <NewChatContainer>
-            <Button>
+            <IconButton onClick={handleClickPopper}>
               <AddCommentIcon />
-            </Button>
+            </IconButton>
+            <Popover
+              open={Boolean(anchorEl)}
+              anchorEl={anchorEl}
+              onClose={() => setAnchorEl(null)}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "center", // Sesuaikan agar Popover tepat berada di bawah FriendDetailContainer
+              }}
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "center", // Sesuaikan agar Popover tepat berada di bawah FriendDetailContainer
+              }}
+            >
+              <Box
+                sx={{
+                  border: 1,
+                  p: 1,
+                  bgcolor: theme.palette.background.default,
+                  width: "20vw",
+                }}
+              >
+                <Box sx={{ textAlign: "center", fontSize: "1.4rem" }}>
+                  New Chat
+                </Box>
+                <Box>
+                  {userFriends.map((friend, index) => (
+                    <ContainerMember
+                      key={index}
+                      onClick={() => {
+                        props.setCurFriend(friend);
+                        props.setCurGroup(null);
+                        setAnchorEl(null);
+                      }}
+                      style={{
+                        pointerEvents: `${
+                          friend.userId === curUserId ? "none" : "auto"
+                        }`,
+                        cursor: "pointer",
+                      }}
+                    >
+                      <FlexContainer>
+                        <MemberImage alt="Member Profile Picture" />
+                        <Box>{friend.name}</Box>
+                        {friend.role === "admin" && (
+                          <Box sx={{ marginLeft: "auto" }}>admin</Box>
+                        )}
+                      </FlexContainer>
+                    </ContainerMember>
+                  ))}
+                </Box>
+              </Box>
+            </Popover>
           </NewChatContainer>
         </FlexContainer>
         <TextField

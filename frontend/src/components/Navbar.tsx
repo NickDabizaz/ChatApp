@@ -41,7 +41,6 @@ const SubContainer = styled(Box)({
   height: "100%",
   padding: 0,
   width: "auto",
-  border: "1px solid lightgray",
 });
 
 function Navbar(props) {

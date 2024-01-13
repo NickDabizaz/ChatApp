@@ -9,8 +9,10 @@ import SendIcon from "@mui/icons-material/Send";
 import EmojiIcon from "@mui/icons-material/EmojiEmotions";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import ExpandCircleDownIcon from "@mui/icons-material/ExpandCircleDown";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import Popper from "@mui/material/Popper";
 import { io } from "socket.io-client";
+import { useTheme } from "@emotion/react";
 
 const Container = styled(Box)({
   width: "100%",
@@ -42,7 +44,7 @@ const FriendDetailContainer = styled(Box)(({ theme }) => ({
 
 const ChatMessageContainer = styled(Box)(({ theme }) => ({
   height: "70%",
-  backgroundColor: theme.palette.background.default, // Sesuaikan latar belakang dengan tema
+  backgroundColor: theme.palette.background.selectedBackground, // Sesuaikan latar belakang dengan tema
   overflow: "auto",
   position: "relative",
 }));
@@ -128,6 +130,8 @@ function ChatPage(props) {
   const setCurFriend = props.setCurFriend;
   const curGroup = props.curGroup;
   const setCurGroup = props.setCurGroup;
+  const selectedBackground = props.selectedBackground;
+
   const [curFriendprofpic, setCurFriendprofpic] = useState();
   const [chat, setChat] = useState(null);
   const [member, setMember] = useState(null);
@@ -139,6 +143,7 @@ function ChatPage(props) {
   const fileInputRef = useRef(null);
   const socket = io("http://localhost:3000");
   const scrollRef = useRef();
+  const theme = useTheme();
 
   const open = Boolean(anchorEl);
   const id = open ? "simple-popper" : undefined;
@@ -382,14 +387,14 @@ function ChatPage(props) {
         {/* gambar dan nama*/}
         <FriendDetailContainer>
           <FlexContainer onClick={handleClickPopperDetail}>
-            <div
+            <IconButton
               onClick={() => {
                 setCurFriend(null);
                 setCurGroup(null);
               }}
             >
-              ↩️
-            </div>
+              <ArrowBackIosNewIcon />
+            </IconButton>
 
             {curFriend ? (
               // ini kalau chat sama friend
@@ -456,6 +461,7 @@ function ChatPage(props) {
                 <ContainerDetail>
                   <Box>ini pp</Box>
                   <Box>{curFriend.name}</Box>
+                  <Box>{curFriend.phoneNumber}</Box>
                 </ContainerDetail>
               ) : curGroup ? (
                 member && (
@@ -505,7 +511,9 @@ function ChatPage(props) {
         </FriendDetailContainer>
 
         {/* tempat message nya */}
-        <ChatMessageContainer>
+        <ChatMessageContainer
+          sx={{ backgroundColor: theme.palette.background[selectedBackground] }}
+        >
           {chat
             ? chat.map((message, index) =>
                 message.senderId === curUserId ? (

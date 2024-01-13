@@ -79,10 +79,29 @@ function AppPage() {
   const [curGroup, setCurGroup] = useState(null);
   const [userFriendRequests, setUserFriendRequests] = useState(null);
   const [isDarkMode, setDarkMode] = useState(false);
+  const [selectedBackground, setSelectedBackground] = useState("background1");
 
   const toggleDarkMode = () => {
     setDarkMode(!isDarkMode);
   };
+
+  const customBackgrounds = [
+    "#FF5733", // Oranye Terang
+    "#66BB6A", // Hijau Mint
+    "#FF4081", // Merah Muda
+    "#2196F3", // Biru Navy
+    "#FFD54F", // Kuning Lemon
+    "#121212", // Hitam Gelap
+    "#1E1E1E", // Hitam Gelap (Paper)
+    "#FFC107", // Kuning
+    "#333333", // Abu-abu Tua (Text)
+    "#9C27B0", // Ungu Lavender
+    "#FF5722", // Oranye
+    "#333333", // Abu-abu Tua
+    "#2196F3", // Biru Langit
+    "#FF5733", // Cokelat Tua
+    "#9C27B0", // Ungu Royal
+  ];
 
   const lightModePalette = {
     mode: "light",
@@ -94,6 +113,7 @@ function AppPage() {
     },
     background: {
       default: "#FFFFFF", // Putih
+      ...customBackgrounds,
     },
     text: {
       primary: "#333333", // Abu-abu tua
@@ -112,6 +132,7 @@ function AppPage() {
     background: {
       default: "#121212", // Hitam (latar belakang utama)
       paper: "#1E1E1E", // Hitam gelap (misalnya untuk kertas atau elemen lainnya)
+      ...customBackgrounds,
     },
     text: {
       primary: "#FFFFFF", // Putih
@@ -177,6 +198,10 @@ function AppPage() {
     console.log(userData);
     console.log(userGroups);
   }, [userData, userGroups]);
+
+  useEffect(() => {
+    console.log(selectedBackground);
+  }, [selectedBackground]);
 
   return (
     <>
@@ -248,6 +273,9 @@ function AppPage() {
                 <SettingPage
                   removeCookie={removeCookie}
                   toggleDarkMode={toggleDarkMode}
+                  selectedBackground={selectedBackground}
+                  setSelectedBackground={setSelectedBackground}
+                  customBackgrounds={customBackgrounds}
                 />
               )
             )}
@@ -262,6 +290,7 @@ function AppPage() {
                 setCurFriend={setCurFriend}
                 curGroup={curGroup}
                 setCurGroup={setCurGroup}
+                selectedBackground={selectedBackground}
               />
             ) : (
               <PaperContainer>
