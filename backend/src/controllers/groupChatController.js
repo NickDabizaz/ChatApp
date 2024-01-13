@@ -229,6 +229,37 @@ const GroupChatController = {
       res.status(500).json({ message: "Internal Server Error" });
     }
   },
+
+  getLastMessage: async (req, res) => {
+    try {
+      const { groupId } = req.params;
+
+      // Find the group chat
+      const groupChat = await GroupChat.findById(groupId);
+
+      if (!groupChat) {
+        return res.status(404).json({ error: "Group chat not found" });
+      }
+
+      // Get the latest message in the group chat
+      const lastMessage = groupChat.messages.reduce((prev, current) =>
+        prev.timestamp > current.timestamp ? prev : current
+      );
+
+      if (!lastMessage) {
+        return res.status(404).json({ error: "Message not found" });
+      }
+
+      return res.status(200).json({
+        senderId: lastMessage.senderId,
+        content: lastMessage.content,
+        timestamp: lastMessage.timestamp,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  },
 };
 
 module.exports = GroupChatController;

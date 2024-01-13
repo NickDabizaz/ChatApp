@@ -210,6 +210,7 @@ function AppPage() {
               //ini kalo routenya chat
               userFriends && userGroups ? (
                 <ChatListPage
+                  curUserId={cookie.user_id}
                   userFriends={userFriends}
                   setCurFriend={setCurFriend}
                   userGroups={userGroups}

@@ -415,6 +415,9 @@ const UserController = {
         return res.status(404).json({ error: "Teman tidak ditemukan" });
       }
 
+      if (friendObj.messages.length < 1)
+        return res.status(404).json({ error: "Pesan tidak ditemukan" });
+
       // Ambil last message dari teman
       const lastMessage = friendObj.messages.reduce((prev, current) =>
         prev.timestamp > current.timestamp ? prev : current

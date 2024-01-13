@@ -125,13 +125,13 @@ function HomePage(props) {
 
               {/* ini isi dropdown Groups */}
               <AccordionDetails>
-                <Typography>
+                <FriendListCardContainer>
                   <ContactCardGroup
                     groups={userGroups}
                     setCurGroup={setCurGroup}
                     setCurFriend={setCurFriend}
                   />
-                </Typography>
+                </FriendListCardContainer>
               </AccordionDetails>
             </Accordion>
           </FriendListContainer>

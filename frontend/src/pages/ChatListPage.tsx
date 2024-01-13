@@ -1,28 +1,10 @@
 import React, { Suspense, useEffect, useState, useRef } from "react";
-import { Outlet, useLoaderData } from "react-router-dom";
 import Box from "@mui/system/Box";
-import Paper from "@mui/material/Paper";
-import Avatar from "@mui/material/Avatar";
-import Typography from "@mui/material/Typography";
-import { style, styled, useTheme } from "@mui/system"; // Tambahkan useTheme
+import { styled, useTheme } from "@mui/system"; // Tambahkan useTheme
 import ChatCard from "../components/chatlistpage/ChatCard";
-import axios from "axios";
-import { useCookies } from "react-cookie";
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Button,
-  IconButton,
-  TextField,
-} from "@mui/material";
-import SendIcon from "@mui/icons-material/Send";
-import EmojiIcon from "@mui/icons-material/EmojiEmotions";
-import EditProfilePage from "./ProfilePage";
-import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
-import Popper from "@mui/material/Popper";
+import { Button, TextField } from "@mui/material";
 import AddCommentIcon from "@mui/icons-material/AddComment";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import axios from "axios";
 
 // Tambahkan `theme` ke dalam properti styled
 const Container = styled(Box)(({ theme }) => ({
@@ -31,6 +13,7 @@ const Container = styled(Box)(({ theme }) => ({
   padding: "1rem",
   display: "flex",
   flexDirection: "column",
+  overflow: "auto",
 }));
 
 const FlexContainer = styled(Box)(({ theme }) => ({
@@ -46,26 +29,52 @@ const NewChatContainer = styled(Box)(({ theme }) => ({
 
 function ChatListPage(props) {
   const [search, setSearch] = useState("");
-  const [filteredFriends, setFilteredFriends] = useState(null);
+  const [filteredChats, setFilteredChats] = useState(null);
 
+  const curUserId = props.curUserId;
   const userFriends = props.userFriends;
   const userGroups = props.userGroups;
+
   const theme = useTheme(); // Gunakan hook useTheme untuk mendapatkan tema
 
   const handlingSearch = (e) => {
     const searchTerm = e.target.value.toLowerCase();
+
+    const tempFilter = [];
 
     if (userFriends) {
       const filteredData = userFriends.filter((friend) =>
         friend.name.toLowerCase().includes(searchTerm)
       );
 
-      setFilteredFriends(filteredData);
+      filteredData.map((data) => {
+        tempFilter.push(data);
+        tempFilter[tempFilter.length - 1].type = "friend";
+      });
     }
+
+    if (userGroups) {
+      const filteredData = userGroups.groups.filter((group) =>
+        group.name.toLowerCase().includes(searchTerm)
+      );
+
+      filteredData.map((data) => {
+        tempFilter.push(data);
+        tempFilter[tempFilter.length - 1].type = "group";
+      });
+    }
+
+    setFilteredChats(tempFilter);
+    console.log(tempFilter);
+
     setSearch(searchTerm);
   };
 
-  const displayFriends = filteredFriends || userFriends;
+  useEffect(() => {
+    handlingSearch({ target: { value: "" } });
+  }, [props.curUserId, userFriends, userGroups.groups]);
+
+  const displayChats = filteredChats;
 
   return (
     <>
@@ -92,10 +101,16 @@ function ChatListPage(props) {
           }}
         />
         <Suspense fallback={<div>Loading...</div>}>
-          <ChatCard
-            friends={displayFriends}
-            setCurFriend={props.setCurFriend}
-          />
+          {displayChats &&
+            displayChats.map((chat, index) => (
+              <ChatCard
+                key={index}
+                chat={chat}
+                curUserId={props.curUserId}
+                setCurFriend={props.setCurFriend}
+                setCurGroup={props.setCurGroup}
+              />
+            ))}
         </Suspense>
       </Container>
     </>

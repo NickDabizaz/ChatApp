@@ -20,4 +20,7 @@ router.get("/:groupId/details", GroupChatController.getGroupDetails);
 // Menampilkan Semua Group User
 router.get("/userGroups/:userId", GroupChatController.getUserGroups);
 
+// Mendapatkan Pesan terakhir
+router.get("/:groupId/last-message", GroupChatController.getLastMessage);
+
 module.exports = router;

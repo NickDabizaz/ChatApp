@@ -67,13 +67,40 @@ const ButtonContainer = styled(Button)(({ theme }) => ({
   color: theme.palette.primary.contrastText, // Sesuaikan warna teks tombol dengan tema
 }));
 
-const ChatBubble = styled(Box)(({ theme }) => ({
-  padding: "1rem",
-  border: "1px solid black",
+const FriendChatBubbleContainer = styled(Box)(({ theme }) => ({
   width: "fit-content",
   margin: "1rem",
   clear: "both",
+  float: "left",
+  borderRadius: "10px 10px 10px 0px",
+  maxWidth: "80%",
+}));
+
+const UserChatBubbleContainer = styled(Box)(({ theme }) => ({
+  width: "fit-content",
+  margin: "1rem",
+  clear: "both",
+  float: "right",
+  borderRadius: "10px 10px 0px 10px",
+  maxWidth: "80%",
+}));
+
+const UserChatBubble = styled(Box)(({ theme }) => ({
+  padding: "1rem",
+  border: "1px solid black",
+  width: "fit-content",
   wordBreak: "break-all",
+  borderRadius: "10px 10px 0px 10px",
+  backgroundColor: theme.palette.primary.main, // Sesuaikan latar belakang tombol dengan tema
+  color: theme.palette.primary.contrastText,
+}));
+
+const FriendChatBubble = styled(Box)(({ theme }) => ({
+  padding: "1rem",
+  border: "1px solid black",
+  width: "fit-content",
+  wordBreak: "break-all",
+  borderRadius: "10px 10px 10px 0px",
   backgroundColor: theme.palette.primary.main, // Sesuaikan latar belakang tombol dengan tema
   color: theme.palette.primary.contrastText,
 }));
@@ -459,7 +486,6 @@ function ChatPage(props) {
                           </FlexContainer>
                         </ContainerMember>
                       ))}
-                      {console.log(curGroup)}
                       {curGroup.admin.userId === curUserId && (
                         <Button
                           onClick={handleInviteMember}
@@ -481,32 +507,42 @@ function ChatPage(props) {
         {/* tempat message nya */}
         <ChatMessageContainer>
           {chat
-            ? chat.map((message, index) => (
-                <ChatBubble
-                  key={index}
-                  ref={scrollRef}
-                  style={{
-                    float: message.senderId === curUserId ? "right" : "left",
-                    borderRadius:
-                      message.senderId === curUserId
-                        ? "10px 10px 0px 10px"
-                        : "10px 10px 10px 0px",
-                    maxWidth: "80%",
-                  }}
-                >
-                  {message.content.includes("jpg") ||
-                  message.content.includes("png") ||
-                  message.content.includes("jpeg") ? (
-                    <img
-                      alt="Image Chat"
-                      src={`http://localhost:3000/api/users/messagePic/${message._id}`}
-                      width={300}
-                    />
-                  ) : (
-                    message.content
-                  )}
-                </ChatBubble>
-              ))
+            ? chat.map((message, index) =>
+                message.senderId === curUserId ? (
+                  <UserChatBubbleContainer key={index} ref={scrollRef}>
+                    <UserChatBubble>
+                      {message.content.includes("jpg") ||
+                      message.content.includes("png") ||
+                      message.content.includes("jpeg") ? (
+                        <img
+                          alt="Image Chat"
+                          src={`http://localhost:3000/api/users/messagePic/${message._id}`}
+                          width={300}
+                        />
+                      ) : (
+                        <>{message.content}</>
+                      )}
+                    </UserChatBubble>
+                  </UserChatBubbleContainer>
+                ) : (
+                  <FriendChatBubbleContainer key={index} ref={scrollRef}>
+                    <Box>{message.sender}</Box>
+                    <FriendChatBubble>
+                      {message.content.includes("jpg") ||
+                      message.content.includes("png") ||
+                      message.content.includes("jpeg") ? (
+                        <img
+                          alt="Image Chat"
+                          src={`http://localhost:3000/api/users/messagePic/${message._id}`}
+                          width={300}
+                        />
+                      ) : (
+                        <>{message.content}</>
+                      )}
+                    </FriendChatBubble>
+                  </FriendChatBubbleContainer>
+                )
+              )
             : "loading..."}
           <ExpandCircleDownIcon
             onClick={scrollToLatestMessage}
