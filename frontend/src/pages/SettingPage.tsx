@@ -57,6 +57,8 @@ function SettingPage(props) {
               height: "50px",
               margin: "0.2rem",
               backgroundColor: background,
+              border: "2px solid white",
+              borderRadius: "5%",
             }}
             onClick={() => setSelectedBackground(index)}
           ></Box>
