@@ -10,10 +10,11 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const Container = styled(Box)(({ theme }) => ({
   display: "flex",
-  height: "89vh",
+  height: "100%",
   maxHeight: "90vh",
   padding: "1rem",
   backgroundColor: theme.palette.background.default,
+  color: theme.palette.text.primary,
   // justifyContent: "center",
   // alignItems: "center",
 }));
@@ -39,7 +40,6 @@ const HomeContainer = styled(Box)(({ theme }) => ({
   height: "100%",
   backgroundColor: theme.palette.background.default, // Sesuaikan latar belakang dengan tema
   overflow: "auto",
-  color: "black",
   // color: theme.palette.primary.contrastText,
 }));
 
@@ -71,7 +71,7 @@ function HomePage(props) {
       {userData ? (
         <HomeContainer>
           {/* ini pp sama nama */}
-          <FlexContainer sx={{ alignItems: "center" }}>
+          <FlexContainer sx={{ alignItems: "center", marginBottom: "2vh" }}>
             <AvatarImage
               alt="Profile picture"
               src={
@@ -116,7 +116,7 @@ function HomePage(props) {
             </Accordion>
           </FriendListContainer>
 
-          <FriendListContainer>
+          <FriendListContainer sx={{ marginTop: "1vh" }}>
             {/* ini drop down Groups */}
             <Accordion sx={{ boxShadow: "none" }}>
               {/* ini tulisan di dropdownnya */}

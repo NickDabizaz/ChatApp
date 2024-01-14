@@ -107,38 +107,37 @@ function AppPage() {
   const lightModePalette = {
     mode: "light",
     primary: {
-      main: "#2196F3", // Biru
+      main: "#1EA1E1",
     },
     secondary: {
-      main: "#FFC107", // Kuning
+      main: "#4BB4E7",
     },
     background: {
-      default: "#FFFFFF", // Putih
+      default: "#FFFFFF",
+      paper: "#E6E6E6",
       ...customBackgrounds,
     },
     text: {
-      primary: "#333333", // Abu-abu tua
+      primary: "#333333",
     },
-    // ... (Tambahkan palet warna lainnya sesuai kebutuhan)
   };
 
   const darkModePalette = {
     mode: "dark",
     primary: {
-      main: "#9C27B0", // Ungu
+      main: "#c084fc",
     },
     secondary: {
-      main: "#FF5722", // Oranye
+      main: "#C0FC84",
     },
     background: {
-      default: "#121212", // Hitam (latar belakang utama)
-      paper: "#1E1E1E", // Hitam gelap (misalnya untuk kertas atau elemen lainnya)
+      default: "#302c2c",
+      paper: "#4B4444",
       ...customBackgrounds,
     },
     text: {
-      primary: "#FFFFFF", // Putih
+      primary: "#FFFFFF",
     },
-    // ... (Tambahkan palet warna lainnya sesuai kebutuhan)
   };
 
   const currentTheme = createTheme({

@@ -16,6 +16,7 @@ const Container = styled(Box)(({ theme }) => ({
   padding: "1rem",
   display: "flex",
   flexDirection: "column",
+  color: theme.palette.text.primary,
 }));
 
 const FlexContainer = styled(Box)(({ theme }) => ({

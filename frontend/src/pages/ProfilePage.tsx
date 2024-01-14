@@ -16,6 +16,7 @@ const Container = styled(Box)(({ theme }) => ({
   alignItems: "center",
   textAlign: "center",
   backgroundColor: theme.palette.background.default,
+  color: theme.palette.text.primary,
 }));
 
 const PaperContainer = styled(Paper)(({ theme }) => ({

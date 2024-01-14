@@ -41,6 +41,7 @@ const FriendDetailContainer = styled(Box)(({ theme }) => ({
   paddingRight: "1rem",
   color: theme.palette.primary.contrastText,
   cursor: "pointer",
+  borderBottom: "1px solid black",
 }));
 
 const ChatMessageContainer = styled(Box)(({ theme }) => ({
@@ -58,6 +59,7 @@ const UserInputField = styled(Box)(({ theme }) => ({
   paddingLeft: "1rem",
   paddingRight: "1rem",
   color: "black",
+  borderTop: "1px solid black",
   // color: theme.palette.primary.contrastText,
 }));
 
