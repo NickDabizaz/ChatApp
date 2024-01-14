@@ -481,6 +481,23 @@ const UserController = {
     return res.status(200).sendFile(lokasinya, { root: "." });
   },
 
+  chatImageGroup: async (req, res) => {
+    return res.status(201).json({ msg: "image berhasil dikirim" });
+  },
+
+  getChatImageGroup: (req, res) => {
+    const messageId = req.params.messageId;
+    console.log(messageId);
+    const lokasinya = `uploads/chatImageGroup/${messageId}.jpg`;
+    return res.status(200).sendFile(lokasinya, { root: "." });
+  },
+
+  getGroupImage: (req, res) => {
+    const groupId = req.params.groupId;
+    const lokasinya = `uploads/chatImage/${groupId}.jpg`;
+    return res.status(200).sendFile(lokasinya, { root: "." });
+  },
+
   getFriendRequests: async (req, res) => {
     try {
       const { userId } = req.params;

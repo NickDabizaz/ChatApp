@@ -58,14 +58,30 @@ router.post("/:type/:user_id", upload.single("file"), UserController.profilpic);
 router.get("/pic/:user_id", UserController.getProfilpic);
 
 //image chat
-//uplod
+//friend
+//upload
 router.post(
-  "/:type/:userId/:friendId",
+  "/friend/:type/:userId/:friendId",
   upload.single("file"),
   UserController.chatImage
 );
 //get
 router.get("/messagePic/:messageId", UserController.getChatImage);
+
+//group
+//upload
+router.post(
+  "/group/:type/:groupId",
+  upload.single("file"),
+  UserController.chatImageGroup
+);
+//get
+router.get("/messagePicGroup/:messageId", UserController.getChatImageGroup);
+
+//group image
+//get
+router.get("/pic/:groupId", UserController.getGroupImage);
+
 
 //get all friend request directed to user
 router.get("/friend-requests/:userId", UserController.getFriendRequests);

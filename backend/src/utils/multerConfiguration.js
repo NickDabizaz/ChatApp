@@ -2,6 +2,7 @@ const multer = require("multer");
 const fs = require("fs-extra");
 const path = require("path");
 const User = require("../models/User");
+const GroupChat = require("../models/GroupChat");
 
 const upload = multer({
     storage: multer.diskStorage({
@@ -12,6 +13,9 @@ const upload = multer({
                 path = `./uploads/${type}`;
             }
             else if (type === "chatImage") {
+                path = `./uploads/${type}`;
+            }
+            else if (type === "chatImageGroup") {
                 path = `./uploads/${type}`;
             }
 
@@ -27,6 +31,7 @@ const upload = multer({
             let type = req.params.type;
             let user_id = req.params.user_id;
             let lastMessage
+            let groupId = req.params.groupId
 
             const { userId, friendId } = req.params;
 
@@ -41,10 +46,23 @@ const upload = multer({
                 );
             }
 
+            
+            if(groupId){
+                const group = await GroupChat.findById(groupId);
+                lastMessage = group.messages.reduce((prev, current) =>
+                prev.timestamp > current.timestamp ? prev : current
+                );
+            }
+            
+            console.log(groupId);
+            console.log(lastMessage);
+
             const fileExtension = path.extname(file.originalname).toLowerCase();
             if (user_id != undefined && type === "profilpic") {
                 callback(null, `${user_id}.jpg`);
             } else if (friendId != undefined && type === "chatImage") {
+                callback(null, `${lastMessage.id}.jpg`);
+            } else if (groupId != undefined && type === "chatImageGroup") {
                 callback(null, `${lastMessage.id}.jpg`);
             }
         },

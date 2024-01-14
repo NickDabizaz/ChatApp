@@ -246,20 +246,32 @@ function ChatPage(props) {
       if (selectedFile) {
         const formData = new FormData();
         formData.append("file", selectedFile);
-        const result = await axios.post(
-          `http://localhost:3000/api/users/chatImage/${curUserId}/${curFriend.friendId}`,
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
+        if(curFriend){
+          const result = await axios.post(
+            `http://localhost:3000/api/users/friend/chatImage/${curUserId}/${curFriend.friendId}`,
+            formData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          );
+        }else if(curGroup){
+          const result2 = await axios.post(
+            `http://localhost:3000/api/users/group/chatImageGroup/${curGroup.idGroup}`,
+            formData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          );
+        }
         setAnchorEl(null);
         setSelectedFile(null);
       }
 
-      // Update the chat after sending the message
+      // Update the chat after sending the messagesetChat
       fetchChat();
       setNewMessage(""); // Clear the input field
     } catch (error) {
@@ -524,7 +536,9 @@ function ChatPage(props) {
                       message.content.includes("jpeg") ? (
                         <img
                           alt="Image Chat"
-                          src={`http://localhost:3000/api/users/messagePic/${message._id}`}
+                          src={ curGroup == null ?
+                            `http://localhost:3000/api/users/messagePic/${message._id}`
+                          : `http://localhost:3000/api/users/messagePicGroup/${message._id}`}
                           width={300}
                         />
                       ) : (
