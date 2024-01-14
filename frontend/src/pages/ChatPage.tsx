@@ -579,7 +579,7 @@ function ChatPage(props) {
       fetchChat();
       fetchMember();
     }
-  }, [curFriend, curGroup]);
+  }, [curFriend, curGroup, curGroupprofpic]);
 
   useEffect(() => {
     // Listen for incoming chat messages
@@ -618,9 +618,17 @@ function ChatPage(props) {
           },
         }
       );
-      setKondisi(true)
-      setSelectedFileGroup(null)
-      setKondisi(false)
+      const updatedProfGroup = axios
+      .get(
+        `http://localhost:3000/api/group-chats/picGroup/${curGroup.idGroup}`
+      )
+      .then((res) => {
+        setCurGroupprofpic(res.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+      // setSelectedFileGroup(null)
     }
   }, [selectedFileGroup]);
 
@@ -725,7 +733,7 @@ function ChatPage(props) {
                           ? `http://localhost:3000/api/users/pic/${curFriend.friendId}`
                           : "https://i.pinimg.com/736x/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.jpg"
                       }
-                      // sx={{ margin: "auto" }}
+                    // sx={{ margin: "auto" }}
                     />
                   </Box>
                   <Box>{curFriend.name}</Box>
@@ -746,27 +754,14 @@ function ChatPage(props) {
                             }}
                           >
                             <FlexContainer>
-                              {
-                                kondisi ? (
-                                  <AvatarImage
-                                    src={
-                                      curGroupprofpic
-                                        ? `http://localhost:3000/api/group-chats/picGroup/${curGroup.idGroup}`
-                                        : "https://i.pinimg.com/736x/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.jpg"
-                                    }
-                                    sx={{ margin: "auto" }}
-                                  />
-                                ) : (
-                                  <AvatarImage
-                                    src={
-                                      curGroupprofpic
-                                        ? `http://localhost:3000/api/group-chats/picGroup/${curGroup.idGroup}`
-                                        : "https://i.pinimg.com/736x/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.jpg"
-                                    }
-                                    sx={{ margin: "auto" }}
-                                  />
-                                )
-                              }
+                              <AvatarImage
+                                src={
+                                  curGroupprofpic
+                                    ? `http://localhost:3000/api/group-chats/picGroup/${curGroup.idGroup}`
+                                    : "https://i.pinimg.com/736x/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.jpg"
+                                }
+                                sx={{ margin: "auto" }}
+                              />
 
                               <input
                                 type="file"
