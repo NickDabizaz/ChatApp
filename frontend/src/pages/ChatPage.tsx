@@ -619,15 +619,15 @@ function ChatPage(props) {
         }
       );
       const updatedProfGroup = axios
-      .get(
-        `https://chat-app-api-qam0.onrender.com/api/group-chats/picGroup/${curGroup.idGroup}`
-      )
-      .then((res) => {
-        setCurGroupprofpic(res.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
+        .get(
+          `https://chat-app-api-qam0.onrender.com/api/group-chats/picGroup/${curGroup.idGroup}`
+        )
+        .then((res) => {
+          setCurGroupprofpic(res.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
       // setSelectedFileGroup(null)
     }
   }, [selectedFileGroup]);
@@ -817,7 +817,14 @@ function ChatPage(props) {
                               }}
                             >
                               <FlexContainer>
-                                <MemberImage alt="Member Profile Picture" />
+                                <AvatarImage
+                                  src={
+                                    curFriendprofpic
+                                      ? `https://chat-app-api-qam0.onrender.com/api/users/pic/${user.userId}`
+                                      : "https://i.pinimg.com/736x/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.jpg"
+                                  }
+                                // sx={{ margin: "auto" }}
+                                />
                                 <Box>{user.name}</Box>
                                 {user.role === "admin" && (
                                   <Box sx={{ marginLeft: "auto" }}>admin</Box>
