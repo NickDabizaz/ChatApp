@@ -817,7 +817,7 @@ function ChatPage(props) {
                                 cursor: "pointer",
                               }}
                             >
-                              <FlexContainer>
+                              <FlexContainer sx={{display: "flex", alignItems: "center"}}>
                                 <AvatarImage
                                   src={
                                     curFriendprofpic
