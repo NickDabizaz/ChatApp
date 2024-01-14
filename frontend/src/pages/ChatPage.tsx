@@ -157,6 +157,7 @@ function ChatPage(props) {
   const socket = io("http://localhost:3000");
   const scrollRef = useRef();
   const theme = useTheme();
+  const [kondisi, setKondisi] = useState(false)
 
   const open = Boolean(anchorEl);
   const id = open ? "simple-popper" : undefined;
@@ -357,7 +358,7 @@ function ChatPage(props) {
     const file = event.target.files[0];
     setSelectedFileGroup(file);
     setTempFileGroup(file);
-    displayImageGroup(file);
+    // displayImageGroup(file);
     console.log("masuk sini ");
   };
 
@@ -370,39 +371,39 @@ function ChatPage(props) {
     fileInputRef.current.click();
   };
 
-  const displayImageGroup = (file) => {
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        // Create an image element and set the data URL as its source
-        const imgElement = document.createElement("img");
-        imgElement.src = e.target.result;
-        imgElement.alt = "Selected Image";
+  // const displayImageGroup = (file) => {
+  //   if (file) {
+  //     const reader = new FileReader();
+  //     reader.onload = (e) => {
+  //       // Create an image element and set the data URL as its source
+  //       const imgElement = document.createElement("img");
+  //       imgElement.src = e.target.result;
+  //       imgElement.alt = "Selected Image";
 
-        imgElement.style.marginLeft = "auto";
-        imgElement.style.marginRight = "auto";
-        imgElement.style.height = "10rem";
-        imgElement.style.width = "10rem";
-        imgElement.style.objectFit = "cover";
-        imgElement.style.borderRadius = "50%";
-        imgElement.style.border = "1px solid black";
+  //       imgElement.style.marginLeft = "auto";
+  //       imgElement.style.marginRight = "auto";
+  //       imgElement.style.height = "10rem";
+  //       imgElement.style.width = "10rem";
+  //       imgElement.style.objectFit = "cover";
+  //       imgElement.style.borderRadius = "50%";
+  //       imgElement.style.border = "1px solid black";
 
-        // Append the image element to the component
-        document.getElementById("imageContainerGroup").innerHTML = "";
-        document.getElementById("imageContainerGroup").appendChild(imgElement);
-      };
+  //       // Append the image element to the component
+  //       document.getElementById("imageContainerGroup").innerHTML = "";
+  //       document.getElementById("imageContainerGroup").appendChild(imgElement);
+  //     };
 
-      // Use readAsDataURL for images
-      reader.readAsDataURL(file);
-    }
-  };
+  //     // Use readAsDataURL for images
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
 
   const handleDropGroup = (event) => {
     event.preventDefault();
     const file = event.dataTransfer.files[0];
     setSelectedFileGroup(file);
     setTempFileGroup(file);
-    displayImageGroup(file);
+    // displayImageGroup(file);
     console.log("masuk handle drop");
   };
 
@@ -617,6 +618,9 @@ function ChatPage(props) {
           },
         }
       );
+      setKondisi(true)
+      setSelectedFileGroup(null)
+      setKondisi(false)
     }
   }, [selectedFileGroup]);
 
@@ -714,7 +718,16 @@ function ChatPage(props) {
             <Box sx={{ width: "23vw" }}>
               {curFriend ? (
                 <ContainerDetail>
-                  <Box>ini pp</Box>
+                  <Box>
+                    <AvatarImage
+                      src={
+                        curFriendprofpic
+                          ? `http://localhost:3000/api/users/pic/${curFriend.friendId}`
+                          : "https://i.pinimg.com/736x/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.jpg"
+                      }
+                      // sx={{ margin: "auto" }}
+                    />
+                  </Box>
                   <Box>{curFriend.name}</Box>
                   <Box>{curFriend.phoneNumber}</Box>
                 </ContainerDetail>
@@ -733,18 +746,28 @@ function ChatPage(props) {
                             }}
                           >
                             <FlexContainer>
-                              {/* {selectedFileGroup ? (
-                          <div id="imageContainerGroup"></div>
-                        ) : ( */}
-                              <AvatarImage
-                                src={
-                                  curGroupprofpic
-                                    ? `http://localhost:3000/api/group-chats/picGroup/${curGroup.idGroup}`
-                                    : "https://i.pinimg.com/736x/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.jpg"
-                                }
-                                sx={{ margin: "auto" }}
-                              />
-                              {/* )} */}
+                              {
+                                kondisi ? (
+                                  <AvatarImage
+                                    src={
+                                      curGroupprofpic
+                                        ? `http://localhost:3000/api/group-chats/picGroup/${curGroup.idGroup}`
+                                        : "https://i.pinimg.com/736x/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.jpg"
+                                    }
+                                    sx={{ margin: "auto" }}
+                                  />
+                                ) : (
+                                  <AvatarImage
+                                    src={
+                                      curGroupprofpic
+                                        ? `http://localhost:3000/api/group-chats/picGroup/${curGroup.idGroup}`
+                                        : "https://i.pinimg.com/736x/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.jpg"
+                                    }
+                                    sx={{ margin: "auto" }}
+                                  />
+                                )
+                              }
+
                               <input
                                 type="file"
                                 id="fileInput"
@@ -793,9 +816,8 @@ function ChatPage(props) {
                                 setCurGroup(null);
                               }}
                               style={{
-                                pointerEvents: `${
-                                  user.userId === curUserId ? "none" : "auto"
-                                }`,
+                                pointerEvents: `${user.userId === curUserId ? "none" : "auto"
+                                  }`,
                                 cursor: "pointer",
                               }}
                             >
@@ -876,49 +898,49 @@ function ChatPage(props) {
         >
           {chat
             ? chat.map((message, index) =>
-                message.senderId === curUserId ? (
-                  <UserChatBubbleContainer key={index} ref={scrollRef}>
-                    <UserChatBubble>
-                      {message.content.includes("jpg") ||
+              message.senderId === curUserId ? (
+                <UserChatBubbleContainer key={index} ref={scrollRef}>
+                  <UserChatBubble>
+                    {message.content.includes("jpg") ||
                       message.content.includes("png") ||
                       message.content.includes("jpeg") ? (
-                        <img
-                          alt="Image Chat"
-                          src={
-                            curGroup == null
-                              ? `http://localhost:3000/api/users/messagePic/${message._id}`
-                              : `http://localhost:3000/api/users/messagePicGroup/${message._id}`
-                          }
-                          width={300}
-                        />
-                      ) : (
-                        <>{message.content}</>
-                      )}
-                    </UserChatBubble>
-                  </UserChatBubbleContainer>
-                ) : (
-                  <FriendChatBubbleContainer key={index} ref={scrollRef}>
-                    <Box>{message.sender}</Box>
-                    <FriendChatBubble>
-                      {message.content.includes("jpg") ||
+                      <img
+                        alt="Image Chat"
+                        src={
+                          curGroup == null
+                            ? `http://localhost:3000/api/users/messagePic/${message._id}`
+                            : `http://localhost:3000/api/users/messagePicGroup/${message._id}`
+                        }
+                        width={300}
+                      />
+                    ) : (
+                      <>{message.content}</>
+                    )}
+                  </UserChatBubble>
+                </UserChatBubbleContainer>
+              ) : (
+                <FriendChatBubbleContainer key={index} ref={scrollRef}>
+                  <Box>{message.sender}</Box>
+                  <FriendChatBubble>
+                    {message.content.includes("jpg") ||
                       message.content.includes("png") ||
                       message.content.includes("jpeg") ? (
-                        <img
-                          alt="Image Chat"
-                          src={
-                            curGroup == null
-                              ? `http://localhost:3000/api/users/messagePic/${message._id}`
-                              : `http://localhost:3000/api/users/messagePicGroup/${message._id}`
-                          }
-                          width={300}
-                        />
-                      ) : (
-                        <>{message.content}</>
-                      )}
-                    </FriendChatBubble>
-                  </FriendChatBubbleContainer>
-                )
+                      <img
+                        alt="Image Chat"
+                        src={
+                          curGroup == null
+                            ? `http://localhost:3000/api/users/messagePic/${message._id}`
+                            : `http://localhost:3000/api/users/messagePicGroup/${message._id}`
+                        }
+                        width={300}
+                      />
+                    ) : (
+                      <>{message.content}</>
+                    )}
+                  </FriendChatBubble>
+                </FriendChatBubbleContainer>
               )
+            )
             : "loading..."}
           <ExpandCircleDownIcon
             onClick={scrollToLatestMessage}
