@@ -141,6 +141,7 @@ function ChatPage(props) {
   const [newMessage, setNewMessage] = useState("");
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [anchorE2, setAnchorE2] = React.useState<null | HTMLElement>(null);
+  const [anchorE3, setAnchorE3] = React.useState<null | HTMLElement>(null);
   const [tempFile, setTempFile] = useState("");
   const [tempFileGroup, setTempFileGroup] = useState("");
   const fileInputRef = useRef(null);
@@ -150,6 +151,121 @@ function ChatPage(props) {
 
   const open = Boolean(anchorEl);
   const id = open ? "simple-popper" : undefined;
+
+  const openEmoji = Boolean(anchorE3);
+  const idEmoji = openEmoji ? "simple-popper" : undefined;
+  const EmojiList = [
+    "😀",
+    "😁",
+    "😂",
+    "🤣",
+    "😃",
+    "😄",
+    "😅",
+    "😆",
+    "😉",
+    "😊",
+    "😋",
+    "😎",
+    "😍",
+    "😘",
+    "🥰",
+    "😗",
+    "😙",
+    "🥲",
+    "😚",
+    "☺️",
+    "🙂",
+    "🤗",
+    "🤩",
+    "🤔",
+    "🫡",
+    "🤨",
+    "😐",
+    "😑",
+    "😶",
+    "🫥",
+    "😶‍🌫️",
+    "🙄",
+    "😏",
+    "😣",
+    "😥",
+    "😮",
+    "🤐",
+    "😯",
+    "😪",
+    "😫",
+    "🥱",
+    "😴",
+    "😌",
+    "😛",
+    "😜",
+    "😝",
+    "🤤",
+    "😒",
+    "😓",
+    "😔",
+    "😕",
+    "🫤",
+    "🙃",
+    "🫠",
+    "🤑",
+    "😲",
+    "☹️",
+    "🙁",
+    "😖",
+    "😞",
+    "😟",
+    "😤",
+    "😢",
+    "😭",
+    "😦",
+    "😧",
+    "😨",
+    "😩",
+    "🤯",
+    "😬",
+    "😮‍💨",
+    "😰",
+    "😱",
+    "🥵",
+    "🥶",
+    "😳",
+    "🤪",
+    "😵",
+    "😵‍💫",
+    "🥴",
+    "😠",
+    "😡",
+    "🤬",
+    "😷",
+    "🤒",
+    "🤕",
+    "🤢",
+    "🤮",
+    "🤧",
+    "😇",
+    "🥳",
+    "🥸",
+    "🥺",
+    "🥹",
+    "🤠",
+    "🤡",
+    "🤥",
+    "🫨",
+    "🤫",
+    "🤭",
+    "🫢",
+    "🫣",
+    "🧐",
+    "🤓",
+    "😈",
+    "👿",
+    "👹",
+    "👺",
+    "💀",
+    "☠️",
+  ];
 
   const handleClickPopper = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(anchorEl ? null : event.currentTarget);
@@ -161,6 +277,16 @@ function ChatPage(props) {
 
   const handlePopDetailClose = () => {
     setAnchorE2(null);
+  };
+
+  const handleEmojiButtonClicked = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorE3(anchorE3 ? null : event.currentTarget);
+  };
+
+  const handleEmojiClicked = (e) => {
+    console.log(e.target.value);
+
+    setNewMessage(newMessage + e.target.value);
   };
 
   // image chat
@@ -217,7 +343,6 @@ function ChatPage(props) {
     console.log("masuk handle drop");
   };
 
-
   // group image
   const handleFileChangeGroup = (event) => {
     const file = event.target.files[0];
@@ -271,7 +396,6 @@ function ChatPage(props) {
     displayImageGroup(file);
     console.log("masuk handle drop");
   };
-
 
   const handleSendMessage = async () => {
     try {
@@ -391,9 +515,7 @@ function ChatPage(props) {
     });
   };
 
-  const handleEmojiButtonClicked = () => { };
-
-  const handleInviteMember = async () => { };
+  const handleInviteMember = async () => {};
 
   useEffect(() => {
     setChat(null);
@@ -412,7 +534,9 @@ function ChatPage(props) {
       fetchChat();
     } else if (curGroup) {
       axios
-        .get(`http://localhost:3000/api/group-chats/picGroup/${curGroup.idGroup}`)
+        .get(
+          `http://localhost:3000/api/group-chats/picGroup/${curGroup.idGroup}`
+        )
         .then((res) => {
           setCurGroupprofpic(res.data);
         })
@@ -465,7 +589,7 @@ function ChatPage(props) {
         },
       }
     );
-  }, [selectedFileGroup])
+  }, [selectedFileGroup]);
 
   return (
     <>
@@ -529,15 +653,15 @@ function ChatPage(props) {
           {/* ini pop up detail group / friend */}
           <Popover
             open={Boolean(anchorE2)}
-            anchorE2={anchorE2}
+            anchorEl={anchorE2}
             onClose={handlePopDetailClose}
             anchorOrigin={{
               vertical: "top",
-              horizontal: "center", // Sesuaikan agar Popover tepat berada di bawah FriendDetailContainer
+              horizontal: "left", // Sesuaikan agar Popover tepat berada di bawah FriendDetailContainer
             }}
             transformOrigin={{
               vertical: "top",
-              horizontal: "center", // Sesuaikan agar Popover tepat berada di bawah FriendDetailContainer
+              horizontal: "left", // Sesuaikan agar Popover tepat berada di bawah FriendDetailContainer
             }}
           >
             {/* Ini isi popup nya */}
@@ -559,11 +683,13 @@ function ChatPage(props) {
                         {/* {selectedFileGroup ? (
                           <div id="imageContainerGroup"></div>
                         ) : ( */}
-                          <AvatarImage
-                            src={curGroupprofpic
-                            ? `http://localhost:3000/api/group-chats/picGroup/${curGroup.idGroup}`
-                            : "https://i.pinimg.com/736x/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.jpg"}
-                          />
+                        <AvatarImage
+                          src={
+                            curGroupprofpic
+                              ? `http://localhost:3000/api/group-chats/picGroup/${curGroup.idGroup}`
+                              : "https://i.pinimg.com/736x/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.jpg"
+                          }
+                        />
                         {/* )} */}
                         <input
                           type="file"
@@ -597,8 +723,9 @@ function ChatPage(props) {
                             setCurGroup(null);
                           }}
                           style={{
-                            pointerEvents: `${user.userId === curUserId ? "none" : "auto"
-                              }`,
+                            pointerEvents: `${
+                              user.userId === curUserId ? "none" : "auto"
+                            }`,
                             cursor: "pointer",
                           }}
                         >
@@ -635,45 +762,49 @@ function ChatPage(props) {
         >
           {chat
             ? chat.map((message, index) =>
-              message.senderId === curUserId ? (
-                <UserChatBubbleContainer key={index} ref={scrollRef}>
-                  <UserChatBubble>
-                    {message.content.includes("jpg") ||
+                message.senderId === curUserId ? (
+                  <UserChatBubbleContainer key={index} ref={scrollRef}>
+                    <UserChatBubble>
+                      {message.content.includes("jpg") ||
                       message.content.includes("png") ||
                       message.content.includes("jpeg") ? (
-                      <img
-                        alt="Image Chat"
-                        src={curGroup == null ?
-                          `http://localhost:3000/api/users/messagePic/${message._id}`
-                          : `http://localhost:3000/api/users/messagePicGroup/${message._id}`}
-                        width={300}
-                      />
-                    ) : (
-                      <>{message.content}</>
-                    )}
-                  </UserChatBubble>
-                </UserChatBubbleContainer>
-              ) : (
-                <FriendChatBubbleContainer key={index} ref={scrollRef}>
-                  <Box>{message.sender}</Box>
-                  <FriendChatBubble>
-                    {message.content.includes("jpg") ||
+                        <img
+                          alt="Image Chat"
+                          src={
+                            curGroup == null
+                              ? `http://localhost:3000/api/users/messagePic/${message._id}`
+                              : `http://localhost:3000/api/users/messagePicGroup/${message._id}`
+                          }
+                          width={300}
+                        />
+                      ) : (
+                        <>{message.content}</>
+                      )}
+                    </UserChatBubble>
+                  </UserChatBubbleContainer>
+                ) : (
+                  <FriendChatBubbleContainer key={index} ref={scrollRef}>
+                    <Box>{message.sender}</Box>
+                    <FriendChatBubble>
+                      {message.content.includes("jpg") ||
                       message.content.includes("png") ||
                       message.content.includes("jpeg") ? (
-                      <img
-                        alt="Image Chat"
-                        src={curGroup == null ?
-                          `http://localhost:3000/api/users/messagePic/${message._id}`
-                          : `http://localhost:3000/api/users/messagePicGroup/${message._id}`}
-                        width={300}
-                      />
-                    ) : (
-                      <>{message.content}</>
-                    )}
-                  </FriendChatBubble>
-                </FriendChatBubbleContainer>
+                        <img
+                          alt="Image Chat"
+                          src={
+                            curGroup == null
+                              ? `http://localhost:3000/api/users/messagePic/${message._id}`
+                              : `http://localhost:3000/api/users/messagePicGroup/${message._id}`
+                          }
+                          width={300}
+                        />
+                      ) : (
+                        <>{message.content}</>
+                      )}
+                    </FriendChatBubble>
+                  </FriendChatBubbleContainer>
+                )
               )
-            )
             : "loading..."}
           <ExpandCircleDownIcon
             onClick={scrollToLatestMessage}
@@ -692,12 +823,42 @@ function ChatPage(props) {
         <UserInputField>
           {/* button emoji */}
           <IconButtonContainer
-            aria-label="emoji"
-            color="secondary"
+            aria-describedby={idEmoji}
             onClick={handleEmojiButtonClicked}
           >
             <EmojiIcon />
           </IconButtonContainer>
+
+          {/* pop up emoji */}
+          <Popper
+            id={idEmoji}
+            open={openEmoji}
+            anchorEl={anchorE3}
+            placement="top"
+          >
+            {/* Ini isi popup nya */}
+            <Box
+              sx={{
+                width: "19vw",
+                height: "30vh",
+                overflow: "auto",
+                background: "white",
+              }}
+            >
+              <Box sx={{ textAlign: "center", fontSize: "1.3rem" }}>
+                Emoticons
+              </Box>
+              {EmojiList.map((emoji) => (
+                <IconButton
+                  sx={{ color: "rgb( 0, 0, 0, 1)" }}
+                  onClick={handleEmojiClicked}
+                  value={emoji}
+                >
+                  {emoji}
+                </IconButton>
+              ))}
+            </Box>
+          </Popper>
 
           {/* button upload foto */}
           <IconButtonContainer
