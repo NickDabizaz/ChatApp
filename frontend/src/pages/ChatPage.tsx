@@ -555,7 +555,9 @@ function ChatPage(props) {
                       message.content.includes("jpeg") ? (
                         <img
                           alt="Image Chat"
-                          src={`http://localhost:3000/api/users/messagePic/${message._id}`}
+                          src={curGroup == null ?
+                            `http://localhost:3000/api/users/messagePic/${message._id}`
+                          : `http://localhost:3000/api/users/messagePicGroup/${message._id}`}
                           width={300}
                         />
                       ) : (

@@ -129,7 +129,7 @@ const GroupChatController = {
       }
 
       const messages = groupChat.messages.map((message) => ({
-        messageId: message._id,
+        _id: message._id,
         senderId: message.senderId._id,
         sender: message.senderId.name,
         content: message.content,
