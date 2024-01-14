@@ -4,8 +4,8 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const app = express();
-const userRoutes = require("./routes/userRoutes");
-const groupChatRoutes = require("./routes/groupChatRoutes");
+const userRoutes = require("./src/routes/userRoutes");
+const groupChatRoutes = require("./src/routes/groupChatRoutes");
 const socket = require("socket.io");
 
 // Body parser middleware
