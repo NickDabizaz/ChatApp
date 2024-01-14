@@ -27,6 +27,27 @@ const UserController = {
     }
   },
 
+  editProfile: async (req, res) => {
+    try {
+      const { userId } = req.params;
+      const { name, phoneNumber } = req.body;
+      // Find the user by their ID and update their information
+      const user = await User.findByIdAndUpdate(
+        userId,
+        { name, phoneNumber },
+        { new: true }
+      );
+      if (!user) {
+        return res.status(404).json({ error: "Pengguna tidak ditemukan" });
+      }
+      res.status(200).json({ message: "Profil berhasil diperbarui" });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Kesalahan Server Internal" });
+    }
+  },
+
+
   loginUser: async (req, res) => {
     try {
       const { phoneNumber, password } = req.body;

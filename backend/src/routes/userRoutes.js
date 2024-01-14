@@ -15,6 +15,9 @@ router.post("/login", UserController.loginUser);
 //user send friend request to another user
 router.post("/add-friend", UserController.addFriend);
 
+//user edit profile
+router.put("/edit-profile/:userId", UserController.editProfile);
+
 //user send message to friend
 router.post("/send-message", UserController.sendMessage);
 
