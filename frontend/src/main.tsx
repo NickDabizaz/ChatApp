@@ -3,15 +3,10 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import ErrorPage from "./pages/ErrorPage.tsx";
-import ProfilePage from "./pages/ProfilePage.tsx";
 import dataHandler from "./dataHandler.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
 import RegisterPage from "./pages/RegisterPage.tsx";
-import HomePage from "./pages/HomePage.tsx";
-import Navbar from "./components/Navbar.tsx";
 import LandingPage from "./pages/LandingPage.tsx";
-import ChatPage from "./pages/ChatPage.tsx";
-import WelcomePage from "./pages/WelcomePage.tsx";
 import AppPage from "./pages/AppPage.tsx";
 
 const { loadData } = dataHandler;
@@ -69,8 +64,6 @@ const router = createBrowserRouter([
 // );
 
 ReactDOM.render(
-  <React.StrictMode>
-    <RouterProvider router={router}></RouterProvider>
-  </React.StrictMode>,
+  <RouterProvider router={router}></RouterProvider>,
   document.getElementById("root")
 );

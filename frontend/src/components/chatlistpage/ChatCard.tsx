@@ -25,11 +25,11 @@ function ChatCard(props) {
         let response;
         if (type === "friend") {
           response = await axios.get(
-            `http://localhost:3000/api/users/last-message/${curUserId}/${props.chat.friendId}`
+            `https://chat-app-api-qam0.onrender.com/api/users/last-message/${curUserId}/${props.chat.friendId}`
           );
         } else if (type === "group") {
           response = await axios.get(
-            `http://localhost:3000/api/group-chats/${props.chat.idGroup}/last-message`
+            `https://chat-app-api-qam0.onrender.com/api/group-chats/${props.chat.idGroup}/last-message`
           );
         }
         setLatestMessage(response.data);

@@ -59,7 +59,7 @@ function AddFriendPage(props) {
     } else {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/users/user-details-by-phone/${search}`
+          `https://chat-app-api-qam0.onrender.com/api/users/user-details-by-phone/${search}`
         );
         setSearchResult(response.data);
         setSearchLoading(false);
@@ -78,7 +78,7 @@ function AddFriendPage(props) {
     if (temp.length > 0) {
       try {
         const response = await axios.post(
-          "http://localhost:3000/api/users/accept-friend-request",
+          "https://chat-app-api-qam0.onrender.com/api/users/accept-friend-request",
           {
             userId: curUserId,
             friendId: temp[0].friendId,
@@ -92,7 +92,7 @@ function AddFriendPage(props) {
     } else {
       try {
         const response = await axios.post(
-          "http://localhost:3000/api/users/add-friend",
+          "https://chat-app-api-qam0.onrender.com/api/users/add-friend",
           {
             userId: curUserId,
             friendPhoneNumber: search,
@@ -111,7 +111,7 @@ function AddFriendPage(props) {
   const handleCreateGroup = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/group-chats/create",
+        "https://chat-app-api-qam0.onrender.com/api/group-chats/create",
         {
           name: groupName,
           admin: curUserId,
@@ -127,7 +127,7 @@ function AddFriendPage(props) {
       const fetchUserProfpic = async () => {
         try {
           const response = await axios.get(
-            `http://localhost:3000/api/users/pic/${searchResult.userId}`
+            `https://chat-app-api-qam0.onrender.com/api/users/pic/${searchResult.userId}`
           );
           setSearchResultProfpic(response.data);
           setSearchLoading(false);
@@ -187,7 +187,7 @@ function AddFriendPage(props) {
                   alt="Friend Search Avatar"
                   src={
                     searchResultProfpic
-                      ? `http://localhost:3000/api/users/pic/${searchResult.userId}`
+                      ? `https://chat-app-api-qam0.onrender.com/api/users/pic/${searchResult.userId}`
                       : "https://i.pinimg.com/736x/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.jpg"
                   }
                 />
@@ -221,7 +221,7 @@ function AddFriendPage(props) {
                   alt="Friend Search Avatar"
                   src={
                     searchResultProfpic
-                      ? `http://localhost:3000/api/users/pic/${searchResult.userId}`
+                      ? `https://chat-app-api-qam0.onrender.com/api/users/pic/${searchResult.userId}`
                       : "https://i.pinimg.com/736x/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.jpg"
                   }
                 />

@@ -12,7 +12,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/api/users/register",
+					"raw": "https://chat-app-api-qam0.onrender.com/api/users/register",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -33,7 +33,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/api/users/login",
+					"raw": "https://chat-app-api-qam0.onrender.com/api/users/login",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -54,7 +54,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/api/users/add-friend",
+					"raw": "https://chat-app-api-qam0.onrender.com/api/users/add-friend",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -75,7 +75,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/api/users/send-message",
+					"raw": "https://chat-app-api-qam0.onrender.com/api/users/send-message",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -96,7 +96,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/api/users/accept-friend-request",
+					"raw": "https://chat-app-api-qam0.onrender.com/api/users/accept-friend-request",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -117,7 +117,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/api/users/reject-friend-request",
+					"raw": "https://chat-app-api-qam0.onrender.com/api/users/reject-friend-request",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -138,7 +138,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/api/users/chat-history/:user_id/:friend_id",
+					"raw": "https://chat-app-api-qam0.onrender.com/api/users/chat-history/:user_id/:friend_id",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -169,7 +169,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/api/users/user-details/:user_id",
+					"raw": "https://chat-app-api-qam0.onrender.com/api/users/user-details/:user_id",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -196,7 +196,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/api/users/user-friends/:user_id",
+					"raw": "https://chat-app-api-qam0.onrender.com/api/users/user-friends/:user_id",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -223,7 +223,7 @@
 				"method": "PUT",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/api/users/read-message/:user_id/:friend_id/:message_id",
+					"raw": "https://chat-app-api-qam0.onrender.com/api/users/read-message/:user_id/:friend_id/:message_id",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -259,7 +259,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/api/users/last-message/:user_id/:friend_id",
+					"raw": "https://chat-app-api-qam0.onrender.com/api/users/last-message/:user_id/:friend_id",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -290,7 +290,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/api/users/all-users",
+					"raw": "https://chat-app-api-qam0.onrender.com/api/users/all-users",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -315,7 +315,7 @@
 					"raw": "{\n  \"name\": \"Friends Group\",\n  \"admin\": \"admin_user_id_here\"\n}"
 				},
 				"url": {
-					"raw": "http://localhost:3000/api/group-chats/create",
+					"raw": "https://chat-app-api-qam0.onrender.com/api/group-chats/create",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -340,7 +340,7 @@
 					"raw": "{\n  \"memberId\": \"new_member_id_here\"\n}"
 				},
 				"url": {
-					"raw": "http://localhost:3000/api/group-chats/group_chat_id_here/addMember",
+					"raw": "https://chat-app-api-qam0.onrender.com/api/group-chats/group_chat_id_here/addMember",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -366,7 +366,7 @@
 					"raw": "{\n  \"senderId\": \"sender_user_id_here\",\n  \"content\": \"Hello, group!\"\n}"
 				},
 				"url": {
-					"raw": "http://localhost:3000/api/group-chats/group_chat_id_here/sendMessage",
+					"raw": "https://chat-app-api-qam0.onrender.com/api/group-chats/group_chat_id_here/sendMessage",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -388,7 +388,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/api/group-chats/group_chat_id_here/messages",
+					"raw": "https://chat-app-api-qam0.onrender.com/api/group-chats/group_chat_id_here/messages",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -410,7 +410,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/api/group-chats/group_chat_id_here/details",
+					"raw": "https://chat-app-api-qam0.onrender.com/api/group-chats/group_chat_id_here/details",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -432,7 +432,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/api/group-chats/userGroups/user_id_here",
+					"raw": "https://chat-app-api-qam0.onrender.com/api/group-chats/userGroups/user_id_here",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -454,7 +454,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/api/user-friends/pending-requests/user_id_here",
+					"raw": "https://chat-app-api-qam0.onrender.com/api/user-friends/pending-requests/user_id_here",
 					"protocol": "http",
 					"host": [
 						"localhost"

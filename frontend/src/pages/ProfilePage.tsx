@@ -43,7 +43,7 @@ function ProfilePage(props) {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3000/api/users/pic/${curUserId}`)
+      .get(`https://chat-app-api-qam0.onrender.com/api/users/pic/${curUserId}`)
       .then((res) => {
         setProfPic(res.data);
       })
@@ -60,7 +60,7 @@ function ProfilePage(props) {
         alert("Profile picture berhasil diubah");
       }
       const response = await axios.post(
-        `http://localhost:3000/api/users/profilpic/${curUserId}`,
+        `https://chat-app-api-qam0.onrender.com/api/users/profilpic/${curUserId}`,
         formData,
         {
           headers: {
@@ -70,7 +70,7 @@ function ProfilePage(props) {
       );
 
       await axios.put(
-        `http://localhost:3000/api/users/edit-profile/${curUserId}`,
+        `https://chat-app-api-qam0.onrender.com/api/users/edit-profile/${curUserId}`,
         {
           name: editedName,
           phoneNumber: editedPhoneNumber,
@@ -114,7 +114,7 @@ function ProfilePage(props) {
               alt="User Avatar"
               src={
                 profpic
-                  ? `http://localhost:3000/api/users/pic/${curUserId}`
+                  ? `https://chat-app-api-qam0.onrender.com/api/users/pic/${curUserId}`
                   : "https://i.pinimg.com/736x/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.jpg"
               }
             />
