@@ -580,7 +580,7 @@ function ChatPage(props) {
       fetchChat();
       fetchMember();
     }
-  }, [curFriend, curGroup, curGroupprofpic]);
+  }, [curFriend, curGroup, curGroupprofpic, curFriendprofpic]);
 
   useEffect(() => {
     // Listen for incoming chat messages
@@ -820,7 +820,7 @@ function ChatPage(props) {
                               <FlexContainer sx={{display: "flex", alignItems: "center"}}>
                                 <AvatarImage
                                   src={
-                                    curFriendprofpic
+                                    `https://chat-app-api-qam0.onrender.com/api/users/pic/${user.userId}` != "Not Found"
                                       ? `https://chat-app-api-qam0.onrender.com/api/users/pic/${user.userId}`
                                       : "https://i.pinimg.com/736x/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.jpg"
                                   }
