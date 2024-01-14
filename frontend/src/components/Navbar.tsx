@@ -9,7 +9,8 @@ import TextsmsIcon from "@mui/icons-material/Textsms";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 
 const Sidebar = styled(Box)(({ theme }) => ({
-  width: "5rem",
+  width: "100%",
+  minWidth: "100%",
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
@@ -40,7 +41,7 @@ const SubContainer = styled(Box)({
   display: "flex",
   height: "100%",
   padding: 0,
-  width: "auto",
+  width: "100%",
 });
 
 function Navbar(props) {

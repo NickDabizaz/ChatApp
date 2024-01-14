@@ -45,8 +45,14 @@ function SettingPage(props) {
         }}
       >
         <LogoutIcon />
+        Log Out
       </ThemedButton>
-      <ThemedButton onClick={toggleDarkMode}>Toggle Mode</ThemedButton>
+      <ThemedButton
+        onClick={toggleDarkMode}
+        sx={{ marginTop: "1vh", marginBottom: "1vh" }}
+      >
+        Toggle Mode
+      </ThemedButton>
       <Box>Select Chat Background</Box>
       <Box sx={{ display: "flex", flexWrap: "wrap" }}>
         {customBackgrounds.map((background, index) => (
@@ -56,7 +62,6 @@ function SettingPage(props) {
               width: "50px",
               height: "50px",
               margin: "0.2rem",
-              backgroundColor: background,
               border: `${
                 index === selectedBackground
                   ? "4px solid #4FD9FF"
@@ -64,8 +69,17 @@ function SettingPage(props) {
               }`,
               borderRadius: "5%",
             }}
-            onClick={() => setSelectedBackground(index)}
-          ></Box>
+          >
+            <Box
+              sx={{
+                height: "100%",
+                width: "100%",
+                backgroundColor: background,
+                opacity: "50%",
+              }}
+              onClick={() => setSelectedBackground(index)}
+            ></Box>
+          </Box>
         ))}
       </Box>
     </Container>

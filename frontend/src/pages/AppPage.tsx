@@ -289,6 +289,7 @@ function AppPage() {
             {curFriend || curGroup ? (
               <ChatPage
                 curUserId={cookie.user_id}
+                userFriends={userFriends}
                 curFriend={curFriend}
                 setCurFriend={setCurFriend}
                 curGroup={curGroup}

@@ -10,6 +10,7 @@ import EmojiIcon from "@mui/icons-material/EmojiEmotions";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import ExpandCircleDownIcon from "@mui/icons-material/ExpandCircleDown";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import EditIcon from "@mui/icons-material/Edit";
 import Popper from "@mui/material/Popper";
 import { io } from "socket.io-client";
 import { useTheme } from "@emotion/react";
@@ -108,15 +109,18 @@ const FriendChatBubble = styled(Box)(({ theme }) => ({
 }));
 
 const ContainerDetail = styled(Box)(({ theme }) => ({
+  padding: "2vh",
   border: "1px solid black",
+  height: "44vh",
+  maxHeight: "auto",
+  overflow: "hidden",
   backgroundColor: theme.palette.primary.main,
 }));
 
 const ContainerMember = styled(Box)(({ theme }) => ({
-  height: "50px",
+  padding: "1vh",
   width: "100%",
   border: "1px solid black",
-  backgroundColor: theme.palette.primary.main,
 }));
 
 const MemberImage = styled(Avatar)(({ theme }) => ({
@@ -131,6 +135,7 @@ function ChatPage(props) {
   const curGroup = props.curGroup;
   const setCurGroup = props.setCurGroup;
   const selectedBackground = props.selectedBackground;
+  const userFriends = props.userFriends;
 
   const [curFriendprofpic, setCurFriendprofpic] = useState();
   const [curGroupprofpic, setCurGroupprofpic] = useState();
@@ -144,6 +149,8 @@ function ChatPage(props) {
   const [anchorE3, setAnchorE3] = React.useState<null | HTMLElement>(null);
   const [tempFile, setTempFile] = useState("");
   const [tempFileGroup, setTempFileGroup] = useState("");
+  const [inviteMember, setInviteMember] = useState(false);
+  const [inviteable, setInviteable] = useState(null);
   const fileInputRef = useRef(null);
   const socket = io("http://localhost:3000");
   const scrollRef = useRef();
@@ -471,7 +478,6 @@ function ChatPage(props) {
           `http://localhost:3000/api/users/chat-history/${curUserId}/${curFriend.friendId}`
         );
         setChat(response.data);
-        console.log(response.data);
       } catch (error) {
         console.error("Error fetching user data", error);
       }
@@ -482,7 +488,6 @@ function ChatPage(props) {
           `http://localhost:3000/api/group-chats/${curGroup.idGroup}/messages`
         );
         setChat(response.data);
-        console.log(response.data);
       } catch (error) {
         console.error("Error fetching user data", error);
       }
@@ -507,6 +512,20 @@ function ChatPage(props) {
     }
   };
 
+  const fetchInviteable = () => {
+    let temp;
+
+    console.log(member);
+    console.log(userFriends);
+
+    const result = userFriends.filter(
+      (friend) => !member.some((member) => member.userId === friend.friendId)
+    );
+
+    setInviteable(result);
+    console.log(result);
+  };
+
   const scrollToLatestMessage = () => {
     scrollRef.current?.scrollIntoView({
       behavior: "smooth",
@@ -515,11 +534,21 @@ function ChatPage(props) {
     });
   };
 
-  const handleInviteMember = async () => {};
+  const handleInviteMember = async (id) => {
+    try {
+      // Replace with your actual API endpoint
+      const response = await axios.post(
+        `http://localhost:3000/api/group-chats/${curGroup.idGroup}/addMember`,
+        { memberId: id }
+      );
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error fetching user data", error);
+    }
+  };
 
   useEffect(() => {
     setChat(null);
-    console.log(curFriend);
 
     if (curFriend) {
       axios
@@ -547,9 +576,6 @@ function ChatPage(props) {
       fetchChat();
       fetchMember();
     }
-
-    console.log(curFriend);
-    console.log(curGroup);
   }, [curFriend, curGroup]);
 
   useEffect(() => {
@@ -565,7 +591,6 @@ function ChatPage(props) {
   }, [chat]);
 
   useEffect(() => {
-    console.log("scroll");
     scrollRef.current?.scrollIntoView({
       behavior: "smooth",
       block: "end",
@@ -574,22 +599,27 @@ function ChatPage(props) {
   }, [chat]);
 
   useEffect(() => {
-    console.log(member);
+    member && fetchInviteable();
   }, [member]);
 
   useEffect(() => {
-    const formData = new FormData();
-    formData.append("file", selectedFileGroup);
-    axios.post(
-      `http://localhost:3000/api/group-chats/picGroup/profpicGroup/${curGroup.idGroup}`,
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
+    if (selectedFileGroup) {
+      const formData = new FormData();
+      formData.append("file", selectedFileGroup);
+      axios.post(
+        `http://localhost:3000/api/group-chats/picGroup/profpicGroup/${curGroup.idGroup}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+    }
   }, [selectedFileGroup]);
+
+  console.log(curFriend);
+  console.log(curGroup);
 
   return (
     <>
@@ -620,10 +650,17 @@ function ChatPage(props) {
                 />
 
                 {/* ini nama friend */}
-                <Paper style={{ textAlign: "left" }}>
-                  {curFriend.name} <br />
-                  🟢online
-                </Paper>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    fontSize: "1.4rem",
+                    fontWeight: "bold",
+                    marginLeft: "1vw",
+                  }}
+                >
+                  {curFriend.name}
+                </Box>
               </>
             ) : curGroup ? (
               //ini kalau chat sama group
@@ -639,10 +676,17 @@ function ChatPage(props) {
                 />
 
                 {/* ini nama group */}
-                <Paper style={{ textAlign: "left" }}>
-                  {curGroup.name} <br />
-                  🟢online
-                </Paper>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    fontSize: "1.4rem",
+                    fontWeight: "bold",
+                    marginLeft: "1vw",
+                  }}
+                >
+                  {curGroup.name}
+                </Box>
               </>
             ) : (
               //ini kalau belum ke load
@@ -675,78 +719,146 @@ function ChatPage(props) {
               ) : curGroup ? (
                 member && (
                   <ContainerDetail>
-                    <Box>
-                      <div
-                        className=" text-center"
-                        style={{ display: "block", width: "100%" }}
-                      >
-                        {/* {selectedFileGroup ? (
+                    {!inviteMember ? (
+                      <>
+                        {/* ini nama sama pp */}
+                        <Box sx={{ textAlign: "center", fontWeight: "bold" }}>
+                          {/* ini pp */}
+                          <Box
+                            sx={{
+                              margin: "auto",
+                              width: "fit-content",
+                            }}
+                          >
+                            <FlexContainer>
+                              {/* {selectedFileGroup ? (
                           <div id="imageContainerGroup"></div>
                         ) : ( */}
-                        <AvatarImage
-                          src={
-                            curGroupprofpic
-                              ? `http://localhost:3000/api/group-chats/picGroup/${curGroup.idGroup}`
-                              : "https://i.pinimg.com/736x/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.jpg"
-                          }
-                        />
-                        {/* )} */}
-                        <input
-                          type="file"
-                          id="fileInput"
-                          style={{ display: "none" }}
-                          onChange={handleFileChangeGroup}
-                          ref={fileInputRef}
-                          accept=".jpeg, .jpg, .png"
-                        />
-                        <div
-                          onClick={handleClickGroup}
-                          onDrop={handleDropGroup}
-                          onDragOver={handleDragOverGroup}
-                          style={{
-                            textAlign: "center",
-                            cursor: "pointer",
-                            height: "auto",
+                              <AvatarImage
+                                src={
+                                  curGroupprofpic
+                                    ? `http://localhost:3000/api/group-chats/picGroup/${curGroup.idGroup}`
+                                    : "https://i.pinimg.com/736x/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.jpg"
+                                }
+                                sx={{ margin: "auto" }}
+                              />
+                              {/* )} */}
+                              <input
+                                type="file"
+                                id="fileInput"
+                                style={{ display: "none" }}
+                                onChange={handleFileChangeGroup}
+                                ref={fileInputRef}
+                                accept=".jpeg, .jpg, .png"
+                              />
+                              <div
+                                onClick={handleClickGroup}
+                                onDrop={handleDropGroup}
+                                onDragOver={handleDragOverGroup}
+                                style={{
+                                  textAlign: "center",
+                                  cursor: "pointer",
+                                  marginTop: "auto",
+                                  height: "auto",
+                                }}
+                              >
+                                <IconButton>
+                                  <EditIcon />
+                                </IconButton>
+                              </div>
+                            </FlexContainer>
+                          </Box>
+
+                          {/* ini nama */}
+                          {curGroup.name}
+                        </Box>
+
+                        {/* ini member */}
+                        <Box>Members</Box>
+                        <Box
+                          sx={{
+                            height: "20vh",
+                            overflow: "auto",
+                            borderTop: "1px solid black",
+                            borderBottom: "1px solid black",
                           }}
                         >
-                          <p>Select Image</p>
-                        </div>
-                      </div>
-                    </Box>
-                    <Box>{curGroup.name}</Box>
-                    <Box>Members</Box>
-                    <Box>
-                      {member.map((user) => (
-                        <ContainerMember
-                          onClick={() => {
-                            setCurFriend({ friendId: user.userId });
-                            setCurGroup(null);
-                          }}
-                          style={{
-                            pointerEvents: `${
-                              user.userId === curUserId ? "none" : "auto"
-                            }`,
-                            cursor: "pointer",
+                          {/* ini mapping membernya */}
+                          {member.map((user) => (
+                            <ContainerMember
+                              onClick={() => {
+                                setCurFriend({ friendId: user.userId });
+                                setCurGroup(null);
+                              }}
+                              style={{
+                                pointerEvents: `${
+                                  user.userId === curUserId ? "none" : "auto"
+                                }`,
+                                cursor: "pointer",
+                              }}
+                            >
+                              <FlexContainer>
+                                <MemberImage alt="Member Profile Picture" />
+                                <Box>{user.name}</Box>
+                                {user.role === "admin" && (
+                                  <Box sx={{ marginLeft: "auto" }}>admin</Box>
+                                )}
+                              </FlexContainer>
+                            </ContainerMember>
+                          ))}
+
+                          {/* ini button invite mmeber (muncul kalau admin) */}
+                        </Box>
+                        <Box
+                          sx={{
+                            marginTop: "auto",
+                            width: "100%",
                           }}
                         >
-                          <FlexContainer>
-                            <MemberImage alt="Member Profile Picture" />
-                            <Box>{user.name}</Box>
-                            {user.role === "admin" && (
-                              <Box sx={{ marginLeft: "auto" }}>admin</Box>
-                            )}
-                          </FlexContainer>
-                        </ContainerMember>
-                      ))}
-                      {curGroup.admin.userId === curUserId && (
-                        <Button
-                          onClick={handleInviteMember}
-                          sx={{ color: "black" }}
+                          {curGroup.admin.userId === curUserId && (
+                            <Button
+                              onClick={() => setInviteMember(true)}
+                              sx={{
+                                color: "black",
+                                width: "100%",
+                              }}
+                            >
+                              invite member
+                            </Button>
+                          )}
+                        </Box>
+                      </>
+                    ) : (
+                      <Box>
+                        <IconButton onClick={() => setInviteMember(false)}>
+                          <ArrowBackIosNewIcon />
+                        </IconButton>
+                        Back
+                        <Box
+                          sx={{
+                            borderBottom: "1px solid black",
+                            overflow: "auto",
+                          }}
                         >
-                          invite member
-                        </Button>
-                      )}
-                    </Box>
+                          {inviteable &&
+                            inviteable.map((friend) => (
+                              <ContainerMember>
+                                <FlexContainer
+                                  sx={{ alignItems: "center" }}
+                                  onClick={() =>
+                                    handleInviteMember(friend.friendId)
+                                  }
+                                >
+                                  <MemberImage alt="Member Profile Picture" />
+                                  <Box sx={{ marginLeft: "1vw" }}>
+                                    {friend.name}
+                                  </Box>
+                                </FlexContainer>
+                              </ContainerMember>
+                            ))}
+                        </Box>
+                      </Box>
+                    )}
                   </ContainerDetail>
                 )
               ) : (
@@ -840,23 +952,33 @@ function ChatPage(props) {
             <Box
               sx={{
                 width: "19vw",
-                height: "30vh",
-                overflow: "auto",
-                background: "white",
+                height: "32vh",
+                background: theme.palette.primary.main,
+                border: `1px solid black`,
+                borderRadius: "10px",
               }}
             >
-              <Box sx={{ textAlign: "center", fontSize: "1.3rem" }}>
+              <Box
+                sx={{ textAlign: "center", fontSize: "1.3rem", height: "5vh" }}
+              >
                 Emoticons
               </Box>
-              {EmojiList.map((emoji) => (
-                <IconButton
-                  sx={{ color: "rgb( 0, 0, 0, 1)" }}
-                  onClick={handleEmojiClicked}
-                  value={emoji}
-                >
-                  {emoji}
-                </IconButton>
-              ))}
+              <Box
+                sx={{
+                  overflow: "auto",
+                  height: "25vh",
+                }}
+              >
+                {EmojiList.map((emoji) => (
+                  <IconButton
+                    sx={{ color: "rgb( 0, 0, 0, 1)" }}
+                    onClick={handleEmojiClicked}
+                    value={emoji}
+                  >
+                    {emoji}
+                  </IconButton>
+                ))}
+              </Box>
             </Box>
           </Popper>
 

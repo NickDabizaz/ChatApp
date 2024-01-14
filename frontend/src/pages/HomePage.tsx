@@ -10,7 +10,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const Container = styled(Box)(({ theme }) => ({
   display: "flex",
-  height: "90vh",
+  height: "89vh",
   maxHeight: "90vh",
   padding: "1rem",
   backgroundColor: theme.palette.background.default,
@@ -71,7 +71,7 @@ function HomePage(props) {
       {userData ? (
         <HomeContainer>
           {/* ini pp sama nama */}
-          <FlexContainer>
+          <FlexContainer sx={{ alignItems: "center" }}>
             <AvatarImage
               alt="Profile picture"
               src={
@@ -80,7 +80,12 @@ function HomePage(props) {
                   : "https://i.pinimg.com/736x/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.jpg"
               }
             />
-            {userData.name}
+            <Box
+              sx={{ marginLeft: "1vw", fontSize: "1.2rem", fontWeight: "bold" }}
+            >
+              {userData.name} <br />
+              <Box sx={{ fontSize: "0.8rem" }}>{userData.phoneNumber}</Box>
+            </Box>
           </FlexContainer>
 
           {/* ini container dropdown Friends */}
