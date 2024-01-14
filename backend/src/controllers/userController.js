@@ -47,7 +47,6 @@ const UserController = {
     }
   },
 
-
   loginUser: async (req, res) => {
     try {
       const { phoneNumber, password } = req.body;

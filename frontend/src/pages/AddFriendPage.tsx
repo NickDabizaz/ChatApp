@@ -48,8 +48,9 @@ function AddFriendPage(props) {
   };
 
   const handleSearch = async () => {
+    setSearchLoading(true);
     let temp = props.userFriends.filter(
-      (friend) => friend.phoneNumber === search
+      (friend) => friend.phoneNumber === search && friend.status === "accepted"
     );
 
     if (temp.length > 0) {
@@ -60,7 +61,7 @@ function AddFriendPage(props) {
           `http://localhost:3000/api/users/user-details-by-phone/${search}`
         );
         setSearchResult(response.data);
-        setSearchLoading(true);
+        setSearchLoading(false);
       } catch (error) {
         console.error("Error fetching user data", error);
         setSearchResult(null);
@@ -69,16 +70,36 @@ function AddFriendPage(props) {
   };
 
   const handleAddFriend = async () => {
-    try {
-      const response = await axios.post(
-        "http://localhost:3000/api/users/add-friend",
-        {
-          userId: curUserId,
-          friendPhoneNumber: search,
-        }
-      );
-    } catch (error) {
-      console.error("Error adding friend:", error);
+    let temp = userFriendRequests.filter((user) => user.phoneNumber === search);
+    console.log(curUserId);
+    console.log(temp[0].friendId);
+
+    if (temp.length > 0) {
+      try {
+        const response = await axios.post(
+          "http://localhost:3000/api/users/accept-friend-request",
+          {
+            userId: curUserId,
+            friendId: temp[0].friendId,
+          }
+        );
+        setSearch("");
+        setSearchResult(null);
+      } catch (error) {
+        console.error("Error adding friend:", error);
+      }
+    } else {
+      try {
+        const response = await axios.post(
+          "http://localhost:3000/api/users/add-friend",
+          {
+            userId: curUserId,
+            friendPhoneNumber: search,
+          }
+        );
+      } catch (error) {
+        console.error("Error adding friend:", error);
+      }
     }
   };
 
@@ -117,6 +138,8 @@ function AddFriendPage(props) {
       fetchUserProfpic();
     }
   }, [searchResult]);
+
+  console.log(userFriendRequests);
 
   return (
     <Container>
@@ -157,7 +180,24 @@ function AddFriendPage(props) {
           <Typography>Friend Request</Typography>
 
           {userFriendRequests &&
-            userFriendRequests.map((friend) => <div>{friend.name}</div>)}
+            userFriendRequests.map((friend) => (
+              <FlexContainer p={2} sx={{ border: "1px solid black" }}>
+                <Avatar
+                  alt="Friend Search Avatar"
+                  src={
+                    searchResultProfpic
+                      ? `http://localhost:3000/api/users/pic/${searchResult.userId}`
+                      : "https://i.pinimg.com/736x/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.jpg"
+                  }
+                />
+
+                <Box>{friend.name}</Box>
+
+                <Button onClick={handleAddFriend} sx={{ marginLeft: "auto" }}>
+                  <PersonAddIcon />
+                </Button>
+              </FlexContainer>
+            ))}
         </>
       ) : add === "friend" ? (
         <>
@@ -175,7 +215,7 @@ function AddFriendPage(props) {
             searchLoading ? (
               "loading..."
             ) : (
-              <FlexContainer>
+              <FlexContainer p={2} sx={{ border: "1px solid black" }}>
                 <Avatar
                   alt="Friend Search Avatar"
                   src={
@@ -185,7 +225,7 @@ function AddFriendPage(props) {
                   }
                 />
                 {searchResult.name}
-                <Button onClick={handleAddFriend}>
+                <Button onClick={handleAddFriend} sx={{ marginLeft: "auto" }}>
                   <PersonAddIcon />
                 </Button>
               </FlexContainer>

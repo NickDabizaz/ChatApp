@@ -79,13 +79,14 @@ function AppPage() {
   const [curGroup, setCurGroup] = useState(null);
   const [userFriendRequests, setUserFriendRequests] = useState(null);
   const [isDarkMode, setDarkMode] = useState(false);
-  const [selectedBackground, setSelectedBackground] = useState("background1");
+  const [selectedBackground, setSelectedBackground] = useState(0);
 
   const toggleDarkMode = () => {
     setDarkMode(!isDarkMode);
   };
 
   const customBackgrounds = [
+    "#FFFFFF", // Putih
     "#FF5733", // Oranye Terang
     "#66BB6A", // Hijau Mint
     "#FF4081", // Merah Muda
@@ -151,6 +152,8 @@ function AppPage() {
         const response = await axios.get(
           `http://localhost:3000/api/users/user-details/${cookie.user_id}`
         );
+        console.log(response.data);
+
         setUserData(response.data);
         setUserFriends(
           response.data.friends.filter((friend) => friend.status == "accepted")
