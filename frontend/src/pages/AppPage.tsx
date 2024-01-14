@@ -1,28 +1,11 @@
 import React, { Suspense, useEffect, useState, useRef } from "react";
-import { Outlet, useLoaderData } from "react-router-dom";
 import Box from "@mui/system/Box";
 import Paper from "@mui/material/Paper";
-import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
-import { style, styled } from "@mui/system";
-import ContactCard from "../components/homepage/ContactCardFriend";
+import { styled } from "@mui/system";
 import axios from "axios";
 import { useCookies } from "react-cookie";
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Button,
-  IconButton,
-  TextField,
-} from "@mui/material";
-import SendIcon from "@mui/icons-material/Send";
-import EmojiIcon from "@mui/icons-material/EmojiEmotions";
 import ProfilePage from "./ProfilePage";
-import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
-import Popper from "@mui/material/Popper";
-import AddCommentIcon from "@mui/icons-material/AddComment";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Navbar from "../components/Navbar";
 import ChatListPage from "./ChatListPage";
 import ChatPage from "./ChatPage";
@@ -110,7 +93,7 @@ function AppPage() {
       main: "#1EA1E1",
     },
     secondary: {
-      main: "#4BB4E7",
+      main: "#1EE1BF",
     },
     background: {
       default: "#FFFFFF",
