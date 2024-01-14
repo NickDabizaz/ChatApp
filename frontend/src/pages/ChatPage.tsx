@@ -34,8 +34,8 @@ const AvatarImage = styled(Avatar)({
 
 const FriendDetailContainer = styled(Box)(({ theme }) => ({
   height: "15%",
-  // backgroundColor: theme.palette.primary.main, // Sesuaikan latar belakang dengan tema
-  backgroundColor: "red",
+  backgroundColor: theme.palette.primary.main, // Sesuaikan latar belakang dengan tema
+  // backgroundColor: "red",
   display: "flex",
   alignItems: "center",
   paddingLeft: "1rem",
@@ -808,7 +808,7 @@ function ChatPage(props) {
                           {member.map((user) => (
                             <ContainerMember
                               onClick={() => {
-                                setCurFriend({ friendId: user.userId });
+                                setCurFriend({ friendId: user.userId, name: user.name });
                                 setCurGroup(null);
                               }}
                               style={{
