@@ -18,6 +18,9 @@ const upload = multer({
             else if (type === "chatImageGroup") {
                 path = `./uploads/${type}`;
             }
+            else if (type === "profpicGroup") {
+                path = `./uploads/${type}`;
+            }
 
             if (!fs.existsSync(path)) {
                 fs.mkdirSync(path, { recursive: true });
@@ -32,6 +35,7 @@ const upload = multer({
             let user_id = req.params.user_id;
             let lastMessage
             let groupId = req.params.groupId
+            let group_id = req.params.group_id
 
             const { userId, friendId } = req.params;
 
@@ -64,7 +68,10 @@ const upload = multer({
                 callback(null, `${lastMessage.id}.jpg`);
             } else if (groupId != undefined && type === "chatImageGroup") {
                 callback(null, `${lastMessage.id}.jpg`);
+            } else if (group_id != undefined && type === "profpicGroup") {
+                callback(null, `${group_id}.jpg`);
             }
+            
         },
     }),
 });

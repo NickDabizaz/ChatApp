@@ -260,6 +260,16 @@ const GroupChatController = {
       res.status(500).json({ error: "Internal Server Error" });
     }
   },
+
+  profilpicgroup: async (req, res) => {
+    return res.status(201).json({ msg: "profile picture berhasil di upload" });
+  },
+
+  getProfilpicgroup: (req, res) => {
+    const group_id = req.params.group_id;
+    const lokasinya = `uploads/profpicGroup/${group_id}.jpg`;
+    return res.status(200).sendFile(lokasinya, { root: "." });
+  },
 };
 
 module.exports = GroupChatController;

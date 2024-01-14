@@ -52,7 +52,7 @@ router.put(
 router.get("/last-message/:userId/:friendId", UserController.getLastMessage);
 
 //profil picture
-//uplod
+//upload
 router.post("/:type/:user_id", upload.single("file"), UserController.profilpic);
 //get
 router.get("/pic/:user_id", UserController.getProfilpic);
@@ -77,11 +77,6 @@ router.post(
 );
 //get
 router.get("/messagePicGroup/:messageId", UserController.getChatImageGroup);
-
-//group image
-//get
-router.get("/pic/:groupId", UserController.getGroupImage);
-
 
 //get all friend request directed to user
 router.get("/friend-requests/:userId", UserController.getFriendRequests);

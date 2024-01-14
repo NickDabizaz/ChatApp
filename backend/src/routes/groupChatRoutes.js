@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const GroupChatController = require("../controllers/groupChatController.js");
+const upload = require("../utils/multerConfiguration");
 
 // Membuat Group Chat
 router.post("/create", GroupChatController.createGroupChat);
@@ -22,5 +23,11 @@ router.get("/userGroups/:userId", GroupChatController.getUserGroups);
 
 // Mendapatkan Pesan terakhir
 router.get("/:groupId/last-message", GroupChatController.getLastMessage);
+
+//profil picture group
+//upload
+router.post("/picGroup/:type/:group_id", upload.single("file"), GroupChatController.profilpicgroup);
+//get
+router.get("/picGroup/:group_id", GroupChatController.getProfilpicgroup);
 
 module.exports = router;

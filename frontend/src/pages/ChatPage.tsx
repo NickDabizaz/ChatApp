@@ -133,13 +133,16 @@ function ChatPage(props) {
   const selectedBackground = props.selectedBackground;
 
   const [curFriendprofpic, setCurFriendprofpic] = useState();
+  const [curGroupprofpic, setCurGroupprofpic] = useState();
   const [chat, setChat] = useState(null);
   const [member, setMember] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedFileGroup, setSelectedFileGroup] = useState(null);
   const [newMessage, setNewMessage] = useState("");
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [anchorE2, setAnchorE2] = React.useState<null | HTMLElement>(null);
   const [tempFile, setTempFile] = useState("");
+  const [tempFileGroup, setTempFileGroup] = useState("");
   const fileInputRef = useRef(null);
   const socket = io("http://localhost:3000");
   const scrollRef = useRef();
@@ -160,6 +163,7 @@ function ChatPage(props) {
     setAnchorE2(null);
   };
 
+  // image chat
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     setSelectedFile(file);
@@ -213,6 +217,62 @@ function ChatPage(props) {
     console.log("masuk handle drop");
   };
 
+
+  // group image
+  const handleFileChangeGroup = (event) => {
+    const file = event.target.files[0];
+    setSelectedFileGroup(file);
+    setTempFileGroup(file);
+    displayImageGroup(file);
+    console.log("masuk sini ");
+  };
+
+  const handleDragOverGroup = (event) => {
+    event.preventDefault();
+  };
+
+  const handleClickGroup = () => {
+    // Trigger the file input when the drop zone is clicked
+    fileInputRef.current.click();
+  };
+
+  const displayImageGroup = (file) => {
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        // Create an image element and set the data URL as its source
+        const imgElement = document.createElement("img");
+        imgElement.src = e.target.result;
+        imgElement.alt = "Selected Image";
+
+        imgElement.style.marginLeft = "auto";
+        imgElement.style.marginRight = "auto";
+        imgElement.style.height = "10rem";
+        imgElement.style.width = "10rem";
+        imgElement.style.objectFit = "cover";
+        imgElement.style.borderRadius = "50%";
+        imgElement.style.border = "1px solid black";
+
+        // Append the image element to the component
+        document.getElementById("imageContainerGroup").innerHTML = "";
+        document.getElementById("imageContainerGroup").appendChild(imgElement);
+      };
+
+      // Use readAsDataURL for images
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleDropGroup = (event) => {
+    event.preventDefault();
+    const file = event.dataTransfer.files[0];
+    setSelectedFileGroup(file);
+    setTempFileGroup(file);
+    displayImageGroup(file);
+    console.log("masuk handle drop");
+  };
+
+
   const handleSendMessage = async () => {
     try {
       // Replace with your actual API endpoint
@@ -246,7 +306,7 @@ function ChatPage(props) {
       if (selectedFile) {
         const formData = new FormData();
         formData.append("file", selectedFile);
-        if(curFriend){
+        if (curFriend) {
           const result = await axios.post(
             `http://localhost:3000/api/users/friend/chatImage/${curUserId}/${curFriend.friendId}`,
             formData,
@@ -256,7 +316,7 @@ function ChatPage(props) {
               },
             }
           );
-        }else if(curGroup){
+        } else if (curGroup) {
           const result2 = await axios.post(
             `http://localhost:3000/api/users/group/chatImageGroup/${curGroup.idGroup}`,
             formData,
@@ -331,9 +391,9 @@ function ChatPage(props) {
     });
   };
 
-  const handleEmojiButtonClicked = () => {};
+  const handleEmojiButtonClicked = () => { };
 
-  const handleInviteMember = async () => {};
+  const handleInviteMember = async () => { };
 
   useEffect(() => {
     setChat(null);
@@ -351,14 +411,14 @@ function ChatPage(props) {
 
       fetchChat();
     } else if (curGroup) {
-      // axios
-      //   .get(`http://localhost:3000/api/group-chats/pi${curFriend.friendId}`)
-      //   .then((res) => {
-      //     setCurFriendprofpic(res.data);
-      //   })
-      //   .catch((error) => {
-      //     console.error("Error fetching data:", error);
-      //   });
+      axios
+        .get(`http://localhost:3000/api/group-chats/picGroup/${curGroup.idGroup}`)
+        .then((res) => {
+          setCurGroupprofpic(res.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
 
       fetchChat();
       fetchMember();
@@ -392,6 +452,20 @@ function ChatPage(props) {
   useEffect(() => {
     console.log(member);
   }, [member]);
+
+  useEffect(() => {
+    const formData = new FormData();
+    formData.append("file", selectedFileGroup);
+    axios.post(
+      `http://localhost:3000/api/group-chats/picGroup/profpicGroup/${curGroup.idGroup}`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+  }, [selectedFileGroup])
 
   return (
     <>
@@ -434,10 +508,9 @@ function ChatPage(props) {
                 <AvatarImage
                   alt="Group Image"
                   src={
-                    "https://i.pinimg.com/736x/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.jpg"
-                    // curFriendprofpic
-                    //   ? `http://localhost:3000/api/users/pic/${curFriend.friendId}`
-                    //   : "https://i.pinimg.com/736x/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.jpg"
+                    curGroupprofpic
+                      ? `http://localhost:3000/api/group-chats/picGroup/${curGroup.idGroup}`
+                      : "https://i.pinimg.com/736x/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.jpg"
                   }
                 />
 
@@ -478,7 +551,42 @@ function ChatPage(props) {
               ) : curGroup ? (
                 member && (
                   <ContainerDetail>
-                    <Box>ini pp</Box>
+                    <Box>
+                      <div
+                        className=" text-center"
+                        style={{ display: "block", width: "100%" }}
+                      >
+                        {/* {selectedFileGroup ? (
+                          <div id="imageContainerGroup"></div>
+                        ) : ( */}
+                          <AvatarImage
+                            src={curGroupprofpic
+                            ? `http://localhost:3000/api/group-chats/picGroup/${curGroup.idGroup}`
+                            : "https://i.pinimg.com/736x/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.jpg"}
+                          />
+                        {/* )} */}
+                        <input
+                          type="file"
+                          id="fileInput"
+                          style={{ display: "none" }}
+                          onChange={handleFileChangeGroup}
+                          ref={fileInputRef}
+                          accept=".jpeg, .jpg, .png"
+                        />
+                        <div
+                          onClick={handleClickGroup}
+                          onDrop={handleDropGroup}
+                          onDragOver={handleDragOverGroup}
+                          style={{
+                            textAlign: "center",
+                            cursor: "pointer",
+                            height: "auto",
+                          }}
+                        >
+                          <p>Select Image</p>
+                        </div>
+                      </div>
+                    </Box>
                     <Box>{curGroup.name}</Box>
                     <Box>Members</Box>
                     <Box>
@@ -489,9 +597,8 @@ function ChatPage(props) {
                             setCurGroup(null);
                           }}
                           style={{
-                            pointerEvents: `${
-                              user.userId === curUserId ? "none" : "auto"
-                            }`,
+                            pointerEvents: `${user.userId === curUserId ? "none" : "auto"
+                              }`,
                             cursor: "pointer",
                           }}
                         >
@@ -528,45 +635,45 @@ function ChatPage(props) {
         >
           {chat
             ? chat.map((message, index) =>
-                message.senderId === curUserId ? (
-                  <UserChatBubbleContainer key={index} ref={scrollRef}>
-                    <UserChatBubble>
-                      {message.content.includes("jpg") ||
+              message.senderId === curUserId ? (
+                <UserChatBubbleContainer key={index} ref={scrollRef}>
+                  <UserChatBubble>
+                    {message.content.includes("jpg") ||
                       message.content.includes("png") ||
                       message.content.includes("jpeg") ? (
-                        <img
-                          alt="Image Chat"
-                          src={ curGroup == null ?
-                            `http://localhost:3000/api/users/messagePic/${message._id}`
+                      <img
+                        alt="Image Chat"
+                        src={curGroup == null ?
+                          `http://localhost:3000/api/users/messagePic/${message._id}`
                           : `http://localhost:3000/api/users/messagePicGroup/${message._id}`}
-                          width={300}
-                        />
-                      ) : (
-                        <>{message.content}</>
-                      )}
-                    </UserChatBubble>
-                  </UserChatBubbleContainer>
-                ) : (
-                  <FriendChatBubbleContainer key={index} ref={scrollRef}>
-                    <Box>{message.sender}</Box>
-                    <FriendChatBubble>
-                      {message.content.includes("jpg") ||
+                        width={300}
+                      />
+                    ) : (
+                      <>{message.content}</>
+                    )}
+                  </UserChatBubble>
+                </UserChatBubbleContainer>
+              ) : (
+                <FriendChatBubbleContainer key={index} ref={scrollRef}>
+                  <Box>{message.sender}</Box>
+                  <FriendChatBubble>
+                    {message.content.includes("jpg") ||
                       message.content.includes("png") ||
                       message.content.includes("jpeg") ? (
-                        <img
-                          alt="Image Chat"
-                          src={curGroup == null ?
-                            `http://localhost:3000/api/users/messagePic/${message._id}`
+                      <img
+                        alt="Image Chat"
+                        src={curGroup == null ?
+                          `http://localhost:3000/api/users/messagePic/${message._id}`
                           : `http://localhost:3000/api/users/messagePicGroup/${message._id}`}
-                          width={300}
-                        />
-                      ) : (
-                        <>{message.content}</>
-                      )}
-                    </FriendChatBubble>
-                  </FriendChatBubbleContainer>
-                )
+                        width={300}
+                      />
+                    ) : (
+                      <>{message.content}</>
+                    )}
+                  </FriendChatBubble>
+                </FriendChatBubbleContainer>
               )
+            )
             : "loading..."}
           <ExpandCircleDownIcon
             onClick={scrollToLatestMessage}
