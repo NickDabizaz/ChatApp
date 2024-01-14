@@ -34,7 +34,8 @@ const AvatarImage = styled(Avatar)({
 
 const FriendDetailContainer = styled(Box)(({ theme }) => ({
   height: "15%",
-  backgroundColor: theme.palette.primary.main, // Sesuaikan latar belakang dengan tema
+  // backgroundColor: theme.palette.primary.main, // Sesuaikan latar belakang dengan tema
+  backgroundColor: "red",
   display: "flex",
   alignItems: "center",
   paddingLeft: "1rem",
