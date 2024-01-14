@@ -68,11 +68,14 @@ function ProfilePage(props) {
         }
       );
 
-      await axios.put(`http://localhost:3000/api/users/update/${curUserId}`, {
-        name: editedName,
-        phoneNumber: editedPhoneNumber,
-        // Add other properties as needed
-      });
+      await axios.put(
+        `http://localhost:3000/api/users/edit-profile/${curUserId}`,
+        {
+          name: editedName,
+          phoneNumber: editedPhoneNumber,
+          // Add other properties as needed
+        }
+      );
 
       setUserData({
         ...userData,
@@ -143,6 +146,7 @@ function ProfilePage(props) {
         fullWidth
         value={editedPhoneNumber}
         onChange={(e) => setEditedPhoneNumber(e.target.value)}
+        disabled={true}
       />
       <Button variant="contained" color="primary" onClick={handleSaveChanges}>
         Save Changes
