@@ -12,7 +12,7 @@ const socket = require("socket.io");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 const corsOptions = {
-  origin: "https://main--dapper-mousse-59f527.netlify.app", // Mengizinkan akses dari alamat ini
+  origin: "http://localhost:5173", // Mengizinkan akses dari alamat ini
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
 };
@@ -44,7 +44,7 @@ const server = app.listen(PORT, async () => {
 
 const io = socket(server, {
   cors: {
-    origin: "https://main--dapper-mousse-59f527.netlify.app",
+    origin: "http://localhost:5173",
     credentials: true,
   },
 });
