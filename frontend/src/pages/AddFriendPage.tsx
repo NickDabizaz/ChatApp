@@ -89,7 +89,7 @@ function AddFriendPage(props) {
   const handleAddFriend = async () => {
     let temp = userFriendRequests.filter((user) => user.phoneNumber === search);
     console.log(curUserId);
-    console.log(temp[0].friendId);
+    // console.log(temp[0].friendId);
 
     if (temp.length > 0) {
       try {

@@ -22,6 +22,7 @@ interface RouteConfig {
 const router = createBrowserRouter([
   {
     path: "/",
+    errorElement: <ErrorPage />,
     children: [
       { index: true, element: <LandingPage /> },
       { path: "/login", element: <LoginPage />, loader: loadData },
