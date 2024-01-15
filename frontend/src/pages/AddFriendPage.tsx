@@ -70,6 +70,22 @@ function AddFriendPage(props) {
     }
   };
 
+  const handleAcceptFriend = async (friendId) => {
+    try {
+      const response = await axios.post(
+        "https://chat-app-api-qam0.onrender.com/api/users/accept-friend-request",
+        {
+          userId: curUserId,
+          friendId: friendId,
+        }
+      );
+      setSearch("");
+      setSearchResult(null);
+    } catch (error) {
+      console.error("Error adding friend:", error);
+    }
+  };
+
   const handleAddFriend = async () => {
     let temp = userFriendRequests.filter((user) => user.phoneNumber === search);
     console.log(curUserId);
@@ -181,8 +197,12 @@ function AddFriendPage(props) {
           <Typography>Friend Request</Typography>
 
           {userFriendRequests &&
-            userFriendRequests.map((friend) => (
-              <FlexContainer p={2} sx={{ border: "1px solid black" }}>
+            userFriendRequests.map((friend, index) => (
+              <FlexContainer
+                key={index}
+                p={2}
+                sx={{ border: "1px solid black" }}
+              >
                 <Avatar
                   alt="Friend Search Avatar"
                   src={
@@ -194,7 +214,10 @@ function AddFriendPage(props) {
 
                 <Box>{friend.name}</Box>
 
-                <Button onClick={handleAddFriend} sx={{ marginLeft: "auto" }}>
+                <Button
+                  onClick={() => handleAcceptFriend(friend.friendId)}
+                  sx={{ marginLeft: "auto" }}
+                >
                   <PersonAddIcon />
                 </Button>
               </FlexContainer>
