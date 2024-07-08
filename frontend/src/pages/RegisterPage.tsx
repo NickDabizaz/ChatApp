@@ -35,7 +35,7 @@ function RegisterPage() {
 
     try {
       // Kirim data pendaftaran ke backend
-      const response = await axios.post("https://chat-app-api-qam0.onrender.com/api/users/register", {
+      const response = await axios.post("http://localhost:3000/api/users/register", {
         name: userData.name,
         phoneNumber: userData.phoneNumber,
         password: userData.password,

@@ -132,7 +132,7 @@ function AppPage() {
       try {
         // Replace with your actual API endpoint
         const response = await axios.get(
-          `https://chat-app-api-qam0.onrender.com/api/users/user-details/${cookie.user_id}`
+          `http://localhost:3000/api/users/user-details/${cookie.user_id}`
         );
         console.log(response.data);
 
@@ -154,7 +154,7 @@ function AppPage() {
       try {
         // Replace with your actual API endpoint
         const response = await axios.get(
-          `https://chat-app-api-qam0.onrender.com/api/users/pic/${cookie.user_id}`
+          `http://localhost:3000/api/users/pic/${cookie.user_id}`
         );
         setUserProfpic(response.data);
       } catch (error) {
@@ -166,7 +166,7 @@ function AppPage() {
       try {
         // Replace with your actual API endpoint
         const response = await axios.get(
-          `https://chat-app-api-qam0.onrender.com/api/group-chats/userGroups/${cookie.user_id}`
+          `http://localhost:3000/api/group-chats/userGroups/${cookie.user_id}`
         );
         setUserGroups(response.data);
       } catch (error) {

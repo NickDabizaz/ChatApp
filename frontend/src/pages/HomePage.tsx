@@ -76,7 +76,7 @@ function HomePage(props) {
               alt="Profile picture"
               src={
                 userProfpic
-                  ? `https://chat-app-api-qam0.onrender.com/api/users/pic/${curUserId}`
+                  ? `http://localhost:3000/api/users/pic/${curUserId}`
                   : "https://i.pinimg.com/736x/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.jpg"
               }
             />

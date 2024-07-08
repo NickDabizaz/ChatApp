@@ -155,7 +155,7 @@ function ChatPage(props) {
   const [inviteMember, setInviteMember] = useState(false);
   const [inviteable, setInviteable] = useState(null);
   const fileInputRef = useRef(null);
-  const socket = io("https://chat-app-api-qam0.onrender.com");
+  const socket = io("http://localhost:3000");
   const scrollRef = useRef();
   const theme = useTheme();
   const [kondisi, setKondisi] = useState(false)
@@ -416,7 +416,7 @@ function ChatPage(props) {
 
       if (curFriend) {
         const response = await axios.post(
-          "https://chat-app-api-qam0.onrender.com/api/users/send-message",
+          "http://localhost:3000/api/users/send-message",
           {
             userId: curUserId,
             friendId: curFriend.friendId,
@@ -425,7 +425,7 @@ function ChatPage(props) {
         );
       } else if (curGroup) {
         const response = await axios.post(
-          `https://chat-app-api-qam0.onrender.com/api/group-chats/${curGroup.idGroup}/sendMessage`,
+          `http://localhost:3000/api/group-chats/${curGroup.idGroup}/sendMessage`,
           {
             senderId: curUserId,
             content: selectedFile ? selectedFile.name : newMessage,
@@ -443,7 +443,7 @@ function ChatPage(props) {
         formData.append("file", selectedFile);
         if (curFriend) {
           const result = await axios.post(
-            `https://chat-app-api-qam0.onrender.com/api/users/friend/chatImage/${curUserId}/${curFriend.friendId}`,
+            `http://localhost:3000/api/users/friend/chatImage/${curUserId}/${curFriend.friendId}`,
             formData,
             {
               headers: {
@@ -453,7 +453,7 @@ function ChatPage(props) {
           );
         } else if (curGroup) {
           const result2 = await axios.post(
-            `https://chat-app-api-qam0.onrender.com/api/users/group/chatImageGroup/${curGroup.idGroup}`,
+            `http://localhost:3000/api/users/group/chatImageGroup/${curGroup.idGroup}`,
             formData,
             {
               headers: {
@@ -479,7 +479,7 @@ function ChatPage(props) {
       try {
         // Replace with your actual API endpoint
         const response = await axios.get(
-          `https://chat-app-api-qam0.onrender.com/api/users/chat-history/${curUserId}/${curFriend.friendId}`
+          `http://localhost:3000/api/users/chat-history/${curUserId}/${curFriend.friendId}`
         );
         setChat(response.data);
       } catch (error) {
@@ -489,7 +489,7 @@ function ChatPage(props) {
       try {
         // Replace with your actual API endpoint
         const response = await axios.get(
-          `https://chat-app-api-qam0.onrender.com/api/group-chats/${curGroup.idGroup}/messages`
+          `http://localhost:3000/api/group-chats/${curGroup.idGroup}/messages`
         );
         setChat(response.data);
       } catch (error) {
@@ -503,7 +503,7 @@ function ChatPage(props) {
       try {
         // Replace with your actual API endpoint
         const response = await axios.get(
-          `https://chat-app-api-qam0.onrender.com/api/group-chats/${curGroup.idGroup}/details`
+          `http://localhost:3000/api/group-chats/${curGroup.idGroup}/details`
         );
         const members = [];
         members.push(response.data.admin);
@@ -542,7 +542,7 @@ function ChatPage(props) {
     try {
       // Replace with your actual API endpoint
       const response = await axios.post(
-        `https://chat-app-api-qam0.onrender.com/api/group-chats/${curGroup.idGroup}/addMember`,
+        `http://localhost:3000/api/group-chats/${curGroup.idGroup}/addMember`,
         { memberId: id }
       );
       console.log(response.data);
@@ -556,7 +556,7 @@ function ChatPage(props) {
 
     if (curFriend) {
       axios
-        .get(`https://chat-app-api-qam0.onrender.com/api/users/pic/${curFriend.friendId}`)
+        .get(`http://localhost:3000/api/users/pic/${curFriend.friendId}`)
         .then((res) => {
           setCurFriendprofpic(res.data);
         })
@@ -568,7 +568,7 @@ function ChatPage(props) {
     } else if (curGroup) {
       axios
         .get(
-          `https://chat-app-api-qam0.onrender.com/api/group-chats/picGroup/${curGroup.idGroup}`
+          `http://localhost:3000/api/group-chats/picGroup/${curGroup.idGroup}`
         )
         .then((res) => {
           setCurGroupprofpic(res.data);
@@ -611,7 +611,7 @@ function ChatPage(props) {
       const formData = new FormData();
       formData.append("file", selectedFileGroup);
       axios.post(
-        `https://chat-app-api-qam0.onrender.com/api/group-chats/picGroup/profpicGroup/${curGroup.idGroup}`,
+        `http://localhost:3000/api/group-chats/picGroup/profpicGroup/${curGroup.idGroup}`,
         formData,
         {
           headers: {
@@ -621,7 +621,7 @@ function ChatPage(props) {
       );
       const updatedProfGroup = axios
         .get(
-          `https://chat-app-api-qam0.onrender.com/api/group-chats/picGroup/${curGroup.idGroup}`
+          `http://localhost:3000/api/group-chats/picGroup/${curGroup.idGroup}`
         )
         .then((res) => {
           setCurGroupprofpic(res.data);
@@ -659,7 +659,7 @@ function ChatPage(props) {
                   alt="Friend Image"
                   src={
                     curFriendprofpic
-                      ? `https://chat-app-api-qam0.onrender.com/api/users/pic/${curFriend.friendId}`
+                      ? `http://localhost:3000/api/users/pic/${curFriend.friendId}`
                       : "https://i.pinimg.com/736x/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.jpg"
                   }
                 />
@@ -685,7 +685,7 @@ function ChatPage(props) {
                   alt="Group Image"
                   src={
                     curGroupprofpic
-                      ? `https://chat-app-api-qam0.onrender.com/api/group-chats/picGroup/${curGroup.idGroup}`
+                      ? `http://localhost:3000/api/group-chats/picGroup/${curGroup.idGroup}`
                       : "https://i.pinimg.com/736x/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.jpg"
                   }
                 />
@@ -731,7 +731,7 @@ function ChatPage(props) {
                     <AvatarImage
                       src={
                         curFriendprofpic
-                          ? `https://chat-app-api-qam0.onrender.com/api/users/pic/${curFriend.friendId}`
+                          ? `http://localhost:3000/api/users/pic/${curFriend.friendId}`
                           : "https://i.pinimg.com/736x/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.jpg"
                       }
                     // sx={{ margin: "auto" }}
@@ -758,7 +758,7 @@ function ChatPage(props) {
                               <AvatarImage
                                 src={
                                   curGroupprofpic
-                                    ? `https://chat-app-api-qam0.onrender.com/api/group-chats/picGroup/${curGroup.idGroup}`
+                                    ? `http://localhost:3000/api/group-chats/picGroup/${curGroup.idGroup}`
                                     : "https://i.pinimg.com/736x/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.jpg"
                                 }
                                 sx={{ margin: "auto" }}
@@ -820,8 +820,8 @@ function ChatPage(props) {
                               <FlexContainer sx={{display: "flex", alignItems: "center"}}>
                                 <AvatarImage
                                   src={
-                                    `https://chat-app-api-qam0.onrender.com/api/users/pic/${user.userId}` != "Not Found"
-                                      ? `https://chat-app-api-qam0.onrender.com/api/users/pic/${user.userId}`
+                                    `http://localhost:3000/api/users/pic/${user.userId}` != "Not Found"
+                                      ? `http://localhost:3000/api/users/pic/${user.userId}`
                                       : "https://i.pinimg.com/736x/38/47/9c/38479c637a4ef9c5ced95ca66ffa2f41.jpg"
                                   }
                                 // sx={{ margin: "auto" }}
@@ -911,8 +911,8 @@ function ChatPage(props) {
                         alt="Image Chat"
                         src={
                           curGroup == null
-                            ? `https://chat-app-api-qam0.onrender.com/api/users/messagePic/${message._id}`
-                            : `https://chat-app-api-qam0.onrender.com/api/users/messagePicGroup/${message._id}`
+                            ? `http://localhost:3000/api/users/messagePic/${message._id}`
+                            : `http://localhost:3000/api/users/messagePicGroup/${message._id}`
                         }
                         width={300}
                       />
@@ -932,8 +932,8 @@ function ChatPage(props) {
                         alt="Image Chat"
                         src={
                           curGroup == null
-                            ? `https://chat-app-api-qam0.onrender.com/api/users/messagePic/${message._id}`
-                            : `https://chat-app-api-qam0.onrender.com/api/users/messagePicGroup/${message._id}`
+                            ? `http://localhost:3000/api/users/messagePic/${message._id}`
+                            : `http://localhost:3000/api/users/messagePicGroup/${message._id}`
                         }
                         width={300}
                       />

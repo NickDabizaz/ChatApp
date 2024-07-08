@@ -62,7 +62,7 @@ function LoginPage() {
 
     try {
       const response = await axios.post(
-        "https://chat-app-api-qam0.onrender.com/api/users/login",
+        "http://localhost:3000/api/users/login",
         data
       );
       const responseData = response.data;
